@@ -80,3 +80,14 @@ Individual post data format
   * subreddit_name_prefixed: r/*subredditName*
   
     --> displays the name of the subreddit this post belong to
+    
+  * preview
+    * .enabled --> this basically says that if on the website that preview icon is shown or not
+    * .images.*array* (usually it's only one element)
+      * .*array*.resolutions --> this stores an array of images of different resolution (starting from the lowest)
+        * width: 108, 216, 320, 640 and 900px
+        
+ !Important note: whole bunch of posts have preview images, but this **DOESN'T** mean that they are all images. For example a link to an article could still have a preview image attached to it, and that image having different resolutions, but that's just because that image has been automatically generated as the preview for that post.
+ 
+ Need to use a different method of determining if that post is a link to an image (maybe be seeing if the url itself has common image extensions: .gif, .png, .jpg etc...
+
