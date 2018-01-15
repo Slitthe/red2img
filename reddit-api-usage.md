@@ -91,3 +91,10 @@ Individual post data format
  
  Need to use a different method of determining if that post is a link to an image (maybe be seeing if the url itself has common image extensions: .gif, .png, .jpg etc...
 
+---
+#### Searching
+/search.json?*url_parameters*
+
+  - q = *string* --> this is the actual search query
+  - limit = *integer* --> how many results to show
+  - include_over_18 = *boolean* --> if to include ornot adult searches
