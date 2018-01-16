@@ -294,7 +294,16 @@ textarea {
 
 
 .subreddit {
-    display: inline-block;
+
     background: gray;
     margin: 5px 20px;
+}
+
+.subredditList {
+    margin: 25px;
+    border: 1px solid gray;
+}
+
+img {
+    height: 200px;
 }

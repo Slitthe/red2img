@@ -14,25 +14,40 @@
         <![endif]-->
 
 
-        <div class="subreddits-list">
-            <div>
-                <div class="subreddit">pics</div>
-                <button type="button">Delete this</button>
-            </div>
-            <div>
-                <div class="subreddit">nature</div>
-                <button type="button">Delete this</button>
-            </div>
-            <div>
-                <div class="subreddit">aww</div>
-                <button type="button">Delete this</button>
-            </div>
-            <div>
-                <div class="subreddit">militaryporn</div>
-                <button type="button">Delete this</button>
-            </div>
+        <div class="sorting">
+            <select name="type" id="type">
+                <option value="new">New</option>
+                <option value="top">Top</option>
+                <option value="rising">Rising</option>
+                <option value="controversial">Controversial</option>
+                <option value="hot">Hot</option>
+            </select>
+            <select class="hidden" name="time" id="time">
+                <option value="hour">Hour</option>
+                <option value="day">Day</option>
+                <option value="week">Week</option>
+                <option value="controversial">Month</option>
+                <option value="year">Year</option>
+                <option value="all">All</option>
+            </select>
         </div>
 
+        <div id="subredditList" class="subredditList">
+
+        </div>
+
+        <div id="settings" class="settings">
+            <label for="nsfw">NSFW</label>
+            <input id="nsfw" type="checkbox" value="nsfw" name="adultContent">
+            <label for="titles">Show Titles</label>
+            <input id="titles" type="checkbox" value="titles" name="titles">
+        </div>
+
+        <input type="text" id="addSubreddit" class="addSubreddit" placeholder="Subreddit name">
+        <button type="button" id="addSubredditBtn" class="addSubredditBtn">Add</button>
+
+        <div class="imagesContainer" id="imagesContainer"></div>
+        <div id="statusMessage" class="statusMessage"></div>
         <!-- Add your site or application content here -->
         <p>Hello world! This is HTML5 Boilerplate.</p>
         <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
