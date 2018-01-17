@@ -6,22 +6,42 @@ var elements = {
 	typeChange: $("#type"),
 	timeChange: $("#time"),
 	statusMessage: $(".statusMessage"),
-	imagesContainer: $("#imagesContainer")
+	imagesContainer: $("#imagesContainer"),
+	loading: $("#loading"),
+	recommendedList: $("#recommended"),
+	inputs: ["#addSubreddit", "#addSubredditBtn", ".settings input", "#type", "#type", ".removeSubreddit"]
 };
 
-function ajaxRequest(url, success){
-	$.ajax(url, {
-		 method: "GET",
-		 crossDomain: true,
-		 dataType: "json",
-		 success: function(val){
-		 	success(val);
-		 },
-		 error: function(err){
-		 	elements.statusMessage.text("Communication failed.")
-		 },
-		 timeout: 0
-	});
+function ajaxRequest(url, success, condition){
+	if(condition){
+		$.ajax(url, {
+			 beforeSend: function(){
+			 	elements.loading.removeClass("hidden");
+			 	elements.inputs.forEach(function(selector){
+			 		$(selector).attr("disabled", true);
+			 	});
+			 },
+			 method: "GET",
+			 crossDomain: true,
+			 dataType: "json",
+			 success: function(val){
+			 	success(val);
+			 },
+			 error: function(err){
+			 	elements.statusMessage.text("Communication failed.")
+			 },
+			 timeout: 0,
+			 headers: {
+			 	Origin: "http://127.0.0.1:8080/"
+			 },
+			 complete: function(){
+			 	elements.loading.addClass("hidden");
+			 	elements.inputs.forEach(function(selector){
+			 		$(selector).attr("disabled", false);
+			 	});
+			 }
+		});
+	}
 }
 
 var urlParams = {
@@ -42,7 +62,8 @@ var urlParams = {
 			value: 5,
 		},
 		adultContent: {
-			name: "include_over_18"
+			name: "include_over_18",
+			value: true
 		},
 		after: {
 			name: "after",
@@ -75,11 +96,6 @@ var urlParams = {
 			this.sortTime.value = time;
 		},
 }
-Object.defineProperty(urlParams.adultContent, "value", {
-	get: function(){
-		return settings.adultContent;
-	}
-});
 
 var requestUrls = {
 	base: "https://www.reddit.com/",
@@ -96,9 +112,15 @@ var requestUrls = {
 	},
 	checkSubExist: function(subName) {
 		var url = this.base +  "search.json?";
-		console.log(url);
-		urlParams.searchQuery.value = "subreddit%3A" + subName;
-		url += urlParams.getParams(["searchQuery", "existanceLimit"]);
+		urlParams.searchQuery.value = "subreddit%3A" + subName + "+nsfw%3A" + urlParams.adultContent.value;
+		url += urlParams.getParams(["searchQuery", "existanceLimit", "adultContent"]);
+		url += "&sort=relevance&t=all";
+		return url;
+	},
+	recommended: function(){
+		var url = this.base + "api/recommend/sr/srnames?";
+		url += "srnames=" + subreddits.list.join(",") + "&";
+		url += urlParams.getParams(["adultContent"]);
 		return url;
 	}
 };
@@ -109,17 +131,25 @@ var requestUrls = {
 
 var subreddits = {
 	list: ["cars", "europe"],
-	add: function(name, element){
-		ajaxRequest(requestUrls.checkSubExist(name), function(succRes){
-			if(succRes.data.children.length){
-				subreddits.list.push(name);
-				subreddits.checkDuplicate();
-				helperFunctions.showList(elements.subredditList);
-			}
-			else {
-				elements.statusMessage.text("Subreddit doesn't exist");
-			}
-		});
+	add: function(element){
+		var value = element.val();
+		if(value){
+			element.val("");
+			subreddits.list.push(value);
+			subreddits.checkDuplicate();
+			helperFunctions.showList(elements.subredditList);
+		}
+		// ajaxRequest(requestUrls.checkSubExist(name), function(succRes){
+		// 	console.log(requestUrls.checkSubExist(name));
+		// 	console.log(succRes);
+		// 	if(succRes.data.children.length){
+
+		// 		
+		// 	}
+		// 	else {
+		// 		elements.statusMessage.text("Subreddit doesn't exist");
+		// 	}
+		// }, true);
 	},
 	checkDuplicate: function(){
 		this.list = this.list.filter(function(curr, ind, arr){
@@ -141,10 +171,8 @@ var settings = {
 var helperFunctions = {
 	addSubreddit: function(thisContext) {
 		var value = $(thisContext).prev().val();
-		if(value){
-			$(thisContext).prev().val("");
-			subreddits.add(value, $(thisContext));	
-		}
+		console.log($(thisContext).prev().val());
+
 	},
 	removeSubreddit: function(thisContext) {
 		var name = $(thisContext).prev().text();
@@ -165,18 +193,36 @@ var helperFunctions = {
 		var resData;
 		ajaxRequest(url, function(succ){
 			resData = succ;
+			generalData.searchCount++;
 			resData.data.children.forEach(function(cr){
-				data.arr.push(cr.data);
+				generalData.arr.push(cr.data);
 			});
-			data.keepOnlyImages();
+			generalData.keepOnlyImages();
 			urlParams.after.value = resData.data.after;
-			data.displayImages();
-		});
+			generalData.displayImages();
+			if(generalData.searchCount && !resData.data.after) {
+				generalData.continueSearch = false;
+				elements.statusMessage.text("No more images to load.");
+			}
+		},
+		generalData.continueSearch
+		);
+	},
+	addRecommended: function(){
+		ajaxRequest(requestUrls.recommended(), function(res){
+			var html = "";
+			res.forEach(function(srname){
+				html += "<li>/r/" + srname + "</li>"; 
+			});
+			elements.recommended.html(html);
+		}, true);
 	}
 };
 
 
-var data = {
+var generalData = {
+	searchCount: 0,
+	continueSearch: true,
 	arr: [],
 	keepOnlyImages: function(){
 		this.arr = this.arr.filter(function(current){
@@ -185,6 +231,13 @@ var data = {
 			// }
 			return current.url.search(/(.jpg|.png|.gif|.gifv|.jpeg|.bmp|.svg)$/gi) >= 0;
 		});
+	},
+	filterAdult: function(){
+		if(settings.adultContent){
+			this.arr = this.arr.filter(function(current){
+				return !current.data.over_18;
+			});
+		}
 	},
 	displayImages: function(){
 		html = "";
@@ -220,7 +273,7 @@ elements.subredditList.on("click", ".removeSubreddit", function(){
 });
 
 elements.addBtn.on("click", function(){
-	helperFunctions.addSubreddit(this);
+	subreddits.add($(this).prev());
 });
 
 elements.changeSettingsInput.on("change", function(){
@@ -228,4 +281,3 @@ elements.changeSettingsInput.on("change", function(){
 });
 
 helperFunctions.showList(elements.subredditList);
-
