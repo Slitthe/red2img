@@ -116,7 +116,7 @@ var urlParams = {
 
 // Returns the API Requests URLs for different tasks
 var requestUrls = {
-	base: "https://www.reddist.com/",
+	base: "https://www.reddit.com/",
 	corsProxy: "https://cors-anywhere.herokuapp.com/",
 	postsData: function(subreddits){
 		subreddits = subreddits.join("+");
@@ -269,10 +269,6 @@ var helperFunctions = {
 					generalData.subExists = true;
 					fun();
 				}
-				else {
-					console.log("Subreddit doesn't exist");
-					elements.statusMessage.text("Subreddit doesn't exist");
-				}
 		}, function(fail){
 			console.log("Communication with the target server failed.");
 			elements.statusMessage.text("Communication with the target server failed.");
@@ -283,17 +279,19 @@ var helperFunctions = {
 				console.log("request timeout");
 			}
 			else {
-				if(complete.responseJSON.reason === "banned" && complete.status === 404 ){
+				var bannedOrPrivateText = '{"reason": "banned", "message": "Not Found", "error": 404}';
+				var notExistText = '{"kind": "Listing", "data": {"modhash": "", "whitelist_status": "all_ads", "children": [], "after": null, "before": null}}';
+				var notExistTextTwo = '{"message": "Not Found", "error": 404}';
+				if(complete.responseText === bannedOrPrivateText){
 					console.log("Private or banned subreddit");
 					elements.statusMessage.text("Private or banned subreddit");
 				}
-				else if(complete.status === 404){
+				else if(complete.responseText === notExistText || complete.responseText === notExistTextTwo){
 					console.log("Subreddit doesn't exist");
 					elements.statusMessage.text("Subreddit doesn't exist");
 				}
 				not();	
 			}
-			
 		});
 	},
 	// autocomplete: function(value){
