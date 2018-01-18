@@ -13,18 +13,18 @@
             <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
         <![endif]-->
 
-
+        <ul class="recommended" id="recommended"></ul>
         <div class="sorting">
             <select name="type" id="type">
                 <option value="new">New</option>
                 <option value="top">Top</option>
-                <option value="rising">R ising</option>
+                <option value="rising">Rising</option>
                 <option value="controversial">Controversial</option>
-                <option value="hot">Hot</option>
+                <option selected value="hot">Hot</option>
             </select>
             <select class="hidden" name="time" id="time">
                 <option value="hour">Hour</option>
-                <option value="day">Day</option>
+                <option selected value="day">Day</option>
                 <option value="week">Week</option>
                 <option value="controversial">Month</option>
                 <option value="year">Year</option>
@@ -43,14 +43,27 @@
             <input id="titles" type="checkbox" value="titles" name="titles">
         </div>
 
-        <input type="text" id="addSubreddit" class="addSubreddit" placeholder="Subreddit name">
-        <button type="button" id="addSubredditBtn" class="addSubredditBtn">Add</button>
+        <div class="srSearchContainer" id="srSearchContainer">
+            <input type="text" id="addSubreddit" class="addSubreddit" placeholder="Subreddit name">
+            <ul class="autocomplete" id="autocomplete"></ul>
+            <button type="button" id="addSubredditBtn" class="addSubredditBtn">Add</button>
+        </div>
 
         <div class="imagesContainer" id="imagesContainer"></div>
+
+        <button type="button" id="loadMore" class="loadMore">Show More Images</button>
         <div id="statusMessage" class="statusMessage"></div>
         <img src="loading.svg" width="64" id="loading" class="loading hidden">
-        <!-- Add your site or application content here -->
-        <ul class="recommended" id="recommended"></ul>
+
+
+
+
+
+
+
+
+
+
         <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
         <script>window.jQuery || document.write('<script src="js/vendor/jquery-3.2.1.min.js"><\/script>')</script>
         <script src="js/main.js"></script>
