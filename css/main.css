@@ -302,3 +302,17 @@ textarea {
 img {
     height: 200px;
 }
+
+.statusMessage {
+    position: fixed;
+    top: 0;
+    background: black;
+    color: white;
+    left: 0;
+    right: 0;
+    text-align: center;
+}
+
+body {
+    padding-top: 50px;
+}

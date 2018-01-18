@@ -1,3 +1,4 @@
+// DOM elements
 var elements = {
 	subredditList: $("#subredditList"),
 	addInput: $("#addSubreddit"),
@@ -6,26 +7,27 @@ var elements = {
 	titleSettingInput: $(".settings #titles"),
 	typeChange: $("#type"),
 	timeChange: $("#time"),
-	statusMessage: $(".statusMessage"),
+	statusMessage: $("#statusMessage"),
 	imagesContainer: $("#imagesContainer"),
 	loading: $("#loading"),
 	recommendedList: $("#recommended"),
 	loadMore: $("#loadMore"),
-	autocompleteRes: $("#autocomplete"),
+	// autocompleteRes: $("#autocomplete"),
 	inputs: ["#addSubredditBtn", ".settings input", "#type", "#type", ".removeSubreddit"],
 };
 
-
-function ajaxRequest(url, condition){
+// Customized jQuery AJAX request function
+function ajaxRequest(reqUrl, condition){
 	var args = arguments;
 	if(condition){
 		elements.loading.removeClass("hidden");
 		elements.inputs.forEach(function(selector){
 			$(selector).attr("disabled", true);
 		});
-		$.ajax(url, {
+		$.ajax({
 			 beforeSend: function(){
 			 },
+			 url: reqUrl,
 			 method: "GET",
 			 crossDomain: true,
 			 dataType: "json",
@@ -46,13 +48,12 @@ function ajaxRequest(url, condition){
 			 	elements.inputs.forEach(function(selector){
 			 		$(selector).attr("disabled", false);
 			 	});
-			 		console.log("complete");
-
 			 }
 		});
 	}
 }
 
+// API URL paramteres data & methods for retrieving / changing them
 var urlParams = {
 		searchQuery: {
 			name: "q",
@@ -113,8 +114,9 @@ var urlParams = {
 		},
 }
 
+// Returns the API Requests URLs for different tasks
 var requestUrls = {
-	base: "https://www.reddit.com/",
+	base: "https://www.reddist.com/",
 	corsProxy: "https://cors-anywhere.herokuapp.com/",
 	postsData: function(subreddits){
 		subreddits = subreddits.join("+");
@@ -138,32 +140,34 @@ var requestUrls = {
 		url += urlParams.getParams(["adultContent"]);
 		return this.corsProxy + url;
 	},
-	searchAutocomplete: function(query, adult){
-		var url = this.base + "api/subreddit_autocomplete.json?";
-		urlParams.longQuery.value = query;
-		url += urlParams.getParams(["longQuery", "includeProfiles"]);
-		url += "&include_over_18=" + adult
-		return url;
-	}
+	// searchAutocomplete: function(query, adult){
+	// 	var url = this.base + "api/subreddit_autocomplete.json?";
+	// 	urlParams.longQuery.value = query;
+	// 	url += urlParams.getParams(["longQuery", "includeProfiles"]);
+	// 	url += "&include_over_18=" + adult;
+	// 	return url;
+	// }
 };
 
 
 
 
-
+// Contains the subreddits data, as well as the related methods for adding/removing them from the list
 var subreddits = {
 	list: ["itookapicture", "photography", "oldschoolcool", "cinemagraphs", "pbandonedporn", "militaryporn", "earthporn", "spaceporn", "eyebleach", "aww"],
 	addWithCheck: function(element){
-		var value = element.val();
+		var value = encodeURI(element.val());
 		if(value) {
 			element.val("");
+			console.log(value);
 			helperFunctions.checkSubExist(value, function(){
 				subreddits.addWithoutCheck(value);
+				console.log("see if enters here");
 				console.log("Added: " + "succesfully");
 				console.log("Now Display Images");
 			}, function(){
-				elements.autocompleteRes.html("");
-				elements.autocompleteRes.addClass("hidden");
+				// elements.autocompleteRes.html("");
+				// elements.autocompleteRes.addClass("hidden");
 			})
 		}
 	},
@@ -173,8 +177,8 @@ var subreddits = {
 		subreddits.checkDuplicate();
 		helperFunctions.showList(elements.subredditList);
 		helperFunctions.getImages(true);
-		elements.autocompleteRes.html("");
-		elements.autocompleteRes.addClass("hidden");
+		// elements.autocompleteRes.html("");
+		// elements.autocompleteRes.addClass("hidden");
 		helperFunctions.getRelatedSubs();
 
 	},
@@ -187,7 +191,6 @@ var subreddits = {
 		var dataIndex = this.list.indexOf(name);
 		this.list.splice(dataIndex, 1);
 		helperFunctions.showList(elements.subredditList);
-		console.log("Show images again");
 		helperFunctions.getImages(true);
 		helperFunctions.getRelatedSubs()
 	}
@@ -198,11 +201,8 @@ var settings = {
 	adultContent: false,
 };
 
+
 var helperFunctions = {
-	removeSubreddit: function(thisContext) {
-		var name = $(thisContext).prev().text();
-		subreddits.remove(name, $(thisContext));
-	},
 	showList: function(element){
 		var html = "";
 		subreddits.list.forEach(function(current){
@@ -222,79 +222,105 @@ var helperFunctions = {
 		}
 		var url = requestUrls.postsData(subreddits.list);
 		var resData;
-		ajaxRequest(url,generalData.continueSearch,4000 , function(succ){
-			resData = succ;
-			generalData.searchCount++;
-			resData.data.children.forEach(function(cr){
-				generalData.arr.push(cr.data);
+		if(subreddits.list.length){
+			ajaxRequest(url,generalData.continueSearch,5000 , function(succ){
+				resData = succ;
+				generalData.searchCount++;
+				resData.data.children.forEach(function(cr){
+					generalData.arr.push(cr.data);
+				});
+				generalData.keepOnlyImages();
+				generalData.filterAdult()
+				urlParams.after.value = resData.data.after;
+				generalData.displayImages();
+				if(generalData.searchCount && !resData.data.after) {
+					generalData.continueSearch = false;
+					console.log("No more images to load");
+					elements.statusMessage.text("No more images to load");
+				}
+				elements.loadMore.removeClass("hidden");
 			});
-			generalData.keepOnlyImages();
-			generalData.filterAdult()
-			urlParams.after.value = resData.data.after;
+		}
+		else {
 			generalData.displayImages();
-			if(generalData.searchCount && !resData.data.after) {
-				generalData.continueSearch = false;
-				console.log("No more images to load");
-			}
-			elements.loadMore.removeClass("hidden");
-		});
+		}
+
 	},
 	getRelatedSubs: function(){
-		ajaxRequest(requestUrls.recommended(),3000, true, function(res){
-			var html = "";
-			res.forEach(function(srname){
-				html += "<li>/r/" + srname.sr_name + "</li>"; 
+		var html = "";
+		if(subreddits.list.length){
+			ajaxRequest(requestUrls.recommended(), true, 3000, function(res){
+				res.forEach(function(srname){
+					html += "<li>/r/" + srname.sr_name + "</li>"; 
+				});
+				elements.recommendedList.html(html);
 			});
+		}
+		else {
 			elements.recommendedList.html(html);
-		});
+		}
 	},
-	checkSubExist(subName, fun, done){
+	checkSubExist(subName, fun, not){
 		generalData.subExists = false;
 		subName = subName.toLowerCase();
-		ajaxRequest(requestUrls.subExists(subName),3000, true, function(res){
+		ajaxRequest(requestUrls.subExists(subName),true, 3000, function(res){
+				console.log("success req");
 				if(res.hasOwnProperty("site_rules")){
 					generalData.subExists = true;
-				}
-				if(generalData.subExists){
 					fun();
 				}
 				else {
-					console.log("Sub doesn't exist");
+					console.log("Subreddit doesn't exist");
+					elements.statusMessage.text("Subreddit doesn't exist");
 				}
 		}, function(fail){
 			console.log("Communication with the target server failed.");
+			elements.statusMessage.text("Communication with the target server failed.");
+
 		}, function(complete){
-			if(complete.status === 404 || complete.status === 403){
-				console.log("Private or banned subreddit");
-				done();
+			console.log(complete);
+			if(complete.statusText === "timeout"){
+				console.log("request timeout");
 			}
+			else {
+				if(complete.responseJSON.reason === "banned" && complete.status === 404 ){
+					console.log("Private or banned subreddit");
+					elements.statusMessage.text("Private or banned subreddit");
+				}
+				else if(complete.status === 404){
+					console.log("Subreddit doesn't exist");
+					elements.statusMessage.text("Subreddit doesn't exist");
+				}
+				not();	
+			}
+			
 		});
 	},
-	autocomplete: function(value){
-		ajaxRequest(requestUrls.searchAutocomplete(value, true), true, 1500,"","", function(data){
-			if(data.responseJSON){
-				data.responseJSON.subreddits.forEach(function(sr){
-					if(sr.allowedPostTypes.images && sr.name.substring(0,2) !== "u_" && sr.numSubscribers >= 1){
-						generalData.recommendedListNSFW.push(sr.name);
-					}
-				});
-			}
-			generalData.firstReqDone = true;
-			generalData.addSuggestions();
-		});
-		ajaxRequest(requestUrls.searchAutocomplete(value, false),true, 1500, "", "",function(data){
-				if(data.responseJSON){
-					data.responseJSON.subreddits.forEach(function(sr){
-						if(sr.allowedPostTypes.images && sr.name.substring(0,2) !== "u_" && sr.numSubscribers >= 1){
-							generalData.recommendedListSFW.push(sr.name);
-						}
-					});
-					console.log("not");
-				}
-				generalData.secondReqDone = true;
-				generalData.addSuggestions();
-		});
-	}
+	// autocomplete: function(value){
+	// 	ajaxRequest(requestUrls.searchAutocomplete(value, true), true, 1500,"","", function(data){
+	// 		if(data.responseJSON && !generalData.stopAutocompletes){
+	// 			data.responseJSON.subreddits.forEach(function(sr){
+	// 				if(sr.allowedPostTypes.images && sr.name.substring(0,2) !== "u_" && sr.numSubscribers >= 1){
+	// 					generalData.recommendedListNSFW.push(sr.name);
+	// 				}
+	// 			});
+	// 		}
+	// 		generalData.firstReqDone = true;
+	// 		generalData.addSuggestions();
+	// 	});
+	// 	ajaxRequest(requestUrls.searchAutocomplete(value, false),true, 1500, "", "",function(data){
+	// 			if(data.responseJSON && !generalData.stopAutocompletes){
+	// 				data.responseJSON.subreddits.forEach(function(sr){
+	// 					if(sr.allowedPostTypes.images && sr.name.substring(0,2) !== "u_" && sr.numSubscribers >= 1){
+	// 						generalData.recommendedListSFW.push(sr.name);
+	// 					}
+	// 				});
+	// 			}
+	// 			generalData.secondReqDone = true;
+	// 			generalData.addSuggestions();
+	// 	});
+	// }
+	
 };
 
 
@@ -302,7 +328,6 @@ var generalData = {
 	firstReqDone: false,
 	secondReqDone: false,
 	addSuggestions: function(){
-		console.log("tried");
 		if(this.firstReqDone && this.secondReqDone){
 			this.firstReqDone = false;
 			this.secondReqDone = false;
@@ -345,7 +370,6 @@ var generalData = {
 	},
 	combinedSuggestions: [],
 	combineSuggestions: function(){
-		console.log("even here");
 		this.combinedSuggestions = [];
 		if(!urlParams.adultContent.value){
 			this.recommendedListNSFW = [];
@@ -369,18 +393,17 @@ var generalData = {
 			i++;
 			// console.log(this.combinedSuggestions.length);
 		}
-		console.log(this.combinedSuggestions);
 		if(this.combinedSuggestions.length){
-			elements.autocompleteRes.removeClass("hidden");
+			// elements.autocompleteRes.removeClass("hidden");
 			var html = "";
 			this.combinedSuggestions.forEach(function(sr){
 				html += "<li data-srname='" + sr.toLowerCase() + "'>/r/" + sr + "</li>"; 
 			});
-			elements.autocompleteRes.html(html);
+			// elements.autocompleteRes.html(html);
 		}
 		else {
-			elements.autocompleteRes.html("");
-			elements.autocompleteRes.add("hidden");
+			// elements.autocompleteRes.html("");
+			// elements.autocompleteRes.add("hidden");
 		}
 		this.recommendedListNSFW = [];
 		this.recommendedListSFW = [];
@@ -404,37 +427,23 @@ elements.timeChange.on("change", function(){
 });
 
 elements.subredditList.on("click", ".removeSubreddit", function(){
-	helperFunctions.removeSubreddit(this);
+	subreddits.remove($(this).prev().text());
 });
 
-elements.addBtn.on("click", function(){
-	subreddits.addWithCheck(elements.addInput);
-});
+
 
 
 helperFunctions.showList(elements.subredditList);
 
-elements.addInput.on("input", function(){
-	console.log("triggered");
-	helperFunctions.autocomplete($(this).val());
-});
-
-elements.addInput.on("change", function(){
-	if(!$(this).val()){
-		helperFunctions.autocomplete($(this).val());	
-	}
-});
 
 elements.adultSettingInput.on("change", function(){
 	urlParams[$(this).attr("name")].value = this.checked;
-	console.log("show images");
 	helperFunctions.getImages(true);
-
+	// helperFunctions.autocomplete(elements.addInput.val());
 });
 
 elements.titleSettingInput.on("change", function(){
 	settings[$(this).attr("name")] = this.checked;
-	console.log("title settings changed");
 });
 
 $("#imagesContainer").on("error", ".imageResult img", function(){
@@ -445,6 +454,44 @@ elements.loadMore.on("click", function(){
 	helperFunctions.getImages(false);
 });
 
-elements.autocompleteRes.on("click", "li", function(){
+elements.recommendedList.on("click", "li", function(){
 	subreddits.addWithoutCheck($(this).text().substring(3));
+});
+// elements.autocompleteRes.on("click", "li", function(){
+// 	subreddits.addWithoutCheck($(this).text().substring(3));
+// });
+
+
+// elements.addInput.on("input", function(){
+// 	if(!$(this).val()){
+// 		generalData.stopAutocompletes = true;
+// 		elements.autocompleteRes.html("");
+// 		elements.autocompleteRes.addClass("hidden");
+// 	}
+// 	else {
+// 		generalData.stopAutocompletes = false;	
+// 	}
+// 	helperFunctions.autocomplete($(this).val());
+// });
+// elements.addInput.on("change", function(){
+// 	if(!$(this).val()){
+// 		generalData.stopAutocompletes = true;
+// 		elements.autocompleteRes.html("");
+// 		elements.autocompleteRes.addClass("hidden");
+
+// 	}
+// 	else {
+// 		generalData.stopAutocompletes = false;	
+// 	}
+// 	helperFunctions.autocomplete($(this).val());	
+// });
+// elements.addInput.on("blur", function(){
+// 	elements.autocompleteRes.html("");
+// 	elements.autocompleteRes.addClass("hidden");
+// });
+
+
+
+elements.addBtn.on("click", function(){
+	subreddits.addWithCheck(elements.addInput);
 });
