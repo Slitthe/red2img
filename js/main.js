@@ -17,8 +17,12 @@ var elements = {
 	loading: $("#loading"),
 	recommendedList: $("#recommended"),
 	loadMore: $("#loadMore"),
-	// autocompleteRes: $("#autocomplete"),
-	inputs: ["#addSubredditBtn", ".settings input", "#type", "#type", ".removeSubreddit"],
+	autocompleteRes: $("#autocomplete"),
+	// inputs: ["#addSubredditBtn", ".settings input", "#type", "#type", ".removeSubreddit"],
+	inputs: [],
+	srSearchContainer: $("#srSearchContainer"),
+	multipleDeleteBtn: $("#multipleDelete"),
+	checkAll: $("#checkAll")
 };
 
 // Customized jQuery AJAX request function
@@ -83,11 +87,11 @@ var urlParams = {
 		},
 		includeProfiles: {
 			name:"include_profiles",
-			value: elements.titleSettingInput[0].checked
+			value: false
 		},
 		limit: {
 			name: "limit",
-			value: 100,
+			value: 15,
 		},
 		existanceLimit: {
 			name: "limit",
@@ -101,6 +105,9 @@ var urlParams = {
 			name: "include_over_18",
 			value: elements.adultSettingInput[0].checked
 		},
+		// relatedSubsAdult: {
+		// 	name: "over_18"
+		// },
 		after: {
 			name: "after",
 			value: "",
@@ -129,13 +136,18 @@ var urlParams = {
 			helperFunctions.getImages(true);
 		},
 }
+// Object.defineProperty(urlParams.relatedSubsAdult, "value", {
+// 	get: function(){
+// 		return urlParams.adultContent.value;
+// 	}
+// });
 
 // Returns the API Requests URLs for different tasks
 var requestUrls = {
 	base: "https://www.reddit.com/",
 	corsProxy: "https://cors-anywhere.herokuapp.com/",
 	postsData: function(subreddits){
-		subreddits = subreddits.join("+");
+		subreddits = subreddits.join("+").toLowerCase();
 		var url = this.base + "r/" + subreddits;
 		url += "/" + urlParams.sortType + ".json?";
 		return url + urlParams.getParams(["limit", "after", "sortTime"]);
@@ -147,7 +159,7 @@ var requestUrls = {
 	// },
 	subExists: function(subName) {
 		var url = this.corsProxy + this.base
-		url += "r/" + subName.toLowerCase() + "/about/rules.json";
+		url += "r/" + subName + "/about/rules.json";
 		return url;
 	},
 	recommended: function(){
@@ -156,13 +168,13 @@ var requestUrls = {
 		url += urlParams.getParams(["adultContent"]);
 		return this.corsProxy + url;
 	},
-	// searchAutocomplete: function(query, adult){
-	// 	var url = this.base + "api/subreddit_autocomplete.json?";
-	// 	urlParams.longQuery.value = query;
-	// 	url += urlParams.getParams(["longQuery", "includeProfiles"]);
-	// 	url += "&include_over_18=" + adult;
-	// 	return url;
-	// }
+	searchAutocomplete: function(query, adult){
+		var url = this.base + "api/subreddit_autocomplete.json?";
+		urlParams.longQuery.value = query;
+		url += urlParams.getParams(["longQuery", "includeProfiles"]);
+		url += "&include_over_18=" + adult;
+		return url;
+	}
 };
 
 
@@ -170,7 +182,7 @@ var requestUrls = {
 
 // Contains the subreddits data, as well as the related methods for adding/removing them from the list
 var subreddits = {
-	list: ["itookapicture", "photography", "oldschoolcool", "cinemagraphs", "pbandonedporn", "militaryporn", "earthporn", "spaceporn", "eyebleach", "aww"],
+	list: ["itookapicture", "photography", "oldschoolcool", "cinemagraphs", "pbandonedporn", "militaryporn", "earthporn", "spaceporn", "eyebleach"],
 	addWithCheck: function(element){
 		var value = encodeURI(element.val());
 		if(value) {
@@ -187,11 +199,16 @@ var subreddits = {
 		subreddits.list.push(value);
 		elements.addInput.val("");
 		subreddits.checkDuplicate();
-		helperFunctions.showList(elements.subredditList);
+		helperFunctions.showList(elements.subredditList, true);
 		helperFunctions.getImages(true);
-		// elements.autocompleteRes.html("");
-		// elements.autocompleteRes.addClass("hidden");
 		helperFunctions.getRelatedSubs();
+		generalData.autocompleteReq.forEach(function(req){
+			req.abort();
+			generalData.secondReqDone = false;
+			generalData.firstReqDone = false;
+		});
+		elements.autocompleteRes.html("");
+		elements.autocompleteRes.addClass("hidden");
 
 	},
 	checkDuplicate: function(){
@@ -199,10 +216,14 @@ var subreddits = {
 			return arr.slice(ind + 1).indexOf(curr) === -1;
 		});
 	},
-	remove: function(name){
-		var dataIndex = this.list.indexOf(name);
-		this.list.splice(dataIndex, 1);
-		helperFunctions.showList(elements.subredditList);
+	remove: function(nameList){
+		var dataIndex;
+		for(var i = 0; i < nameList.length; i++){
+			var dataIndex = this.list.indexOf(nameList[i]);
+			this.list.splice(dataIndex, 1);
+		}
+		helperFunctions.showList(elements.subredditList, false);
+		generalData.searchCount = 0;
 		helperFunctions.getImages(true);
 		helperFunctions.getRelatedSubs()
 	}
@@ -215,27 +236,51 @@ var settings = {
 
 
 var helperFunctions = {
-	showList: function(element){
-		var html = "";
-		subreddits.list.forEach(function(current){
-			html += "<div class='subreddit'>"
-			html += "<div class='subredditName'>" + current + "</div>";
-			html += "<button class='removeSubreddit' type='button'>X</button>";
-			html += "</div>";
-		});
-		element.html(html);
+	showList: function(element, add){
+		var html = "", 
+		inputs = [], 
+		i,
+		currentIndex;
+		var elements = $("#subredditList > .subreddit");
+		for(i = 0; i < elements.length; i++){
+			inputs.push(elements[i].getAttribute("data-srname"));
+		}
+		if(add){
+			subreddits.list.forEach(function(current){
+				if( inputs.indexOf(current) === -1){
+					html = "";
+					html += "<div class='subreddit' data-srname=\"" + current.toLowerCase() + "\">";
+					html += "<input type=\"checkbox\" name=\"" + current + "\">";
+					html += "<div class='subredditName'>" + current + "</div>";
+					html += "<button class='removeSubreddit' type='button'>X</button>";
+					html += "</div>";
+					$(html).appendTo(element);
+				}
+			});
+		}
+		else {
+			console.log(inputs, subreddits.list);
+			inputs.forEach(function(current){
+				currentIndex = subreddits.list.indexOf(current);;
+				if( currentIndex === -1){
+					$("#subredditList").children(".subreddit[data-srname='" + current + "']").remove();
+				}
+			});
+		}
+
 	},
 	getImages(newSearch){
 		if(newSearch){
 			if(!generalData.searchCount){
 				urlParams.after.value = "";
+				generalData.arr = [];
 				elements.imagesContainer.html("");
 				generalData.imageRequests.forEach(function(req){
 					req.abort();
-				})
+				});
 				generalData.imageRequests = [];
+				generalData.continueSearch = true;
 			}
-			generalData.continueSearch = true;
 			elements.loadMore.addClass("hidden");
 			generalData.searchCount++;
 		}
@@ -245,49 +290,71 @@ var helperFunctions = {
 		var url = requestUrls.postsData(subreddits.list);
 		var resData;
 		if(subreddits.list.length){
-			generalData.imageRequests.push( ajaxRequest(url, generalData.continueSearch, 3500, {
+			console.log("Req started");
+
+			generalData.imageRequests.push( ajaxRequest(url, generalData.continueSearch, 7000, {
 				success: function(succ){
-							resData = succ;
-							
-							resData.data.children.forEach(function(cr){
+							succ.data.children.forEach(function(cr){
 								generalData.arr.push(cr.data);
 							});
 							generalData.keepOnlyImages();
 							generalData.filterAdult()
 							// console.log(generalData.arr);
-							urlParams.after.value = resData.data.after;
-							generalData.displayImages();
-							if(!resData.data.after && generalData.searchCount) {
-								alertify.delay(5000).error("No more images to load.");
-							}
-							elements.loadMore.removeClass("hidden");
-							if(newSearch && $("#imagesContainer .imageResult").length < 25 && generalData.searchCount < 5){
-								helperFunctions.getImages(true);
-							}
-							else {
-								generalData.searchCount = 0;
-							}
-							if(generalData.searchCount === 5){
-								alertify.delay(5000).error("No images to load.");
-							}
+							urlParams.after.value = succ.data.after;
+							var displayImg = new Promise(function(res, rej){
+								generalData.displayImages();
+								console.log("Before");
+								setTimeout(function(){
+									res();
+								}, 250);
+							}).then(function(){
+								console.log("After");
+								if(!succ.data.after) {
+									generalData.searchCount = 5;
+									generalData.continueSearch = false;
+									elements.loadMore.addClass("hidden");
+
+								}
+								else {
+									elements.loadMore.removeClass("hidden");								
+								}
+								if(generalData.searchCount === 5 && $("#imagesContainer .imageResult").length === 0){
+									alertify.delay(5000).error("No images to load." );
+								}
+								else if(!succ.data.after){
+									alertify.delay(5000).error("No more images to load.");
+								}
+								if(newSearch && $("#imagesContainer .imageResult").length < 15 && generalData.searchCount < 5){
+									helperFunctions.getImages(true);
+								}
+								else {
+									generalData.searchCount = 0;
+								}
+							});
+							
+							
 						},
+				fail: function(){
+					elements.loadMore.removeClass("hidden");
+				},
 				reqName: "Getting Images"
 			}) );
 			// console.log(generalData.imageRequests);
 		}
-		else {
-			generalData.displayImages();
-		}
-
-
+		// else {
+		// 	generalData.displayImages();
+		// }
 	},
 	getRelatedSubs: function(){
+		if(generalData.relatedSubsReq){
+			generalData.relatedSubsReq.abort();
+		}
 		var html = "";
 		if(subreddits.list.length){
-			ajaxRequest(requestUrls.recommended(), true, 5000, {
+			generalData.relatedSubsReq = ajaxRequest(requestUrls.recommended(), true, 5000, {
 				success: function(res){
 				res.forEach(function(srname){
-					html += "<li>/r/" + srname.sr_name + "</li>"; 
+					html += "<li data-srname=" + srname.sr_name + ">/r/" + srname.sr_name + "</li>"; 
 				});
 				elements.recommendedList.html(html);
 			},
@@ -301,7 +368,7 @@ var helperFunctions = {
 	checkSubExist(subName, succesful, unsuccesful){
 		var reqName = "Subreddit Validation";
 		generalData.subExists = false;
-		subName = subName.toLowerCase();
+		subName = subName;
 		var success = function(data){
 			if(data.hasOwnProperty("site_rules")){
 				generalData.subExists = true;
@@ -336,40 +403,70 @@ var helperFunctions = {
 			reqName: "Subreddit Validation "
 		});
 	},
-	// autocomplete: function(value){
-	// 	ajaxRequest(requestUrls.searchAutocomplete(value, true), true, 1500,"","", function(data){
-	// 		if(data.responseJSON && !generalData.stopAutocompletes){
-	// 			data.responseJSON.subreddits.forEach(function(sr){
-	// 				if(sr.allowedPostTypes.images && sr.name.substring(0,2) !== "u_" && sr.numSubscribers >= 1){
-	// 					generalData.recommendedListNSFW.push(sr.name);
-	// 				}
-	// 			});
-	// 		}
-	// 		generalData.firstReqDone = true;
-	// 		generalData.addSuggestions();
-	// 	});
-	// 	ajaxRequest(requestUrls.searchAutocomplete(value, false),true, 1500, "", "",function(data){
-	// 			if(data.responseJSON && !generalData.stopAutocompletes){
-	// 				data.responseJSON.subreddits.forEach(function(sr){
-	// 					if(sr.allowedPostTypes.images && sr.name.substring(0,2) !== "u_" && sr.numSubscribers >= 1){
-	// 						generalData.recommendedListSFW.push(sr.name);
-	// 					}
-	// 				});
-	// 			}
-	// 			generalData.secondReqDone = true;
-	// 			generalData.addSuggestions();
-	// 	});
-	// }
-	
+	autocomplete: function(value) {
+		generalData.autocompleteReq.forEach(function(req){
+			req.abort();
+			generalData.secondReqDone = false;
+			generalData.firstReqDone = false;
+		});
+		if(elements.addInput.val()){
+			generalData.autocompleteReq.push( ajaxRequest(requestUrls.searchAutocomplete(value, true), true, 1500, {
+				complete: function(data){
+					if(data.responseJSON){
+						data.responseJSON.subreddits.forEach(function(sr){
+							if(sr.allowedPostTypes.images && sr.name.substring(0,2) !== "u_" && sr.numSubscribers >= 1){
+								generalData.recommendedListNSFW.push(sr.name);
+							}
+						});
+						generalData.firstReqDone = true;
+						generalData.addSuggestions();
+					}
+				},
+				silent: true
+			}) );
+			generalData.autocompleteReq.push( ajaxRequest(requestUrls.searchAutocomplete(value, false), true, 1500, {
+				complete: function(data){
+					if(data.responseJSON){
+						data.responseJSON.subreddits.forEach(function(sr){
+							if(sr.allowedPostTypes.images && sr.name.substring(0,2) !== "u_" && sr.numSubscribers >= 1){
+								generalData.recommendedListSFW.push(sr.name);
+							}
+						});
+					}
+					generalData.secondReqDone = true;
+					generalData.addSuggestions();
+				},
+				silent: true
+			}) );
+		}
+		else {
+			generalData.autocompleteReq.forEach(function(req){
+				req.abort();
+				generalData.secondReqDone = false;
+				generalData.firstReqDone = false;
+			});
+			elements.autocompleteRes.html("");
+			elements.autocompleteRes.addClass("hidden");
+		}
+	}
 };
 
 
 var generalData = {
+	autocompleteReq: [],
 	imageRequests: [],
+	relatedSubsReq: "",
 	firstReqDone: false,
 	secondReqDone: false,
 	imgReqTries: 0,
 	maxReqTries: 5,
+	stopAutocompletes: function(){
+		this.autocompleteReq.forEach(function(req){
+			req.abort();
+		});
+		// elements.autocompleteRes.html("");
+		// elements.autocompleteRes.addClass("hidden");
+	},
 	addSuggestions: function(){
 		if(this.firstReqDone && this.secondReqDone){
 			this.firstReqDone = false;
@@ -414,12 +511,18 @@ var generalData = {
 		images.appendTo(elements.imagesContainer);
 	},
 	getCorrectResolution: function(post){
-		for(var i = post.preview.images[0].resolutions.length - 1; i >= 0; i--){
-			// console.log(post.preview.images[0].resolutions[i]);
-			if(post.preview.images[0].resolutions[i].width <= 320){
-				return post.preview.images[0].resolutions[i].url;
+		if(post.hasOwnProperty("preview")){
+			for(var i = post.preview.images[0].resolutions.length - 1; i >= 0; i--){
+				// console.log(post.preview.images[0].resolutions[i]);
+				if(post.preview.images[0].resolutions[i].width <= 320){
+					return post.preview.images[0].resolutions[i].url;
+				}
 			}
 		}
+		else {
+			return post.url;
+		}
+
 	},
 	maximumResWidth: 320,
 	combinedSuggestions: [],
@@ -442,12 +545,12 @@ var generalData = {
 			i++;
 		}
 		if(this.combinedSuggestions.length){
-			// elements.autocompleteRes.removeClass("hidden");
+			elements.autocompleteRes.removeClass("hidden");
 			var html = "";
 			this.combinedSuggestions.forEach(function(sr){
-				html += "<li data-srname='" + sr.toLowerCase() + "'>/r/" + sr + "</li>"; 
+				html += "<li data-srname='" + sr + "'>/r/" + sr + "</li>"; 
 			});
-			// elements.autocompleteRes.html(html);
+			elements.autocompleteRes.html(html);
 		}
 		else {
 			// elements.autocompleteRes.html("");
@@ -482,28 +585,29 @@ elements.timeChange.on("change", function(){
 });
 
 elements.subredditList.on("click", ".removeSubreddit", function(){
-	subreddits.remove($(this).prev().text());
+	subreddits.remove([$(this).prev().text()]);
 });
 
 
 
 
-helperFunctions.showList(elements.subredditList);
+helperFunctions.showList(elements.subredditList, true);
 
 
 elements.adultSettingInput.on("change", function(){
 	urlParams[$(this).attr("name")].value = this.checked;
+	generalData.searchCount = 0;
 	helperFunctions.getImages(true);
-	// helperFunctions.autocomplete(elements.addInput.val());
+	helperFunctions.autocomplete(elements.addInput.val());
 });
 
 elements.titleSettingInput.on("change", function(){
 	settings[$(this).attr("name")] = this.checked;
 	if(settings[$(this).attr("name")]){
-		elements.imagesContainer.addClass("no-titles");	
+		elements.imagesContainer.removeClass("no-titles");	
 	}
 	else {
-		elements.imagesContainer.removeClass("no-titles");	
+		elements.imagesContainer.addClass("no-titles");	
 	}
 	
 });
@@ -516,43 +620,61 @@ elements.loadMore.on("click", function(){
 });
 
 elements.recommendedList.on("click", "li", function(){
-	subreddits.addWithoutCheck($(this).text().substring(3));
+	subreddits.addWithoutCheck($(this).attr("data-srname"));
 });
-// elements.autocompleteRes.on("click", "li", function(){
-// 	subreddits.addWithoutCheck($(this).text().substring(3));
-// });
+elements.autocompleteRes.on("click", "li", function(){
+	subreddits.addWithoutCheck($(this).attr("data-srname"));
+});
 
 
-// elements.addInput.on("input", function(){
-// 	if(!$(this).val()){
-// 		generalData.stopAutocompletes = true;
-// 		elements.autocompleteRes.html("");
-// 		elements.autocompleteRes.addClass("hidden");
-// 	}
-// 	else {
-// 		generalData.stopAutocompletes = false;	
-// 	}
-// 	helperFunctions.autocomplete($(this).val());
-// });
-// elements.addInput.on("change", function(){
-// 	if(!$(this).val()){
-// 		generalData.stopAutocompletes = true;
-// 		elements.autocompleteRes.html("");
-// 		elements.autocompleteRes.addClass("hidden");
-
-// 	}
-// 	else {
-// 		generalData.stopAutocompletes = false;	
-// 	}
-// 	helperFunctions.autocomplete($(this).val());	
-// });
-// elements.addInput.on("blur", function(){
-// 	elements.autocompleteRes.html("");
-// 	elements.autocompleteRes.addClass("hidden");
-// });
+elements.addInput.on("input", function(){
+	if(!$(this).val()){
+		// elements.autocompleteRes.html("");
+		// elements.autocompleteRes.addClass("hidden");
+	}
+	helperFunctions.autocomplete($(this).val());
+});
+elements.addInput.on("change", function(){
+	if(!$(this).val()){
+		// elements.autocompleteRes.html("");
+		// elements.autocompleteRes.addClass("hidden");
+	}
+	// helperFunctions.autocomplete($(this).val());	
+});
+elements.srSearchContainer.on("blur", function(){
+	elements.autocompleteReq.forEach(function(req){
+		req.abort();
+	})
+	elements.autocompleteRes.html("");
+	elements.autocompleteRes.addClass("hidden");
+});
 
 
 
 elements.addBtn.on("click", function(){
 	subreddits.addWithCheck(elements.addInput);
+});
+
+elements.multipleDeleteBtn.on("click", function(){
+	var deleteList = [],
+	currentEl;
+	var els = elements.subredditList.children(".subreddit");
+	console.log(els);
+	for(var i = 0; i < els.length; i++){
+		var currentEl = $(els[i]);
+		if(currentEl.children("input")[0].checked){
+			deleteList.push(currentEl.children("input").attr("name"));
+		}
+	}
+	subreddits.remove(deleteList);
+});
+
+elements.checkAll.on("change", function(){
+	if(this.checked){
+		$(".subreddit input").attr("checked", true);
+	}
+	else {
+		$(".subreddit input").attr("checked", false);
+
+	}
 });
