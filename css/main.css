@@ -316,3 +316,23 @@ img {
 body {
     padding-top: 50px;
 }
+
+.no-titles .postText, .no-titles .subredditSource {
+    display: none;
+}
+
+.imageResult {
+    display: inline-block;
+}
+
+.imagesContainer img {
+    visibility: hidden;
+    opacity: 0;
+}
+
+.imagesContainer img.visible {
+    opacity: 1;
+    height: 200px;
+    visibility: visible;
+    transition: opacity 0.5s linear;
+}
