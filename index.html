@@ -8,6 +8,7 @@
         <link rel="stylesheet" href="css/normalize.css">
         <link rel="stylesheet" href="css/main.css">
         <link rel="stylesheet" href="css/lib/alertify.css">
+        <link rel="stylesheet" href="css/lib/awesomplete.css">
         <script src="js/lib/alertify.js"></script>
     </head>
     <body>
@@ -49,8 +50,10 @@
         </div>
 
         <label class="srSearchContainer" id="srSearchContainer">
-            <input type="text" id="addSubreddit" class="addSubreddit" placeholder="Subreddit name">
-            <ul class="autocomplete" id="autocomplete"></ul>
+            <input list="autocomplete" type="text" id="addSubreddit" class="awesomplete addSubreddit" placeholder="Subreddit name">
+<!--             <datalist class="autocomplete" id="autocomplete">
+                <option value="One">One</option>
+            </datalist> -->
             <button type="button" id="addSubredditBtn" class="addSubredditBtn">Add</button>
         </label>
 
@@ -70,7 +73,10 @@
 
 
         <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
-        <script>window.jQuery || document.write('<script src="js/vendor/jquery-3.2.1.min.js"><\/script>')</script>
+<!--         <script>window.jQuery || document.write('<script src="js/vendor/jquery-3.2.1.min.js"><\/script>')</script> -->
+        <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+        <script src="js/lib/awesomplete.js"></script>
         <script src="js/main.js"></script>
+
     </body>
 </html>

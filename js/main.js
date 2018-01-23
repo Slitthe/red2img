@@ -54,7 +54,7 @@ var elements = {
 	loading: $("#loading"),
 	recommendedList: $("#recommended"),
 	loadMore: $("#loadMore"),
-	autocompleteDisplay: $("#autocomplete"),
+	// autocompleteDisplay: $("#autocomplete"),
 	inputs: [],
 	srSearchContainer: $("#srSearchContainer"),
 	multipleDeleteBtn: $("#multipleDelete"),
@@ -64,7 +64,6 @@ var elements = {
 
 // Customized jQuery ajaxReqest, to avoid using $.ajaxSetup()
 function ajaxRequest(reqUrl, condition, timeout, obj){
-	console.log(obj.reqName);
 	if(condition){
 		if(obj.loading){
 			elements.loading.removeClass("hidden");
@@ -79,21 +78,20 @@ function ajaxRequest(reqUrl, condition, timeout, obj){
 			 dataType: "json",
 			 timeout: timeout,
 			 success: function(succData){
-			 	console.log("success");
 			 	if(obj.success){ obj.success(succData);	}
 			 },
 			 error: function(errorData){
-			 	console.log("error");
 			 	if(obj.fail){
 			 		obj.fail(errorData);
 			 	}
-		 		if(errorData.statusText === "timeout"){
-		 			alertify.delay(5000).error("<strong>" + obj.reqName + "</strong>: Request timeout.");
-		 		}
+
 			 	if (!obj.silent){
 			 		// Timeout message
 			 		// General error message (unless the request is aborted by the script via .abort())
-			 		if(errorData.statusText !== "abort") {
+			 		if(errorData.statusText === "timeout"){
+			 			alertify.delay(5000).error("<strong>" + obj.reqName + "</strong>: Request timeout.");
+			 		}
+			 		else if(errorData.statusText !== "abort") {
 
 			 			alertify.delay(5000).error("<strong>" + obj.reqName + "</strong>: Communication failed.");
 			 		}
@@ -108,7 +106,6 @@ function ajaxRequest(reqUrl, condition, timeout, obj){
 			 	// }
 			 },
 			 complete: function(completeData){
-			 	console.log("complete");
 
 			 	if(obj.complete){ obj.complete(completeData);	}
 			 	if(obj.loading){
@@ -239,8 +236,8 @@ var subreddits = {
 			autocomplete.secondReqDone = false;
 			autocomplete.firstReqDone = false;
 		});
-		elements.autocompleteDisplay.html("");
-		elements.autocompleteDisplay.addClass("hidden");
+		autocomplete.aComplete.list = [];
+		autocomplete.aComplete.close();
 
 	},
 	checkDuplicate: function(){
@@ -385,7 +382,9 @@ var images = {
 			htmlS += "<div class='subredditSource'>" + requestUrls.base + current.permalink + "</div></div>";
 		});
 		var imagesElements = $(htmlS);
+		console.log(imagesElements);
 		this.rawResponseData = [];
+
 		imagesElements.appendTo(elements.imagesContainer);
 	},
 	getImages(newSearch){ 
@@ -393,7 +392,7 @@ var images = {
 			if(!this.searchCount){
 				urlParams.after.value = "";
 				images.rawResponseData = [];
-				elements.imagesContainer.html("");
+				elements.imagesContainer.html("<div class='col-width'></div>");
 				this.imageRequests.forEach(function(req){
 					req.abort();
 				});
@@ -464,6 +463,10 @@ var images = {
 
 
 var autocomplete = {
+	list: [],
+	aComplete: new Awesomplete(elements.addInput[0], {
+		minChars: 1
+	}),
 	firstReqDone: false,
 	secondReqDone: false,
 	combinedSuggestions: [],
@@ -471,6 +474,7 @@ var autocomplete = {
 	recommendedListNSFW: [],
 	autocompleteReq: [], // HTTP Requests for autocomplete data
 	combineSuggestions: function(){
+		autocomplete.aComplete.list = [];
 		this.combinedSuggestions = [];
 		if(!urlParams.adultContent.value){
 			this.recommendedListNSFW = [];
@@ -489,16 +493,16 @@ var autocomplete = {
 			i++;
 		}
 		if(this.combinedSuggestions.length){
-			elements.autocompleteDisplay.removeClass("hidden");
-			var html = "";
+			autocomplete.list = [];
 			this.combinedSuggestions.forEach(function(sr){
-				html += "<li data-srname='" + sr + "'>/r/" + sr + "</li>"; 
+				autocomplete.list.push(sr);
 			});
-			elements.autocompleteDisplay.html(html);
+			autocomplete.aComplete.list = autocomplete.list;
+			autocomplete.aComplete.evaluate();
 		}
 		else {
-			// elements.autocompleteDisplay.html("");
-			// elements.autocompleteDisplay.add("hidden");
+			autocomplete.aComplete.list = [];
+			autocomplete.aComplete.close();
 		}
 		this.recommendedListNSFW = [];
 		this.recommendedListSFW = [];
@@ -517,7 +521,6 @@ var autocomplete = {
 			autocomplete.firstReqDone = false;
 		});
 		if(elements.addInput.val()){
-			console.log(this);
 			this.autocompleteReq.push( ajaxRequest(requestUrls.searchAutocomplete(value, true), true, 1500, {
 				complete: function(data){
 					if(data.responseJSON){
@@ -553,8 +556,8 @@ var autocomplete = {
 				autocomplete.secondReqDone = false;
 				autocomplete.firstReqDone = false;
 			});
-			elements.autocompleteDisplay.html("");
-			elements.autocompleteDisplay.addClass("hidden");
+			autocomplete.aComplete.list = [];
+			autocomplete.aComplete.close();
 		}
 	}
 };
@@ -593,13 +596,17 @@ function deleteEl(el) {
 };
 // Shows an image only when it's fully loaded
 function showOnload(el){
-	$(el).addClass("visible");
+	console.log(el);
+	$(el).parent().addClass("visible");
+	msnry.appended($(el).parent());
+	msnry.layout();
 }
 
 
 
 
 function init(){
+	autocomplete.aComplete.list = [];
 	elements.typeChange.on("input", function(){
 		var value = $(this).val();
 		if(value === "controversial" || value === "top"){
@@ -620,7 +627,10 @@ function init(){
 	});
 
 
-
+	elements.addInput.on("focus", function(){
+		autocomplete.aComplete.evaluate();
+		autocomplete.aComplete.open();
+	});
 
 
 
@@ -639,8 +649,11 @@ function init(){
 		else {
 			elements.imagesContainer.addClass("no-titles");	
 		}
-		
 	});
+
+	elements.addInput[0].addEventListener("awesomplete-selectcomplete", function(evt){
+		subreddits.addWithoutCheck(evt.text.value);
+	})
 
 	$("#imagesContainer").on("error", ".imageResult img", function(){
 	});
@@ -653,31 +666,17 @@ function init(){
 		subreddits.addWithoutCheck($(this).attr("data-srname"));
 		$(this).remove();
 	});
-	elements.autocompleteDisplay.on("click", "li", function(){
-		subreddits.addWithoutCheck($(this).attr("data-srname"));
-	});
-
 
 	elements.addInput.on("input", function(){
 		if(!$(this).val()){
-			// elements.autocompleteRes.html("");
-			// elements.autocompleteRes.addClass("hidden");
 		}
 		autocomplete.getAutocomplete($(this).val());
 	});
-	elements.addInput.on("change", function(){
-		if(!$(this).val()){
-			// elements.autocompleteRes.html("");
-			// elements.autocompleteRes.addClass("hidden");
-		}
-		// requests.autocomplete($(this).val());	
-	});
 	elements.srSearchContainer.on("blur", function(){
-		elements.autocompleteReq.forEach(function(req){
+		autocomplete.autocompleteReq.forEach(function(req){
 			req.abort();
-		})
-		elements.autocompleteDisplay.html("");
-		elements.autocompleteDisplay.addClass("hidden");
+		});
+		autocomplete.aComplete.close();
 	});
 
 
@@ -708,12 +707,20 @@ function init(){
 			$(".subreddit input").prop("checked", false);
 		}
 	});
-
 	elements.resetImagesBtn.on("click", function(){
 		images.getImages(true);
 	});
+
 	subreddits.showList(elements.subredditList, true);
 	images.getImages(true);
 	relatedSubs.getRelatedSubs();
 }
 init();
+
+var es = document.querySelector('.imagesContainer');
+var msnry = new Masonry( es, {
+  itemSelector: '.imageResult',
+  columnWidth: '.col-width',
+    percentPosition: true,
+	gutter: 0
+});

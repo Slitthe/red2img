@@ -15,7 +15,9 @@ html {
     font-size: 1em;
     line-height: 1.4;
 }
-
+body, html {
+    height: 100%;
+}
 /*
  * Remove text-shadow in selection highlight:
  * https://twitter.com/miketaylr/status/12228805301
@@ -300,7 +302,7 @@ textarea {
 }
 
 img {
-    height: 200px;
+    /*height: 200px;*/
 }
 
 .statusMessage {
@@ -321,18 +323,39 @@ body {
     display: none;
 }
 
-.imageResult {
-    display: inline-block;
-}
 
-.imagesContainer img {
+
+.imageResult img {
     visibility: hidden;
-    opacity: 0;
+    opacity: 0;   
+    height: auto;
+    width: 100%;
+
 }
 
-.imagesContainer img.visible {
-    opacity: 1;
-    height: 200px;
-    visibility: visible;
-    transition: opacity 0.5s linear;
+.imageResult {
+    /*display:block;*/
+    /*padding: 1px;*/
+    width: 25%;
+        overflow: hidden;
 }
+.imageResult.visible img {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.8s ease-in;
+}
+
+/*.imageResult {
+    box-shadow: 5px 5px 25px 5px yellow;
+    z-index: 999;
+}
+
+.imageResult.visible {
+    box-shadow: 5px 5px 5px 5px white;
+    transition: box-shadow 1s linear;
+}*/
+
+.col-width {
+    width: 25%;
+}
+
