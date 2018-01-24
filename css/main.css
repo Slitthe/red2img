@@ -12,11 +12,11 @@
 
 html {
     color: #222;
-    font-size: 1em;
     line-height: 1.4;
+    font-size: 16px;
 }
-body, html {
-    height: 100%;
+body {
+    padding-bottom: 50px;
 }
 /*
  * Remove text-shadow in selection highlight:
@@ -184,15 +184,12 @@ textarea {
  *    `:before` to contain the top-margins of child elements.
  */
 
-.clearfix:before,
 .clearfix:after {
-    content: " "; /* 1 */
-    display: table; /* 2 */
-}
-
-.clearfix:after {
+    content: ""; /* 1 */
+    display: block; /* 2 */
     clear: both;
 }
+
 
 /* ==========================================================================
    EXAMPLE Media Queries for Responsive Design.
@@ -315,14 +312,6 @@ img {
     text-align: center;
 }
 
-body {
-    padding-top: 50px;
-}
-
-.no-titles .postText, .no-titles .subredditSource {
-    display: none;
-}
-
 
 
 .imageResult img {
@@ -330,14 +319,16 @@ body {
     opacity: 0;   
     height: auto;
     width: 100%;
-
 }
 
 .imageResult {
     /*display:block;*/
     /*padding: 1px;*/
-    width: 25%;
+    width: 12.5%;
         overflow: hidden;
+        padding: 10px 5px;
+        box-sizing: border-box;
+        
 }
 .imageResult.visible img {
     opacity: 1;
@@ -356,6 +347,202 @@ body {
 }*/
 
 .col-width {
-    width: 25%;
+    width: 12.5%;
 }
 
+@media screen and (max-width: 2100px){
+    .col-width, .imageResult { width: 16.6%; }
+}
+@media screen and (max-width: 1800px){
+    .col-width, .imageResult { width: 20%; }
+}
+@media screen and (max-width: 1400px){
+    .col-width, .imageResult { width: 25%; }
+}
+@media screen and (max-width: 1000px){
+    .col-width, .imageResult { width: 33.3%; }
+}
+@media screen and (max-width: 600px){
+    .col-width, .imageResult { width: 50%; }
+}
+@media screen and (max-width: 400px){
+    .col-width, .imageResult { width: 100%; }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+/* ----------------------LOADING CIRCLE---------------------- */
+.loading {
+    margin: 20px auto;
+    width: 50px;
+    height: 50px;
+    border: 9px solid rgba(0,0,0,0.1);
+    border-top-color: rgba(0,0,0,0.8);
+    border-radius: 50%;
+    position: relative;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+    animation-name: rotate;
+    animation-timing-function: linear;
+}
+@keyframes rotate {
+    0%{transform: rotate(0deg);}
+    100%{transform: rotate(360deg);}
+}
+/* ---------------------------------------------------------- */
+
+
+
+
+
+
+
+
+
+
+/* ----------------------General---------------------- */
+h1 {
+    text-align: center;
+}
+.no-btn-style {
+    background: transparent;
+    border: none;
+    outline: none;
+    padding: 0;
+}
+/* --------------------------------------------------- */
+
+
+/* ----------------------Subreddits---------------------- */
+.subreddits {
+    border: 5px solid blue;
+    float: left;
+    width: 300px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition: all 0.5s ease-in-out;
+    background: #999;
+    z-index: 999;
+}
+    /* Show/hide button */
+.slideHidden {
+    transform: translateX(-100%);
+
+}
+.slideHidden .hideSubreddits {
+   transform: rotate(180deg);
+}
+.hideSubreddits {
+    width: 20px;
+    background: gray;
+    cursor: pointer;
+    height: 20px;
+    position: absolute;
+    right: -25px;
+    transition: transform 0.1s linear;
+}
+
+    /*Add subreddit*/
+.srSearchContainer {
+    width: 100%;
+}
+.srSearchContainer > .awesomplete {
+    width: 85%;
+    outline: 2px solid green;
+    float: left;
+}
+.srSearchContainer input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    outline: none;
+}
+.awesomplete > .awesomplete {
+    width: 100%;
+}
+
+.addSubredditBtn {
+    width: 15%;
+    border: none;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    float: left;
+    font-size: 1.6em;
+    line-height: 1;
+}
+/* ------------------------------------------------------ */
+
+
+
+/* ----------------------Gallery Settings----------------- */
+.gallerySettings {
+    border: 5px solid red;
+    padding: 10px;
+    clear: both;
+}
+/* ------------------------------------------------------ */
+
+
+/* ----------------------Images----------------- */
+.images {
+    border: 5px solid green;
+    padding: 10px;
+    clear: both;
+}
+    /* Image Description (title link and subreddit which it belongs it) */
+.no-titles .imgDesc{
+    display: none;
+}
+.imgDesc {
+    font-size: 0.8rem;
+    /*background: linear-gradient(to top, rgba(0,0,0,1), rgba(0,0,0,0.0));*/
+    color: rgb(210,210,210);
+    text-shadow: 0 0 1px black;
+    text-overflow: ellipsis;
+}
+.imgDesc .postText {
+    /*float: left;*/
+    /*width: 65%;*/
+    position: absolute;
+    bottom: 10px;
+    left: 5px;
+    right: 5px;
+    max-height: 3.5em;
+    box-sizing: border-box;
+    padding: 0.5em;
+    background: linear-gradient(to top, rgba(0,0,0,0.6), rgba(0,0,0,0.0));
+    overflow: hidden;
+}
+.imgDesc .subredditName {
+    /*float: left;*/
+    /*width: 35%;*/
+    position: absolute;
+    padding: 5px 0 0 5px;
+    top: 10px;
+    left: 5px;
+    right: 5px;
+    text-align: left;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.6), rgba(0,0,0,0.0));
+
+}
+:link, :visited {
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.03s linear;
+}
+
+a:hover, a:active {
+    text-decoration: underline;
+}
+/* --------------------------------------------- */

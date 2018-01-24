@@ -49,7 +49,6 @@ var elements = {
 	titleSettingInput: $(".settings #titles"),
 	typeChange: $("#type"),
 	timeChange: $("#time"),
-	statusMessage: $("#statusMessage"),
 	imagesContainer: $("#imagesContainer"),
 	loading: $("#loading"),
 	recommendedList: $("#recommended"),
@@ -59,7 +58,9 @@ var elements = {
 	srSearchContainer: $("#srSearchContainer"),
 	multipleDeleteBtn: $("#multipleDelete"),
 	checkAll: $("#checkAll"),
-	resetImagesBtn: $("#resetImages")
+	resetImagesBtn: $("#resetImages"),
+	hideSubreddits: $("#hideSubreddits"),
+	subredditsContainer: $(".subreddits")
 };
 
 // Customized jQuery ajaxReqest, to avoid using $.ajaxSetup()
@@ -377,12 +378,10 @@ var images = {
 			htmlS += "<div class='imageResult'>";
 			htmlS += "<img onerror=\"deleteEl(this);\" onload=\"showOnload(this);\" class=\"faded\" src=\"" + images.getCorrectResolution(current);
 			htmlS += "\" data-fullurl=\"" + current.url + "\"" + "\">";
-			htmlS += "<div class='postText'>" + current.title + "</div>";
-			htmlS += "<div class='subredditSource'>" + current.subreddit_name_prefixed + "</div>";
-			htmlS += "<div class='subredditSource'>" + requestUrls.base + current.permalink + "</div></div>";
+			htmlS += "<div class=\"imgDesc clearfix\"><a href=\"" + requestUrls.base + current.permalink.substring(1) + "\" class='postText' target=\"_blank\">" + current.title + "</a>";
+			htmlS += "<div class='subredditName'>" + current.subreddit_name_prefixed + "</div></div></div>";
 		});
 		var imagesElements = $(htmlS);
-		console.log(imagesElements);
 		this.rawResponseData = [];
 
 		imagesElements.appendTo(elements.imagesContainer);
@@ -587,7 +586,9 @@ var relatedSubs = {
 	},
 };
 
-
+var generalSettings = {
+	menuClosed: false
+}
 
 
 // don't show images with broken "src" link
@@ -596,7 +597,6 @@ function deleteEl(el) {
 };
 // Shows an image only when it's fully loaded
 function showOnload(el){
-	console.log(el);
 	$(el).parent().addClass("visible");
 	msnry.appended($(el).parent());
 	msnry.layout();
@@ -660,6 +660,7 @@ function init(){
 
 	elements.loadMore.on("click", function(){
 		images.getImages(false);
+		$(this).addClass("hidden");
 	});
 
 	elements.recommendedList.on("click", "li", function(){
@@ -672,14 +673,18 @@ function init(){
 		}
 		autocomplete.getAutocomplete($(this).val());
 	});
-	elements.srSearchContainer.on("blur", function(){
-		autocomplete.autocompleteReq.forEach(function(req){
-			req.abort();
-		});
-		autocomplete.aComplete.close();
+	// elements.srSearchContainer.on("blur", function(){
+	// 	autocomplete.autocompleteReq.forEach(function(req){
+	// 		req.abort();
+	// 	});
+	// 	autocomplete.aComplete.close();
+	// });
+
+	elements.hideSubreddits.on("click", function(){
+		$(this).parent().toggleClass("slideHidden");
+		generalSettings.menuClosed = $(this).parent().hasClass("slideHidden");
+
 	});
-
-
 
 	elements.addBtn.on("click", function(){
 		subreddits.addWithCheck(elements.addInput);
@@ -714,6 +719,15 @@ function init(){
 	subreddits.showList(elements.subredditList, true);
 	images.getImages(true);
 	relatedSubs.getRelatedSubs();
+
+	$(document.body).on("click", function(evt){
+		if(!generalSettings.menuClosed){
+			if(evt.target !== elements.subredditsContainer[0] && $(evt.target).parents(".subreddits").length === 0){
+				elements.subredditsContainer.addClass("slideHidden");
+				generalSettings.menuClosed = true;
+			}	
+		}
+	});
 }
 init();
 

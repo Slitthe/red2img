@@ -16,52 +16,68 @@
             <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
         <![endif]-->
 
-        <ul class="recommended" id="recommended"></ul>
-        <div class="sorting">
-            <select name="type" id="type">
-                <option value="new">New</option>
-                <option value="top">Top</option>
-                <option value="rising">Rising</option>
-                <option value="controversial">Controversial</option>
-                <option selected value="hot">Hot</option>
-            </select>
-            <select class="hidden" name="time" id="time">
-                <option value="hour">Hour</option>
-                <option selected value="day">Day</option>
-                <option value="week">Week</option>
-                <option value="controversial">Month</option>
-                <option value="year">Year</option>
-                <option value="all">All</option>
-            </select>
+        <h1>Subreddits IMG Gallery</h1>
+
+        <div class="subreddits">
+            <button type="button" id="hideSubreddits" class="no-btn-style hideSubreddits">&lt;</button>
+            <div class="srSearchContainer clearfix" id="srSearchContainer">
+                <input list="autocomplete" type="text" id="addSubreddit" class="awesomplete addSubreddit" placeholder="Subreddit name">
+                <button type="button" id="addSubredditBtn" class="addSubredditBtn ">&#65291;</button>
+            </div>
+
+            <div class="multipleDeleteContainer">
+                <label>Check All<input type="checkbox" class="checkAll" id="checkAll"></label>
+                <button type="button" id="multipleDelete" class="multipleDelete">Delete</button>
+            </div>
+
+            <div id="subredditList" class="subredditList"></div>
+
+            <ul class="recommended" id="recommended"></ul>
+        </div>
+
+        <div class="gallerySettings">
+            <div class="sorting">
+                <select name="type" id="type">
+                    <option value="new">New</option>
+                    <option value="top">Top</option>
+                    <option value="rising">Rising</option>
+                    <option value="controversial">Controversial</option>
+                    <option selected value="hot">Hot</option>
+                </select>
+                <select class="hidden" name="time" id="time">
+                    <option value="hour">Hour</option>
+                    <option selected value="day">Day</option>
+                    <option value="week">Week</option>
+                    <option value="controversial">Month</option>
+                    <option value="year">Year</option>
+                    <option value="all">All</option>
+                </select>
+            </div>
+
+            <button type="button" id="resetImages" class="resetImages">Refresh</button>
+
+            <div id="settings" class="settings">
+                <label for="nsfw">NSFW</label>
+                <input id="nsfw" type="checkbox" value="nsfw" name="adultContent">
+                <label for="titles">Show Titles</label>
+                <input checked id="titles" type="checkbox" value="displayTitles" name="displayTitles">
+            </div>
         </div>
         
-        <button type="button" id="resetImages" class="resetImages">Refresh</button>
-        <button type="button" id="multipleDelete" class="multipleDelete">Delete</button>
-        <label>Check All<input type="checkbox" class="checkAll" id="checkAll"></label>
-        <div id="subredditList" class="subredditList">
 
+        
+        
+
+
+       
+
+
+        <div class="images">
+            <div class="imagesContainer" id="imagesContainer"></div>
+            <button type="button" id="loadMore" class="loadMore">Show More Images</button>
+            <div id="loading" class="loading hidden"></div>
         </div>
 
-        <div id="settings" class="settings">
-            <label for="nsfw">NSFW</label>
-            <input id="nsfw" type="checkbox" value="nsfw" name="adultContent">
-            <label for="titles">Show Titles</label>
-            <input checked id="titles" type="checkbox" value="displayTitles" name="displayTitles">
-        </div>
-
-        <label class="srSearchContainer" id="srSearchContainer">
-            <input list="autocomplete" type="text" id="addSubreddit" class="awesomplete addSubreddit" placeholder="Subreddit name">
-<!--             <datalist class="autocomplete" id="autocomplete">
-                <option value="One">One</option>
-            </datalist> -->
-            <button type="button" id="addSubredditBtn" class="addSubredditBtn">Add</button>
-        </label>
-
-        <div class="imagesContainer" id="imagesContainer"></div>
-
-        <button type="button" id="loadMore" class="loadMore">Show More Images</button>
-        <div id="statusMessage" class="statusMessage"></div>
-        <img src="loading.svg" width="64" id="loading" class="loading hidden">
 
 
 
