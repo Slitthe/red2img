@@ -424,9 +424,9 @@ h1 {
 
 /* ----------------------Subreddits---------------------- */
 .subreddits {
-    border: 5px solid blue;
+    margin-top: 50px;
     float: left;
-    width: 300px;
+    width: 400px;
     position: absolute;
     top: 0;
     left: 0;
@@ -434,53 +434,131 @@ h1 {
     background: #999;
     z-index: 999;
 }
-    /* Show/hide button */
 .slideHidden {
     transform: translateX(-100%);
+}
 
-}
-.slideHidden .hideSubreddits {
-   transform: rotate(180deg);
-}
-.hideSubreddits {
-    width: 20px;
-    background: gray;
-    cursor: pointer;
-    height: 20px;
-    position: absolute;
-    right: -25px;
-    transition: transform 0.1s linear;
-}
+    /* ======Show/hide button */
+    .hideSubreddits {
+        width: 40px;
+        height: 40px;
+        top: 5px;
+        left: 5px;
+        background: gray;
+        cursor: pointer;
+        position: absolute;
+        transition: transform 0.1s linear;
+        z-index: 999;
+    }
+    .hamburger-btn .bar {
+        display: block;
+        width: 80%;
+        height: 10%;
+        background: black;
+        position: absolute;
+        left: 10%;
+        margin-top: -5%;
+        border-radius: 15px;
+        transform-origin: center center;
+        transition: all 0.2s linear;
+    }
+    .slideHidden + .hamburger-btn .bar:nth-child(1){ 
+        top: 25%;
+        transform: rotate(0);
+    }
+    .slideHidden + .hamburger-btn .bar:nth-child(2){ 
+        top: 50%;
+        opacity: 1;
+    }
+    .slideHidden + .hamburger-btn .bar:nth-child(3){ 
+        top: 75%;
+        transform: rotate(0);
+    }
+
+    .hamburger-btn :nth-child(2){
+      opacity: 0;
+      transition-duration: 0.1s;
+    }
+    .hamburger-btn :not(:nth-child(2)){ top: 50%; }
+    .hamburger-btn :nth-child(1){ transform: rotate(45deg); }
+    .hamburger-btn :nth-child(3){ transform: rotate(-45deg); }
+
+
 
     /*Add subreddit*/
-.srSearchContainer {
-    width: 100%;
-}
-.srSearchContainer > .awesomplete {
-    width: 85%;
-    outline: 2px solid green;
-    float: left;
-}
-.srSearchContainer input {
-    width: 100%;
-    background: transparent;
-    border: none;
-    outline: none;
-}
-.awesomplete > .awesomplete {
-    width: 100%;
-}
+    .srSearchContainer {
+        width: 100%;
+    }
+    .srSearchContainer > .awesomplete {
+        width: 85%;
+        float: left;
+        border-bottom: 1px solid black;
+    }
+    .srSearchContainer input {
+        width: 100%;
+        background: transparent;
+        border: none;
+        outline: none;
+        margin: 0;
+        padding: 0;
+    }
+    .awesomplete > .awesomplete {
+        width: 100%;
+    }
 
-.addSubredditBtn {
-    width: 15%;
-    border: none;
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    float: left;
-    font-size: 1.6em;
-    line-height: 1;
-}
+    .addSubredditBtn {
+        width: 15%;
+        border: none;
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        float: left;
+        font-size: 1.6em;
+        line-height: 1;
+    }
+    .addSubredditBtn, .srSearchContainer input {
+        height: 1.6em;
+        font-size: 1rem;
+    }
+
+    /* Subreddit List */
+    .subreddit {
+        width: 75%;
+        margin: 0 auto;
+        margin: 5px 0;
+        position: relative;
+        text-align: center;
+    }
+    .subreddit > .removeSubreddit {
+       float: left;
+    }
+    .subreddit > input {
+        float: left;
+    }
+    .subreddit > .removeSubreddit {
+        position: absolute;
+        right: 0;
+        width: 20px;
+        top: 0;
+        bottom: 0;
+        text-align: center;
+    }
+
+    /* Recommended list */
+    .recommended {
+        margin: 0;
+        padding: 0;
+        list-style-type: none;
+    }
+
+    .recommended li {
+        background: yellow;
+        margin: 5px 10px;
+        padding: 5px;
+        display: inline-block;
+    }
+
+
 /* ------------------------------------------------------ */
 
 
@@ -508,7 +586,8 @@ h1 {
     font-size: 0.8rem;
     /*background: linear-gradient(to top, rgba(0,0,0,1), rgba(0,0,0,0.0));*/
     color: rgb(210,210,210);
-    text-shadow: 0 0 1px black;
+    text-shadow: 0.05em 0 black, -0.05em 0 black, 0 0.05em black, 0 -0.05em black;
+   /* text-shadow: 0 0 1px black;*/
     text-overflow: ellipsis;
 }
 .imgDesc .postText {
@@ -521,7 +600,8 @@ h1 {
     max-height: 3.5em;
     box-sizing: border-box;
     padding: 0.5em;
-    background: linear-gradient(to top, rgba(0,0,0,0.6), rgba(0,0,0,0.0));
+    /*background: linear-gradient(to top, rgba(0,0,0,0.6), rgba(0,0,0,0.0));*/
+     background: rgba(0,0,0,0.2);
     overflow: hidden;
 }
 .imgDesc .subredditName {
@@ -533,7 +613,8 @@ h1 {
     left: 5px;
     right: 5px;
     text-align: left;
-    background: linear-gradient(to bottom, rgba(0,0,0,0.6), rgba(0,0,0,0.0));
+    /*background: linear-gradient(to bottom, rgba(0,0,0,0.6), rgba(0,0,0,0.0));*/
+
 
 }
 :link, :visited {

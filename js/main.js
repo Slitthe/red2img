@@ -1,5 +1,5 @@
 // Alertify library settings
-alertify.logPosition("top left");
+alertify.logPosition("bottom right");
 alertify.parent(document.body);
 alertify.maxLogItems(5);
 /*
@@ -270,7 +270,7 @@ var subreddits = {
 			subreddits.list.forEach(function(current){
 				if( inputs.indexOf(current.toLowerCase()) === -1){
 					html = "";
-					html += "<div class='subreddit' data-srname=\"" + current.toLowerCase() + "\">";
+					html += "<div class='subreddit clearfix' data-srname=\"" + current.toLowerCase() + "\">";
 					html += "<input type=\"checkbox\" name=\"" + current.toLowerCase() + "\">";
 					html += "<div class='subredditName'>" + current.toLowerCase() + "</div>";
 					html += "<button class='removeSubreddit' type='button'>X</button>";
@@ -629,7 +629,6 @@ function init(){
 
 	elements.addInput.on("focus", function(){
 		autocomplete.aComplete.evaluate();
-		autocomplete.aComplete.open();
 	});
 
 
@@ -653,6 +652,8 @@ function init(){
 
 	elements.addInput[0].addEventListener("awesomplete-selectcomplete", function(evt){
 		subreddits.addWithoutCheck(evt.text.value);
+		autocomplete.aComplete.list = [];
+
 	})
 
 	$("#imagesContainer").on("error", ".imageResult img", function(){
@@ -673,6 +674,7 @@ function init(){
 		}
 		autocomplete.getAutocomplete($(this).val());
 	});
+
 	// elements.srSearchContainer.on("blur", function(){
 	// 	autocomplete.autocompleteReq.forEach(function(req){
 	// 		req.abort();
@@ -681,8 +683,9 @@ function init(){
 	// });
 
 	elements.hideSubreddits.on("click", function(){
-		$(this).parent().toggleClass("slideHidden");
-		generalSettings.menuClosed = $(this).parent().hasClass("slideHidden");
+		console.log("registers");
+		elements.subredditsContainer.toggleClass("slideHidden");
+		generalSettings.menuClosed = elements.subredditsContainer.hasClass("slideHidden");
 
 	});
 
@@ -720,14 +723,14 @@ function init(){
 	images.getImages(true);
 	relatedSubs.getRelatedSubs();
 
-	$(document.body).on("click", function(evt){
-		if(!generalSettings.menuClosed){
-			if(evt.target !== elements.subredditsContainer[0] && $(evt.target).parents(".subreddits").length === 0){
-				elements.subredditsContainer.addClass("slideHidden");
-				generalSettings.menuClosed = true;
-			}	
-		}
-	});
+	// $(document.body).on("click", function(evt){
+	// 	if(!generalSettings.menuClosed){
+	// 		if(evt.target !== elements.subredditsContainer[0] && $(evt.target).parents(".subreddits").length === 0){
+	// 			elements.subredditsContainer.addClass("slideHidden");
+	// 			generalSettings.menuClosed = true;
+	// 		}	
+	// 	}
+	// });
 }
 init();
 
