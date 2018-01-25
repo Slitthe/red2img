@@ -262,20 +262,28 @@ var subreddits = {
 		inputs = [], 
 		i,
 		currentIndex;
-		var elements = $("#subredditList > .subreddit");
+		var elements = $("#subredditList > .subreddit-single");
 		for(i = 0; i < elements.length; i++){
 			inputs.push(elements[i].getAttribute("data-srname"));
 		}
 		if(add){
 			subreddits.list.forEach(function(current){
+				// <div class="custom-checkbox-wrapper">
+				//     <input type="checkbox" class="checkAll hidden-input" id="checkAll">
+				//     <div class="faux-checkbox"></div>
+				// </div>
 				if( inputs.indexOf(current.toLowerCase()) === -1){
 					html = "";
-					html += "<div class='subreddit clearfix' data-srname=\"" + current.toLowerCase() + "\">";
-					html += "<input type=\"checkbox\" name=\"" + current.toLowerCase() + "\">";
+					html += "<div class='subreddit-single clearfix' data-srname=\"" + current.toLowerCase() + "\">";
+					html += "<label class=\"custom-checkbox-wrapper\">";
+					html += "<input class=\"hidden-input\" type=\"checkbox\" name=\"" + current.toLowerCase() + "\">";
+					html += "<div class=\"faux-checkbox\"></div></label>";
 					html += "<div class='subredditName'>" + current.toLowerCase() + "</div>";
-					html += "<button class='removeSubreddit' type='button'>X</button>";
+					html += "<button class='removeSubreddit no-input-style' type='button'><i class=\"fa fa-trash-o\"></i></button>";
 					html += "</div>";
-					$(html).appendTo(element);
+					var el = $(html);
+					el.css("backgroundColor", colorGenerator());
+					el.appendTo(element);
 				}
 			});
 		}
@@ -283,7 +291,9 @@ var subreddits = {
 			inputs.forEach(function(current){
 				currentIndex = subreddits.list.indexOf(current);;
 				if( currentIndex === -1){
-					$("#subredditList").children(".subreddit[data-srname='" + current + "']").remove();
+					$("#subredditList").children(".subreddit-single[data-srname='" + current + "']").fadeOut(function(what){
+						$(this).remove();
+					});
 				}
 			});
 		}
@@ -697,11 +707,11 @@ function init(){
 		var deleteList = [],
 		currentEl;
 		elements.checkAll.prop("checked", false);
-		var els = elements.subredditList.children(".subreddit");
+		var els = elements.subredditList.children(".subreddit-single");
 		for(var i = 0; i < els.length; i++){
 			var currentEl = $(els[i]);
-			if(currentEl.children("input")[0].checked){
-				deleteList.push(currentEl.children("input").attr("name"));
+			if(currentEl.find("input")[0].checked){
+				deleteList.push(currentEl.find("input").attr("name"));
 			}
 		}
 		subreddits.remove(deleteList);
@@ -709,10 +719,10 @@ function init(){
 
 	elements.checkAll.on("change", function(){
 		if(this.checked){
-			$(".subreddit input").prop("checked", true);
+			$(".subreddit-single input").prop("checked", true);
 		}
 		else {
-			$(".subreddit input").prop("checked", false);
+			$(".subreddit-single input").prop("checked", false);
 		}
 	});
 	elements.resetImagesBtn.on("click", function(){
@@ -741,3 +751,8 @@ var msnry = new Masonry( es, {
     percentPosition: true,
 	gutter: 0
 });
+
+function colorGenerator(){
+	var number = Math.floor(Math.random() * 361);
+	return "hsla(" + number + ", 35%, 35%, 0.2)";
+}
