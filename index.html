@@ -19,7 +19,11 @@
         <![endif]-->
 
         <h1>Subreddits IMG Gallery</h1>
-
+        <button type="button" id="hideSubreddits" class="open hamburger-btn no-input-style hideSubreddits">
+            <div class="bar"></div> 
+            <div class="bar"></div> 
+            <div class="bar"></div> 
+        </button>
         <div class="subreddits slideHidden">
 
             <div class="srSearchContainer clearfix" id="srSearchContainer">
@@ -45,11 +49,7 @@
             <h3>Suggestions</h3>
             <ul class="recommended" id="recommended"></ul>
         </div>
-        <button type="button" id="hideSubreddits" class="hamburger-btn no-input-style hideSubreddits">
-            <div class="bar"></div> 
-            <div class="bar"></div> 
-            <div class="bar"></div> 
-        </button>
+
 
         <div class="gallerySettings">
 
@@ -76,12 +76,13 @@
                     Show Info
                 </label>
                 <div class="sorting">
+                    Sort by: 
                     <select class="no-input-style" name="type" id="type">
+                        <option selected value="hot">Hot</option>
                         <option value="new">New</option>
-                        <option value="top">Top</option>
                         <option value="rising">Rising</option>
                         <option value="controversial">Controversial</option>
-                        <option selected value="hot">Hot</option>
+                        <option value="top">Top</option>
                     </select>
                     <select class="hidden no-input-style" name="time" id="time">
                         <option value="hour">Hour</option>

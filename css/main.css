@@ -423,6 +423,8 @@ body {
 }
 h1 {
     text-align: center;
+    margin: 0;
+    padding: 50px 30px;
 }
 h2, h3 {
    
@@ -496,33 +498,34 @@ h2, h3 {
         height: 40px;
         top: 5px;
         left: 5px;
-        background: gray;
+        background: rgb(80, 80, 80);
         cursor: pointer;
         position: absolute;
         transition: transform 0.1s linear;
         z-index: 999;
+        border-radius: 5px;
     }
     .hamburger-btn .bar {
         display: block;
         width: 80%;
         height: 10%;
-        background: black;
         position: absolute;
         left: 10%;
         margin-top: -5%;
         border-radius: 15px;
         transform-origin: center center;
         transition: all 0.2s linear;
+        background: #ccc;
     }
-    .slideHidden + .hamburger-btn .bar:nth-child(1){ 
+    .open.hamburger-btn .bar:nth-child(1){ 
         top: 25%;
         transform: rotate(0);
     }
-    .slideHidden + .hamburger-btn .bar:nth-child(2){ 
+    .open.hamburger-btn .bar:nth-child(2){ 
         top: 50%;
         opacity: 1;
     }
-    .slideHidden + .hamburger-btn .bar:nth-child(3){ 
+    .open.hamburger-btn .bar:nth-child(3){ 
         top: 75%;
         transform: rotate(0);
     }
@@ -611,9 +614,12 @@ h2, h3 {
         line-height: 35px;
         transition: background 0.1s linear;
     }
-    .multipleDeleteContainer .fa-trash:hover {
 
-
+    .multipleDeleteContainer .custom-checkbox-wrapper {
+        position: absolute;
+        left: 10px;
+        top: 50%;
+        transform: translateY(-50%);
     }
     .multipleDelete {
         color: rgba(130, 30,30, 0.8);
@@ -629,8 +635,8 @@ h2, h3 {
         color: #cbcbcb;
     }
     .multipleDeleteContainer label {
-       padding-left: 10px;
-       text-align: left;
+       border-right: 1px solid #444;
+       position: relative;
     }
     .subredditList, .multipleDeleteContainer {
         width: 75%;
@@ -644,7 +650,7 @@ h2, h3 {
         text-align: center;
         background: white;
         padding: 7px 0;
-        box-shadow: 0 0 7px 0px rgba(0,0,0,0.1);
+        /*box-shadow: 0 0 7px 0px rgba(0,0,0,0.1);*/
         color: #222;
     }
     .subreddit-single > .custom-checkbox-wrapper {
@@ -790,16 +796,6 @@ h2, h3 {
 
 
 
-/* ----------------------Gallery Settings----------------- */
-.gallerySettings {
-    padding: 10px;
-    clear: both;
-}
-/* ------------------------------------------------------ */
-
-
-
-
 
 
 
@@ -835,8 +831,8 @@ h2, h3 {
     font-size: 0.8rem;
     /*background: linear-gradient(to top, rgba(0,0,0,1), rgba(0,0,0,0.0));*/
     color: rgb(210,210,210);
-    text-shadow: 0.05em 0 black, -0.05em 0 black, 0 0.05em black, 0 -0.05em black;
-   /* text-shadow: 0 0 1px black;*/
+    /*text-shadow: 0.05em 0 black, -0.05em 0 black, 0 0.05em black, 0 -0.05em black;*/
+    text-shadow: 0 0 1px black;
     text-overflow: ellipsis;
 }
 .imgDesc .postText {
@@ -850,7 +846,7 @@ h2, h3 {
     box-sizing: border-box;
     padding: 0.5em;
     /*background: linear-gradient(to top, rgba(0,0,0,0.6), rgba(0,0,0,0.0));*/
-     background: rgba(0,0,0,0.2);
+     background: rgba(0,0,0,0.3);
     overflow: hidden;
 }
 .imgDesc .subredditName {
@@ -889,85 +885,137 @@ a:hover, a:active {
 
 
 
+/* ----------------------Settings----------------- */
 
-.settings label {
-    display: block;
-    width: 200px;
-    text-align: left;
-}
-
-.custom-slider-wrapper {
-    width: 70px;
-    height: 28px;
-    display: block;
-    cursor: pointer;
+.gallerySettings {
+    clear: both;
+    margin-bottom: 50px;
+    border-bottom: 2px solid #444;
     position: relative;
-    border-radius: 20px;
-    border: 1px solid gray;
-    margin: 10px 5px;
-    display: inline-block;
-
-
 }
-
-.custom-slider-wrapper input {
-    display: none
-        
+.settings, h1 {
+    background: #e0e0e0;
+    padding: 10px;
 }
+    /* Custom sliders */
+    .settings label {
+        display: block;
+        width: 200px;
+        text-align: left;
+    }
 
-.custom-slider-wrapper .input-text:after{
-    content: "off";
-    font-size: 0.8em;
-    text-transform: uppercase;
-    font-family: sans-serif;
-    line-height: 28px;
-    text-align: right;
-    padding-left: 1em;
-    width: 100%;
-    display: inline-block;
-    box-sizing: border-box;
-    padding-right: 1em;
-}
+    .custom-slider-wrapper {
+        width: 70px;
+        height: 28px;
+        display: block;
+        cursor: pointer;
+        position: relative;
+        border-radius: 20px;
+        border: 1px solid gray;
+        margin: 10px 5px;
+        display: inline-block;
 
-.custom-slider-wrapper input:checked ~ .input-text:after {
-    content: "on";
-    text-align: left;
-}
 
-.custom-slider-wrapper .faux-checkbox {
+    }
+
+    .custom-slider-wrapper input {
+        display: none
+            
+    }
+
+    .custom-slider-wrapper .input-text:after{
+        content: "off";
+        font-size: 0.8em;
+        text-transform: uppercase;
+        font-family: sans-serif;
+        line-height: 28px;
+        text-align: right;
+        padding-left: 1em;
+        width: 100%;
+        display: inline-block;
+        box-sizing: border-box;
+        padding-right: 1em;
+    }
+
+    .custom-slider-wrapper input:checked ~ .input-text:after {
+        content: "on";
+        text-align: left;
+    }
+
+    .custom-slider-wrapper .faux-checkbox {
+            position: absolute;
+            left: 0;
+        right: 0;
+        top: 0;
+            bottom: 0;
+        background: rgba(120,0,0,0.6);
+        border-radius: 20px;
+    }
+
+    .custom-slider-wrapper .faux-checkbox:after {
+        content: "";
         position: absolute;
-        left: 0;
-    right: 0;
-    top: 0;
-        bottom: 0;
-    background: rgba(120,0,0,0.6);
-    border-radius: 20px;
+        top: 15%;
+        bottom: 15%;
+        left: 10%;
+        right: 60%;
+        background: repeating-linear-gradient(135deg, silver 0%, silver 10%, gray 10%, gray 20%);
+        border-radius: 20px;
+        transition: all 0.1s linear;
+        border: 1px solid silver
+    }
+
+    .custom-slider-wrapper input:checked + .faux-checkbox:after {
+        position: absolute;
+        left: 60%;
+        top: 15%;
+        bottom: 15%;
+        right: 10%;
+        border-radius: 20px;
+    }
+    .custom-slider-wrapper input:checked + .faux-checkbox {
+        background: rgba(0,120,0,0.6)
+    }
+    .custom-slider-wrapper label:hover .faux-checkbox:after {
+        background: repeating-linear-gradient(135deg, silver 0%, silver 10%, #333 10%, #333 20%);
+    }
+
+    /*Sorting*/
+    .sorting {
+        border-top: 4px solid black;
+        padding-top: 10px;
+    }
+
+    .sorting select {
+        border: 1px solid black;
+        border-radius: 5px;
+        padding: 5px 10px;
+    }
+    .sorting select:first-child {
+        margin: 0 10px 0 7px;
+    }
+
+.resetImages {
+    position: absolute;
+    bottom: -59px;
+    left: 50%;
+    margin-left:-23px;
+    height: 46px;
+    width: 46px;
+    font-size: 1.7rem;
+    cursor: pointer;
+    
+    border-radius: 4px;
+}
+.resetImages .fa {
+    transition: transform 0.3s linear;
+}
+.resetImages:hover .fa {
+   transform: rotate(270deg);
+   
 }
 
-.custom-slider-wrapper .faux-checkbox:after {
-    content: "";
-    position: absolute;
-    top: 15%;
-    bottom: 15%;
-    left: 10%;
-    right: 60%;
-    background: repeating-linear-gradient(135deg, silver 0%, silver 10%, gray 10%, gray 20%);
-    border-radius: 20px;
-    transition: all 0.1s linear;
-    border: 1px solid silver
+.resetImages:hover {
+    background: #ada996;
 }
-
-.custom-slider-wrapper input:checked + .faux-checkbox:after {
-    position: absolute;
-    left: 60%;
-    top: 15%;
-    bottom: 15%;
-    right: 10%;
-    border-radius: 20px;
-}
-.custom-slider-wrapper input:checked + .faux-checkbox {
-    background: rgba(0,120,0,0.6)
-}
-.custom-slider-wrapper label:hover .faux-checkbox:after {
-    background: repeating-linear-gradient(135deg, # 0%, silver 10%, #333 10%, #333 20%);
-}
+/* --------------------------------------------- */

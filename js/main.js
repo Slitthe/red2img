@@ -389,7 +389,7 @@ var images = {
 			htmlS += "<div class='imageResult'>";
 			htmlS += "<img onerror=\"deleteEl(this);\" onload=\"showOnload(this);\" class=\"faded\" src=\"" + images.getCorrectResolution(current);
 			htmlS += "\" data-fullurl=\"" + current.url + "\"" + "\">";
-			htmlS += "<div class=\"imgDesc clearfix\"><a href=\"" + requestUrls.base + current.permalink.substring(1) + "\" class='postText' target=\"_blank\">" + current.title + "</a>";
+			htmlS += "<div class=\"imgDesc clearfix\"><a href=\"" + requestUrls.base + current.permalink.substring(1) + "\" class='postText' target=\"_blank\" title=\"" +current.title + "\">" + current.title + "</a>";
 			htmlS += "<div class='subredditName'>" + current.subreddit_name_prefixed + "</div></div></div>";
 		});
 		var imagesElements = $(htmlS);
@@ -598,7 +598,8 @@ var relatedSubs = {
 };
 
 var generalSettings = {
-	menuClosed: false
+	menuClosed: false,
+	delayList: []
 }
 
 
@@ -694,10 +695,21 @@ function init(){
 	// });
 
 	elements.hideSubreddits.on("click", function(){
-		console.log("registers");
 		elements.subredditsContainer.toggleClass("slideHidden");
+		$(this).toggleClass("open");
 		generalSettings.menuClosed = elements.subredditsContainer.hasClass("slideHidden");
-
+		if(generalSettings.menuClosed){
+			generalSettings.delayList.push(setTimeout(function(){
+				$(elements.subredditsContainer.addClass("hidden"));
+			}, 500));
+		}
+		else {
+			generalSettings.delayList.forEach(function(currentDelay){
+				window.clearTimeout(currentDelay);
+				console.log(currentDelay);
+			});
+			$(elements.subredditsContainer.removeClass("hidden"));
+		}
 	});
 
 	elements.addBtn.on("click", function(){
