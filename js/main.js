@@ -140,7 +140,7 @@ var urlParams = {
 		},
 		adultContent: {
 			name: "include_over_18",
-			value: elements.adultSettingInput[0].checked
+			value: !elements.adultSettingInput[0].checked
 		},
 		after: {
 			name: "after",
@@ -276,13 +276,14 @@ var subreddits = {
 					html = "";
 					html += "<div class='subreddit-single clearfix' data-srname=\"" + current.toLowerCase() + "\">";
 					html += "<label class=\"custom-checkbox-wrapper\">";
-					html += "<input class=\"hidden-input\" type=\"checkbox\" name=\"" + current.toLowerCase() + "\">";
+					html += "<input class=\"hidden-input\" type=\"checkbox\" name=\"" + current + "\">";
 					html += "<div class=\"faux-checkbox\"></div></label>";
 					html += "<div class='subredditName'>" + current.toLowerCase() + "</div>";
 					html += "<button class='removeSubreddit no-input-style' type='button'><i class=\"fa fa-trash-o\"></i></button>";
 					html += "</div>";
 					var el = $(html);
 					el.css("backgroundColor", colorGenerator());
+					console.log(el);
 					el.appendTo(element);
 				}
 			});
@@ -291,7 +292,7 @@ var subreddits = {
 			inputs.forEach(function(current){
 				currentIndex = subreddits.list.indexOf(current);;
 				if( currentIndex === -1){
-					$("#subredditList").children(".subreddit-single[data-srname='" + current + "']").fadeOut(function(what){
+					$("#subredditList").children(".subreddit-single[data-srname='" + current + "']").fadeOut(function(){
 						$(this).remove();
 					});
 				}
@@ -644,7 +645,7 @@ function init(){
 
 
 	elements.adultSettingInput.on("change", function(){
-		urlParams[$(this).attr("name")].value = this.checked;
+		urlParams[$(this).attr("name")].value = !this.checked;
 		images.searchCount = 0;
 		images.getImages(true);
 		autocomplete.getAutocomplete(elements.addInput.val());
@@ -714,6 +715,7 @@ function init(){
 				deleteList.push(currentEl.find("input").attr("name"));
 			}
 		}
+		console.log(deleteList);
 		subreddits.remove(deleteList);
 	});
 

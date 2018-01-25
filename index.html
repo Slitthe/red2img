@@ -20,11 +20,11 @@
 
         <h1>Subreddits IMG Gallery</h1>
 
-        <div class="subreddits">
+        <div class="subreddits slideHidden">
 
             <div class="srSearchContainer clearfix" id="srSearchContainer">
                 <input list="autocomplete" type="text" id="addSubreddit" class="awesomplete addSubreddit no-input-style" placeholder="Subreddit name">
-                <button type="button" id="addSubredditBtn" class="no-input-style addSubredditBtn ">&#65291;</button>
+                <button type="button" id="addSubredditBtn" class="no-input-style addSubredditBtn "><i class="fa fa-plus"></i></button>
             </div>
 
             <h2>Subreddits</h2>
@@ -42,7 +42,7 @@
             </div>
         
             <div id="subredditList" class="subredditList clearfix"></div>
-            <h3>Suggested</h3>
+            <h3>Suggestions</h3>
             <ul class="recommended" id="recommended"></ul>
         </div>
         <button type="button" id="hideSubreddits" class="hamburger-btn no-input-style hideSubreddits">
@@ -52,31 +52,50 @@
         </button>
 
         <div class="gallerySettings">
-            <div class="sorting">
-                <select name="type" id="type">
-                    <option value="new">New</option>
-                    <option value="top">Top</option>
-                    <option value="rising">Rising</option>
-                    <option value="controversial">Controversial</option>
-                    <option selected value="hot">Hot</option>
-                </select>
-                <select class="hidden" name="time" id="time">
-                    <option value="hour">Hour</option>
-                    <option selected value="day">Day</option>
-                    <option value="week">Week</option>
-                    <option value="controversial">Month</option>
-                    <option value="year">Year</option>
-                    <option value="all">All</option>
-                </select>
-            </div>
 
-            <button type="button" id="resetImages" class="resetImages">Refresh</button>
+
 
             <div id="settings" class="settings">
-                <label for="nsfw">NSFW</label>
-                <input id="nsfw" type="checkbox" value="nsfw" name="adultContent">
-                <label for="titles">Show Titles</label>
-                <input checked id="titles" type="checkbox" value="displayTitles" name="displayTitles">
+                <label>
+                    <div class="custom-slider-wrapper">
+                        <input id="nsfw" type="checkbox" value="nsfw" name="adultContent" checked>
+                        <div class="faux-checkbox"></div>
+                        <span class="input-text"></span>
+                    </div>
+                    Safe For Work
+                </label>
+
+                    <!-- <label for="nsfw">NSFW</label>
+                    <input id="nsfw" type="checkbox" value="nsfw" name="adultContent"> -->
+                <label>
+                    <div class="custom-slider-wrapper">
+                        <input checked id="titles" type="checkbox" value="displayTitles" name="displayTitles">
+                        <div class="faux-checkbox"></div>
+                        <span class="input-text"></span>
+                    </div>
+                    Show Info
+                </label>
+                <div class="sorting">
+                    <select class="no-input-style" name="type" id="type">
+                        <option value="new">New</option>
+                        <option value="top">Top</option>
+                        <option value="rising">Rising</option>
+                        <option value="controversial">Controversial</option>
+                        <option selected value="hot">Hot</option>
+                    </select>
+                    <select class="hidden no-input-style" name="time" id="time">
+                        <option value="hour">Hour</option>
+                        <option selected value="day">Day</option>
+                        <option value="week">Week</option>
+                        <option value="controversial">Month</option>
+                        <option value="year">Year</option>
+                        <option value="all">All</option>
+                    </select>
+
+                    <button type="button" id="resetImages" class="resetImages no-input-style"><i class="fa fa-refresh"></i></button>
+                </div>
+<!--                 <label for="titles">Show Titles</label>
+                <input checked id="titles" type="checkbox" value="displayTitles" name="displayTitles"> -->
             </div>
         </div>
         

@@ -372,6 +372,8 @@ img {
 
 
 
+
+
 /* ----------------------LOADING CIRCLE---------------------- */
 .loading {
     margin: 20px auto;
@@ -401,12 +403,29 @@ img {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 /* ----------------------General---------------------- */
 body {
     font-family: "Lato", sans-serif;
+    background: #ada996; /* fallback for old browsers */
+      background: -webkit-linear-gradient(to right, #ada996, #f2f2f2, #dbdbdb, #eaeaea); /* Chrome 10-25, Safari 5.1-6 */
+      background: linear-gradient(to right, #ada996, #f2f2f2, #dbdbdb, #eaeaea); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
 h1 {
     text-align: center;
+}
+h2, h3 {
+   
 }
 .no-input-style {
     background: transparent;
@@ -418,6 +437,22 @@ h1 {
 /* --------------------------------------------------- */
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /* ----------------------Subreddits---------------------- */
 .subreddits {
     margin-top: 50px;
@@ -427,12 +462,33 @@ h1 {
     top: 0;
     left: 0;
     transition: all 0.5s ease-in-out;
-    background: #999;
+    background: #ccc;
     z-index: 999;
+    text-align: center;
+    border: 2px solid #333;
+    border-left-color: transparent;
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
 }
 .slideHidden {
     transform: translateX(-100%);
 }
+.subreddits h2, .subreddits h3 {
+    color: #383838;
+    width: 75%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #565656;
+}
+
+
+
+
+
+
+
+
 
     /* ======Show/hide button */
     .hideSubreddits {
@@ -481,9 +537,22 @@ h1 {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
     /*Add subreddit*/
     .srSearchContainer {
         width: 100%;
+        background: #eee;
+        border-top-right-radius: 20px;
     }
     .srSearchContainer > .awesomplete {
         width: 85%;
@@ -500,11 +569,14 @@ h1 {
     .addSubredditBtn {
         width: 15%;
         float: left;
-        outline: 1px solid black;
         cursor: pointer;
+        color: #222;
+        border-left: 1px solid black;
+        border-bottom: 1px solid black;
+        border-top-right-radius: 20px;
     }
     .addSubredditBtn:hover {
-        background: cyan;
+        background: rgb(120, 150, 140);
     }
     .addSubredditBtn, .addSubreddit {
         font-size: 1rem;
@@ -563,6 +635,7 @@ h1 {
     .subredditList, .multipleDeleteContainer {
         width: 75%;
         margin: 0 auto;
+        border-left: 1px solid #454545;
     }
     .subreddit-single {
         width: 100%;
@@ -602,21 +675,52 @@ h1 {
         margin-top: 0px;
     }*/
 
+
+
+
+
+
+
+
+
+
+
+
+
     /* Recommended list */
     .recommended {
         margin: 0;
         padding: 0;
         list-style-type: none;
         font-size: 0.8rem;
+        text-align: left;
+        padding: 10px 20px;
     }
 
     .recommended li {
         border-radius: 7px;
-        background: silver;
+        background: #bbb;
         margin: 5px 10px;
         padding: 5px;
         display: inline-block;
+        cursor: pointer;
+        transition: background 0.1s linear;
     }
+    .recommended li:hover {
+        background: #999;
+        color: white;
+    }
+    .recommended li:active {
+        background: #666;
+    }
+
+
+
+
+
+
+
+
     
     /* Checkboxes styling*/
     .custom-checkbox-wrapper {
@@ -633,7 +737,7 @@ h1 {
       display: none  
     }
 
-    .faux-checkbox {
+    .custom-checkbox-wrapper .faux-checkbox {
         position: absolute;
         left: 0;
         right: 0;
@@ -642,7 +746,7 @@ h1 {
         border-radius: 15%;
     }
 
-    .faux-checkbox:after {
+    .custom-checkbox-wrapper .faux-checkbox:after {
       content: "";
       position: absolute;
       top: 35%;
@@ -654,7 +758,7 @@ h1 {
       transition: all 0.1s linear;
     }
 
-    .hidden-input:checked + .faux-checkbox:after {
+    .custom-checkbox-wrapper .hidden-input:checked + .faux-checkbox:after {
       position: absolute;
       left: 0;
       top: 0;
@@ -668,22 +772,62 @@ h1 {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /* ----------------------Gallery Settings----------------- */
 .gallerySettings {
-    border: 5px solid red;
     padding: 10px;
     clear: both;
 }
 /* ------------------------------------------------------ */
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /* ----------------------Images----------------- */
 .images {
-    border: 5px solid green;
     padding: 10px;
     clear: both;
 }
+.imageResult {
+    display: none;
+}
+.imageResult.visible {
+    display: block;
     /* Image Description (title link and subreddit which it belongs it) */
+}
 .no-titles .imgDesc{
     display: none;
 }
@@ -732,3 +876,98 @@ a:hover, a:active {
     text-decoration: underline;
 }
 /* --------------------------------------------- */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.settings label {
+    display: block;
+    width: 200px;
+    text-align: left;
+}
+
+.custom-slider-wrapper {
+    width: 70px;
+    height: 28px;
+    display: block;
+    cursor: pointer;
+    position: relative;
+    border-radius: 20px;
+    border: 1px solid gray;
+    margin: 10px 5px;
+    display: inline-block;
+
+
+}
+
+.custom-slider-wrapper input {
+    display: none
+        
+}
+
+.custom-slider-wrapper .input-text:after{
+    content: "off";
+    font-size: 0.8em;
+    text-transform: uppercase;
+    font-family: sans-serif;
+    line-height: 28px;
+    text-align: right;
+    padding-left: 1em;
+    width: 100%;
+    display: inline-block;
+    box-sizing: border-box;
+    padding-right: 1em;
+}
+
+.custom-slider-wrapper input:checked ~ .input-text:after {
+    content: "on";
+    text-align: left;
+}
+
+.custom-slider-wrapper .faux-checkbox {
+        position: absolute;
+        left: 0;
+    right: 0;
+    top: 0;
+        bottom: 0;
+    background: rgba(120,0,0,0.6);
+    border-radius: 20px;
+}
+
+.custom-slider-wrapper .faux-checkbox:after {
+    content: "";
+    position: absolute;
+    top: 15%;
+    bottom: 15%;
+    left: 10%;
+    right: 60%;
+    background: repeating-linear-gradient(135deg, silver 0%, silver 10%, gray 10%, gray 20%);
+    border-radius: 20px;
+    transition: all 0.1s linear;
+    border: 1px solid silver
+}
+
+.custom-slider-wrapper input:checked + .faux-checkbox:after {
+    position: absolute;
+    left: 60%;
+    top: 15%;
+    bottom: 15%;
+    right: 10%;
+    border-radius: 20px;
+}
+.custom-slider-wrapper input:checked + .faux-checkbox {
+    background: rgba(0,120,0,0.6)
+}
+.custom-slider-wrapper label:hover .faux-checkbox:after {
+    background: repeating-linear-gradient(135deg, # 0%, silver 10%, #333 10%, #333 20%);
+}
