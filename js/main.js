@@ -212,7 +212,7 @@ var requestUrls = {
 
 // Contains the subreddits data, as well as the related methods for adding/removing them from the list
 var subreddits = {
-	list: ["itookapicture", "photography", "oldschoolcool", "cinemagraphs", "pbandonedporn", "militaryporn", "earthporn", "spaceporn", "eyebleach"],
+	list: ["itookapicture", "photography", "OldSchoolCool", "Cinemagraphs", "AbandonedPorn", "MilitaryPorn", "EarthPorn", "spaceporn", "Eyebleach"],
 	addWithCheck: function(element){
 		var value = encodeURI(element.val());
 		if(value) {
@@ -264,7 +264,7 @@ var subreddits = {
 		currentIndex;
 		var elements = $("#subredditList > .subreddit-single");
 		for(i = 0; i < elements.length; i++){
-			inputs.push(elements[i].getAttribute("data-srname"));
+			inputs.push(elements[i].getAttribute("data-srname").toLowerCase());
 		}
 		if(add){
 			subreddits.list.forEach(function(current){
@@ -278,19 +278,21 @@ var subreddits = {
 					html += "<label class=\"custom-checkbox-wrapper\">";
 					html += "<input class=\"hidden-input\" type=\"checkbox\" name=\"" + current + "\">";
 					html += "<div class=\"faux-checkbox\"></div></label>";
-					html += "<div class='subredditName'>" + current.toLowerCase() + "</div>";
+					html += "<div class='subredditName'>" + current + "</div>";
 					html += "<button class='removeSubreddit no-input-style' type='button'><i class=\"fa fa-trash-o\"></i></button>";
 					html += "</div>";
 					var el = $(html);
 					el.css("backgroundColor", colorGenerator());
-					console.log(el);
 					el.appendTo(element);
 				}
 			});
 		}
 		else {
+			subreddits.list = subreddits.list.map(function(cr){
+				return cr.toLowerCase();
+			});
 			inputs.forEach(function(current){
-				currentIndex = subreddits.list.indexOf(current);;
+				currentIndex = subreddits.list.indexOf(current);
 				if( currentIndex === -1){
 					$("#subredditList").children(".subreddit-single[data-srname='" + current + "']").fadeOut(function(){
 						$(this).remove();
@@ -387,7 +389,7 @@ var images = {
 		this.rawResponseData.forEach(function(current, indx, arr){
 			//  
 			htmlS += "<div class='imageResult'>";
-			htmlS += "<img onerror=\"deleteEl(this);\" onload=\"showOnload(this);\" class=\"faded\" src=\"" + images.getCorrectResolution(current);
+			htmlS += "<img onerror=\"deleteEl(this);\" onload=\"showOnload(this);\" class=\"content faded\" src=\"" + images.getCorrectResolution(current);
 			htmlS += "\" data-fullurl=\"" + current.url + "\"" + "\">";
 			htmlS += "<div class=\"imgDesc clearfix\"><a href=\"" + requestUrls.base + current.permalink.substring(1) + "\" class='postText' target=\"_blank\" title=\"" +current.title + "\">" + current.title + "</a>";
 			htmlS += "<div class='subredditName'>" + current.subreddit_name_prefixed + "</div></div></div>";
@@ -695,12 +697,13 @@ function init(){
 	// });
 
 	elements.hideSubreddits.on("click", function(){
-		elements.subredditsContainer.toggleClass("slideHidden");
 		$(this).toggleClass("open");
+		elements.subredditsContainer.toggleClass("slideHidden");
+		// elements.subredditsContainer.toggleClass("slideOpen");
 		generalSettings.menuClosed = elements.subredditsContainer.hasClass("slideHidden");
 		if(generalSettings.menuClosed){
 			generalSettings.delayList.push(setTimeout(function(){
-				$(elements.subredditsContainer.addClass("hidden"));
+				$(elements.subredditsContainer.addClass("invisible"));
 			}, 500));
 		}
 		else {
@@ -708,7 +711,7 @@ function init(){
 				window.clearTimeout(currentDelay);
 				console.log(currentDelay);
 			});
-			$(elements.subredditsContainer.removeClass("hidden"));
+			$(elements.subredditsContainer.removeClass("invisible"));
 		}
 	});
 
