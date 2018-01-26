@@ -722,7 +722,7 @@ function init(){
 	elements.multipleDeleteBtn.on("click", function(){
 		var deleteList = [],
 		currentEl;
-		elements.checkAll.prop("checked", false);
+		
 		var els = elements.subredditList.children(".subreddit-single");
 		for(var i = 0; i < els.length; i++){
 			var currentEl = $(els[i]);
@@ -730,8 +730,22 @@ function init(){
 				deleteList.push(currentEl.find("input").attr("name"));
 			}
 		}
-		console.log(deleteList);
-		subreddits.remove(deleteList);
+		if(deleteList.length){
+			// confirm dialog
+			alertify.confirm("Are you sure you want to delete the selected subreddits?", function () {
+			    subreddits.remove(deleteList);
+			    elements.checkAll.prop("checked", false);
+			}, function() {
+				for(var i = 0; i < els.length; i++){
+					var currentEl = $(els[i]);
+					currentEl.find("input").prop("checked", false);
+
+				}
+			    elements.checkAll.prop("checked", false);
+			});
+				
+		}
+
 	});
 
 	elements.checkAll.on("change", function(){
