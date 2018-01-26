@@ -899,6 +899,7 @@ a:hover, a:active {
 .settings, h1 {
     background: #e0e0e0;
     padding: 10px;
+    padding-top: 50px;
 }
     /* Custom sliders */
     .settings label {

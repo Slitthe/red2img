@@ -63,6 +63,44 @@ var elements = {
 	subredditsContainer: $(".subreddits")
 };
 
+
+var localStorageData = {
+	initialData: {
+		list: ["itookapicture", "photography", "OldSchoolCool", "Cinemagraphs", "AbandonedPorn", "MilitaryPorn", "EarthPorn", "spaceporn", "Eyebleach"],
+		sortType: "hot",
+		sortTime: "day",
+		displayTitles: true,
+		adultContent: false
+	},
+	locations: [
+		["list" , ["subreddits", "list"], true],
+		["sortType" , ["urlParams", "sortType"] ],
+		["sortTime" , ["urlParams", "sortTime", "value"] ],
+		["adultContent", ["urlParams", "adultContent", "value"] ],
+		["displayTitles", ["images", "displayTitles"] ]
+	],
+	updateStorage: function(){
+		for(var i = 0; i < this.locations.length; i++){
+			var item = window;
+			this.locations[i][1].forEach(function(current){
+				item = item[current];
+			});
+			if(this.locations[i][3]){
+				items = JSON.stringify(items);
+			}
+			localStorage.setItem(this.locations[i][0], JSON.stringify(item));
+		}
+		window.localStorage.setItem("list", JSON.stringify(subreddits.list));
+	},
+	deleteStorage: function(){
+		window.localStorage.clear();
+	},
+	getValue: function(name){
+		return window.localStorage.getItem(name) ? JSON.parse(window.localStorage.getItem(name)) : this.initialData[name];
+	}
+}
+
+
 // Customized jQuery ajaxReqest, to avoid using $.ajaxSetup()
 function ajaxRequest(reqUrl, condition, timeout, obj){
 	if(condition){
@@ -137,7 +175,7 @@ var urlParams = {
 		},
 		adultContent: {
 			name: "include_over_18",
-			value: !elements.adultSettingInput[0].checked
+			value: localStorageData.getValue("adultContent")
 		},
 		after: {
 			name: "after",
@@ -146,9 +184,9 @@ var urlParams = {
 		// Time and type start out as whatever their HTML value is		
 		sortTime: {
 			name: "t",
-			value: elements.timeChange.val()
+			value: localStorageData.getValue("sortTime")
 		},
-		sortType: elements.typeChange.val(),
+		sortType: localStorageData.getValue("sortType"),
 		getParams: function(paramList){ // <-- takes an array of params obj names (ex: "sortTime"); --> returns that name:value pairs in an URL-friendly string
 			var params = [];
 			for(var i = 0; i < paramList.length; i++){
@@ -157,14 +195,18 @@ var urlParams = {
 			return params.join("&");Add
 
 		},
-		setType: function(type) { // makes it that when the type or time is changed, new images are fetched (it affects the results)
+		setType: function(type, loadImg) { // makes it that when the type or time is changed, new images are fetched (it affects the results)
 			this.sortType = type;
-			images.getImages(true);
+			if(loadImg){
+				images.getImages(true);	
+			}
 
 		},
-		setTime: function(time){
+		setTime: function(time, loadImg){
 			this.sortTime.value = time;
-			images.getImages(true);
+			if(loadImg){
+				images.getImages(true);	
+			}
 		},
 }
 
@@ -209,7 +251,7 @@ var requestUrls = {
 
 // Contains the subreddits data, as well as the related methods for adding/removing them from the list
 var subreddits = {
-	list: ["itookapicture", "photography", "OldSchoolCool", "Cinemagraphs", "AbandonedPorn", "MilitaryPorn", "EarthPorn", "spaceporn", "Eyebleach"],
+	list: localStorageData.getValue("list"),
 	addWithCheck: function(element){
 		var value = encodeURI(element.val());
 		if(value) {
@@ -346,10 +388,10 @@ var subreddits = {
 
 
 var images = {
-	displayTitles: elements.titleSettingInput.prop("checked"),
+	displayTitles: localStorageData.getValue("displayTitles"),
 	imageRequests: [], // HTTP Requests for images data
 	continueSearch: true, // stops calling the getImages function when there is no more data to get
-	imagesTarget: 10, // roughly how many images to display for the fresh image requests
+	imagesTarget: 25, // roughly how many images to display for the fresh image requests
 	maxNewSearchRequests: 5, // stops trying to get the imagesTarget no. of images when the requests for that exeed this amount
 	searchCount: 0, // keeps track of the no. of requests for fresh image requests
 	maximumResWidth: 320, // the image resolution target for previews, can go lower than this, but not higher
@@ -402,6 +444,7 @@ var images = {
 				urlParams.after.value = "";
 				images.rawResponseData = [];
 				elements.imagesContainer.html("<div class='col-width'></div>");
+				console.log(this.imageRequests);
 				this.imageRequests.forEach(function(req){
 					req.abort();
 				});
@@ -468,14 +511,15 @@ var images = {
 				},
 
 			});
-			this.imageRequests.push(req);
+			if(req){this.imageRequests.push(req);}
+			
 		}
 	}
 };
 
 
 var autocomplete = {
-	list: [],
+	aSrNames: [],
 	aComplete: new Awesomplete(elements.addInput[0], {
 		minChars: 1
 	}),
@@ -505,11 +549,11 @@ var autocomplete = {
 			i++;
 		}
 		if(this.combinedSuggestions.length){
-			autocomplete.list = [];
+			autocomplete.aSrNames = [];
 			this.combinedSuggestions.forEach(function(sr){
-				autocomplete.list.push(sr);
+				autocomplete.aSrNames.push(sr);
 			});
-			autocomplete.aComplete.list = autocomplete.list;
+			autocomplete.aComplete.list = autocomplete.aSrNames;
 			autocomplete.aComplete.evaluate();
 		}
 		else {
@@ -518,6 +562,7 @@ var autocomplete = {
 		}
 		this.recommendedListNSFW = [];
 		this.recommendedListSFW = [];
+		console.log(this.aSrNames);
 	},
 	addSuggestions: function(){
 		if(this.firstReqDone && this.secondReqDone){
@@ -621,20 +666,54 @@ function showOnload(el){
 
 
 function init(){
-	autocomplete.aComplete.list = [];
-	elements.typeChange.on("input", function(){
-		var value = $(this).val();
-		if(value === "controversial" || value === "top"){
-			$(this).next().removeClass("hidden");	
+	function setValues(){
+		elements.adultSettingInput.prop("checked", !urlParams.adultContent.value);
+		elements.titleSettingInput.prop("checked", images.displayTitles);
+		elements.typeChange.val(urlParams.sortType);
+		elements.timeChange.val(urlParams.sortTime.value);
+	}
+	function adultSettingsChange(el, loadImg){
+		urlParams[$(el).attr("name")].value = !el.checked;
+		images.searchCount = 0;
+		if(loadImg){
+			images.getImages(true);
+		}
+		autocomplete.getAutocomplete(elements.addInput.val());
+	}
+	function titleSettingsChange(el){
+		images[$(el).attr("name")] = el.checked;
+		if(images[$(el).attr("name")]){
+			elements.imagesContainer.removeClass("no-titles");	
 		}
 		else {
-			$(this).next().addClass("hidden");	
+			elements.imagesContainer.addClass("no-titles");	
 		}
-		urlParams.setType(value);
-	});
+	}
+	function timeSettingsChange(el, loadImg){
+		urlParams.setTime($(el).val(), loadImg);
+	}
+	function typeSettingsChange(el, loadImg){
+		var value = $(el).val();
+		if(value === "controversial" || value === "top"){
+			$(el).next().removeClass("hidden");	
+		}
+		else {
+			$(el).next().addClass("hidden");	
+		}
+		urlParams.setType(value, loadImg);
+	}	
+	setValues();
+	adultSettingsChange(elements.adultSettingInput[0], false);
+	titleSettingsChange(elements.titleSettingInput[0]);
+	timeSettingsChange(elements.timeChange[0], false);
+	typeSettingsChange(elements.typeChange[0], false);
 
+	autocomplete.aComplete.list = [];
+	elements.typeChange.on("input", function(){
+		typeSettingsChange(this, true);
+	});
 	elements.timeChange.on("change", function(){
-		urlParams.setTime($(this).val());
+		timeSettingsChange(this, true);
 	});
 
 	elements.subredditList.on("click", ".removeSubreddit", function(){
@@ -647,22 +726,12 @@ function init(){
 	});
 
 
-
 	elements.adultSettingInput.on("change", function(){
-		urlParams[$(this).attr("name")].value = !this.checked;
-		images.searchCount = 0;
-		images.getImages(true);
-		autocomplete.getAutocomplete(elements.addInput.val());
+		adultSettingsChange(this, true);
 	});
 
 	elements.titleSettingInput.on("change", function(){
-		images[$(this).attr("name")] = this.checked;
-		if(images[$(this).attr("name")]){
-			elements.imagesContainer.removeClass("no-titles");	
-		}
-		else {
-			elements.imagesContainer.addClass("no-titles");	
-		}
+		titleSettingsChange(this);
 	});
 
 	elements.addInput[0].addEventListener("awesomplete-selectcomplete", function(evt){
@@ -760,9 +829,7 @@ function init(){
 		images.getImages(true);
 	});
 
-	subreddits.showList(elements.subredditList, true);
-	images.getImages(true);
-	relatedSubs.getRelatedSubs();
+
 
 	$(document.body).on("click", function(evt){
 		var menuClosed = !generalSettings.menuClosed;
@@ -777,6 +844,7 @@ function init(){
 			elements.subredditsContainer.addClass("slideHidden");
 				// console.log(evt.target, $(evt.target).parent(".subreddits").length);
 				generalSettings.menuClosed = true;
+				elements.hideSubreddits.toggleClass("open");
 		}
 	});
 	$(window).on("scroll wheel", function(evt){
@@ -784,10 +852,13 @@ function init(){
 			var bodyHeight = document.body.offsetHeight;
 			var windowScroll = window.scrollY + window.innerHeight;
 			if(windowScroll >= (bodyHeight - 35)) {
-				images.getImages(false);
+					images.getImages(false);
 			}	
 		}
 	});
+		subreddits.showList(elements.subredditList, true);
+	images.getImages(true);
+	relatedSubs.getRelatedSubs();
 }
 
 
