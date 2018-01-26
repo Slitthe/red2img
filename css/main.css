@@ -289,7 +289,6 @@ textarea {
 
 
 
-
 img {
     /*height: 200px;*/
 }
@@ -845,14 +844,14 @@ h2, h3 {
     bottom: 10px;
     left: 5px;
     right: 5px;
-    max-height: 3.5em;
+    max-height: 3.2em;
     box-sizing: border-box;
     padding: 0.5em;
     /*background: linear-gradient(to top, rgba(0,0,0,0.6), rgba(0,0,0,0.0));*/
      background: rgba(0,0,0,0.3);
     overflow: hidden;
 }
-.imgDesc .subredditName {
+.imgDesc .imgSubredditName {
     /*float: left;*/
     /*width: 35%;*/
     position: absolute;
@@ -862,8 +861,9 @@ h2, h3 {
     right: 5px;
     text-align: left;
     /*background: linear-gradient(to bottom, rgba(0,0,0,0.6), rgba(0,0,0,0.0));*/
-
-
+}
+.imgSubredditName {
+    text-shadow: 0.05em 0.05em 0 black;
 }
 :link, :visited {
     color: inherit;
@@ -1020,5 +1020,41 @@ a:hover, a:active {
 
 .resetImages:hover {
     background: #ada996;
+}
+
+/* --------------------------------------------- */
+
+
+
+
+
+
+/* -----------Loading & Load More -------------- */
+
+.loadMore {
+    padding: 15px 7px;   
+    font-size: 1.3rem;
+    border: 1px solid black;
+    border-radius: 5px;
+    margin: 50px auto 30px auto;
+    display: block;
+    max-width: 500px;
+    width: 75%;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: bold;
+    background: #e4dfc7;
+    color: #232323;
+
+}
+
+.loadMore:hover {
+    background: #b2ae9b;
+
+}
+.loadMore:active{
+    position: relative;
+    top: 2px;
 }
 /* --------------------------------------------- */

@@ -68,9 +68,8 @@ function ajaxRequest(reqUrl, condition, timeout, obj){
 	if(condition){
 		if(obj.loading){
 			elements.loading.removeClass("hidden");
-			// elements.inputs.forEach(function(selector){
-			// 	$(selector).attr("disabled", true);
-			// });
+			elements.loadMore.addClass("hidden");
+
 		}
 		return $.ajax({
 			 url: reqUrl,
@@ -111,9 +110,7 @@ function ajaxRequest(reqUrl, condition, timeout, obj){
 			 	if(obj.complete){ obj.complete(completeData);	}
 			 	if(obj.loading){
 			 		elements.loading.addClass("hidden");
-			 		// elements.inputs.forEach(function(selector){
-			 		// 	$(selector).attr("disabled", false);
-			 		// });
+			 		elements.loadMore.removeClass("hidden");
 			 	}
 			 }
 		});
@@ -352,7 +349,7 @@ var images = {
 	displayTitles: elements.titleSettingInput.prop("checked"),
 	imageRequests: [], // HTTP Requests for images data
 	continueSearch: true, // stops calling the getImages function when there is no more data to get
-	imagesTarget: 15, // roughly how many images to display for the fresh image requests
+	imagesTarget: 10, // roughly how many images to display for the fresh image requests
 	maxNewSearchRequests: 5, // stops trying to get the imagesTarget no. of images when the requests for that exeed this amount
 	searchCount: 0, // keeps track of the no. of requests for fresh image requests
 	maximumResWidth: 320, // the image resolution target for previews, can go lower than this, but not higher
@@ -392,7 +389,7 @@ var images = {
 			htmlS += "<img onerror=\"deleteEl(this);\" onload=\"showOnload(this);\" class=\"content faded\" src=\"" + images.getCorrectResolution(current);
 			htmlS += "\" data-fullurl=\"" + current.url + "\"" + "\">";
 			htmlS += "<div class=\"imgDesc clearfix\"><a href=\"" + requestUrls.base + current.permalink.substring(1) + "\" class='postText' target=\"_blank\" title=\"" +current.title + "\">" + current.title + "</a>";
-			htmlS += "<div class='subredditName'>" + current.subreddit_name_prefixed + "</div></div></div>";
+			htmlS += "<div class='imgSubredditName'>" + current.subreddit_name_prefixed + "</div></div></div>";
 		});
 		var imagesElements = $(htmlS);
 		this.rawResponseData = [];
@@ -417,6 +414,7 @@ var images = {
 		else {
 			this.searchCount = 0;
 		}
+		generalSettings.avoidMultipleRequests = false;
 		var url = requestUrls.postsData(subreddits.list);
 		var resData;
 		if(subreddits.list.length){
@@ -445,7 +443,7 @@ var images = {
 
 								}
 								else {
-									elements.loadMore.removeClass("hidden");								
+									elements.loadMore.removeClass("hidden");							
 								}
 								if((images.searchCount === images.maxNewSearchRequests) && imagesCount  === 0){
 									alertify.delay(5000).error("No images to load." );
@@ -458,11 +456,13 @@ var images = {
 								}
 								else {
 									images.searchCount = 0;
+									generalSettings.avoidMultipleRequests = true;
 								}
 							});
-							
-							
-						},
+				},
+				fail: function(){
+					generalSettings.avoidMultipleRequests = false;
+				},
 				complete: function() {
 					elements.loadMore.removeClass("hidden");
 				},
@@ -585,7 +585,7 @@ var relatedSubs = {
 			this.relatedSubsReq = ajaxRequest(requestUrls.recommended(), true, 5000, {
 				success: function(res){
 				res.forEach(function(srname){
-					html += "<li data-srname=" + srname.sr_name + ">/r/" + srname.sr_name + "</li>"; 
+					html += "<li class=\"recommandation\" data-srname=" + srname.sr_name + ">/r/" + srname.sr_name + "</li>"; 
 				});
 				elements.recommendedList.html(html);
 			},
@@ -600,8 +600,9 @@ var relatedSubs = {
 };
 
 var generalSettings = {
-	menuClosed: false,
-	delayList: []
+	menuClosed: true,
+	delayList: [],
+	avoidMultipleRequests: true
 }
 
 
@@ -709,7 +710,6 @@ function init(){
 		else {
 			generalSettings.delayList.forEach(function(currentDelay){
 				window.clearTimeout(currentDelay);
-				console.log(currentDelay);
 			});
 			$(elements.subredditsContainer.removeClass("invisible"));
 		}
@@ -732,7 +732,7 @@ function init(){
 		}
 		if(deleteList.length){
 			// confirm dialog
-			alertify.confirm("Are you sure you want to delete the selected subreddits?", function () {
+			alertify.confirm("Are you sure you want to remove the selected subreddits?", function () {
 			    subreddits.remove(deleteList);
 			    elements.checkAll.prop("checked", false);
 			}, function() {
@@ -764,15 +764,33 @@ function init(){
 	images.getImages(true);
 	relatedSubs.getRelatedSubs();
 
-	// $(document.body).on("click", function(evt){
-	// 	if(!generalSettings.menuClosed){
-	// 		if(evt.target !== elements.subredditsContainer[0] && $(evt.target).parents(".subreddits").length === 0){
-	// 			elements.subredditsContainer.addClass("slideHidden");
-	// 			generalSettings.menuClosed = true;
-	// 		}	
-	// 	}
-	// });
+	$(document.body).on("click", function(evt){
+		var menuClosed = !generalSettings.menuClosed;
+		var buttonTrigger = evt.target !== elements.hideSubreddits[0] && !$(event.target).parents(".hideSubreddits").length;
+		var subredditsContainerTrigger = evt.target !== elements.subredditsContainer[0] && $(evt.target).parents(".subreddits").length === 0;
+		var isRecommandation = evt.target.classList.contains("recommandation");
+		var isDialog = evt.target !== $(".alertify")[0];
+		var isConfirmBox = evt.target !== $(".dialog")[0] && $(evt.target).parents(".dialog").length === 0;
+		console.log(isDialog);
+
+		if(menuClosed && buttonTrigger && subredditsContainerTrigger && !isRecommandation && isDialog && isConfirmBox){
+			elements.subredditsContainer.addClass("slideHidden");
+				// console.log(evt.target, $(evt.target).parent(".subreddits").length);
+				generalSettings.menuClosed = true;
+		}
+	});
+	$(window).on("scroll wheel", function(evt){
+		if(generalSettings.avoidMultipleRequests){
+			var bodyHeight = document.body.offsetHeight;
+			var windowScroll = window.scrollY + window.innerHeight;
+			if(windowScroll >= (bodyHeight - 35)) {
+				images.getImages(false);
+			}	
+		}
+	});
 }
+
+
 init();
 
 var es = document.querySelector('.imagesContainer');
