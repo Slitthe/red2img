@@ -866,11 +866,17 @@ function init(){
 		var isRecommandation = evt.target.classList.contains("recommandation");
 		var isDialog = evt.target !== $(".alertify")[0];
 		var isConfirmBox = evt.target !== $(".dialog")[0] && $(evt.target).parents(".dialog").length === 0;
-		console.log(isDialog);
+		document.querySelector("h1").innerHTML = "";
+		document.querySelector("h1").innerHTML += menuClosed + "<br>";
+		document.querySelector("h1").innerHTML += buttonTrigger + "<br>";
+		document.querySelector("h1").innerHTML += subredditsContainerTrigger + "<br>";
+		document.querySelector("h1").innerHTML += isRecommandation + "<br>";
+		document.querySelector("h1").innerHTML += isDialog + "<br>";
+		document.querySelector("h1").innerHTML += isConfirmBox + "<br>";
 
 		if(menuClosed && buttonTrigger && subredditsContainerTrigger && !isRecommandation && isDialog && isConfirmBox){
 			elements.subredditsContainer.addClass("slideHidden");
-			alert("trigger");
+			alert(menuClosed, buttonTrigger, subredditsContainerTrigger, isRecommandation, isDialog, isConfirmBox);
 				// console.log(evt.target, $(evt.target).parent(".subreddits").length);
 				generalSettings.menuClosed = true;
 				elements.hideSubreddits.toggleClass("open");
