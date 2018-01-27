@@ -163,7 +163,7 @@ function ajaxRequest(reqUrl, condition, timeout, obj){
 	}
 }
 
-// API URL paramteres data & methods for retrieving / changing them
+// API URL parameters data & methods for retrieving / changing them
 var urlParams = {
 		searchQuery: {
 			name: "q",
@@ -661,7 +661,8 @@ var relatedSubs = {
 var generalSettings = {
 	menuClosed: true,
 	delayList: [],
-	avoidMultipleRequests: true
+	avoidMultipleRequests: true,
+	isTap: false
 }
 
 
@@ -853,21 +854,41 @@ function init(){
 		relatedSubs.getRelatedSubs();
 	})
 
-
-	$(document.body).on("click touchend", function(evt){
+	function closeSideMenu(evt){
 		var menuClosed = !generalSettings.menuClosed;
-		var buttonTrigger = evt.target !== elements.hideSubreddits[0] && !$(event.target).parents(".hideSubreddits").length;
-		var subredditsContainerTrigger = evt.target !== elements.subredditsContainer[0] && $(evt.target).parents(".subreddits").length === 0;
-		var isRecommandation = !(evt.target.classList.contains("recommandation"));
-		var isDialog = evt.target !== $(".alertify")[0];
-		var isConfirmBox = evt.target !== $(".dialog")[0] && $(evt.target).parents(".dialog").length === 0;
-		console.log(menuClosed, buttonTrigger, subredditsContainerTrigger, isRecommandation, isDialog, isConfirmBox);
+		if(menuClosed){
+			var buttonTrigger = evt.target !== elements.hideSubreddits[0] && !$(event.target).parents(".hideSubreddits").length;
+			var subredditsContainerTrigger = evt.target !== elements.subredditsContainer[0] && $(evt.target).parents(".subreddits").length === 0;
+			var isRecommandation = !(evt.target.classList.contains("recommandation"));
+			var isDialog = evt.target !== $(".alertify")[0];
+			var isConfirmBox = evt.target !== $(".dialog")[0] && $(evt.target).parents(".dialog").length === 0;
+			console.log(menuClosed, buttonTrigger, subredditsContainerTrigger, isRecommandation, isDialog, isConfirmBox);
 
-		if(menuClosed && buttonTrigger && subredditsContainerTrigger && isRecommandation && isDialog && isConfirmBox){
-			elements.subredditsContainer.addClass("slideHidden");
-				// console.log(evt.target, $(evt.target).parent(".subreddits").length);
-				generalSettings.menuClosed = true;
-				elements.hideSubreddits.toggleClass("open");
+			if(buttonTrigger && subredditsContainerTrigger && isRecommandation && isDialog && isConfirmBox){
+				elements.subredditsContainer.addClass("slideHidden");
+					// console.log(evt.target, $(evt.target).parent(".subreddits").length);
+					generalSettings.menuClosed = true;
+					elements.hideSubreddits.toggleClass("open");
+			}
+		}
+
+	}
+	$(document.body).on("click", function(evt){
+		closeSideMenu(evt);
+	});
+	$(document.body).on("touchstart", function(evt){
+		console.log("start");
+		generalSettings.isTap = true; 
+
+	});
+	$(document.body).on("touchmove", function(){
+		console.log("move");
+		generalSettings.isTap = false;
+	});
+	$(document.body).on("touchend", function(evt){
+		console.log(evt.target);
+		if(generalSettings.isTap){
+			closeSideMenu(evt);
 		}
 	});
 	$(window).on("scroll wheel", function(evt){
@@ -879,6 +900,9 @@ function init(){
 			}	
 		}
 	});
+
+	var isTap = false;
+
 		subreddits.showList(elements.subredditList, true);
 	images.getImages(true);
 	relatedSubs.getRelatedSubs();
