@@ -854,7 +854,7 @@ function init(){
 	})
 
 
-	$(document.body).on("click", function(evt){
+	$(document.body).on("click touchend", function(evt){
 		var menuClosed = !generalSettings.menuClosed;
 		var buttonTrigger = evt.target !== elements.hideSubreddits[0] && !$(event.target).parents(".hideSubreddits").length;
 		var subredditsContainerTrigger = evt.target !== elements.subredditsContainer[0] && $(evt.target).parents(".subreddits").length === 0;
