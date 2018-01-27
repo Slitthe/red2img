@@ -640,7 +640,7 @@ h2, h3 {
        border-right: 1px solid #444;
        position: relative;
     }
-    .subredditList, .multipleDeleteContainer {
+    .subredditList, .multipleDeleteContainer, .restoreSubreddits {
         width: 75%;
         margin: 0 auto;
         border-left: 1px solid #454545;
@@ -678,6 +678,19 @@ h2, h3 {
     .removeSubreddit:hover {
         color: #aaa;
         background: rgba(130, 30,30, 0.8);
+    }
+    .restoreSubreddits {
+        border: 1px solid black;
+        border-radius: 5px;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+        padding:3px 6px;
+        background: #e4dfc7;
+        color: #232323;
+        cursor: pointer;
+    }
+    .restoreSubreddits:hover {
+        background: #c4c0ac
     }
 /*    .subreddit-single:first-child {
         margin-top: 0px;
@@ -832,9 +845,9 @@ h2, h3 {
 .imgDesc {
     font-size: 0.8rem;
     /*background: linear-gradient(to top, rgba(0,0,0,1), rgba(0,0,0,0.0));*/
-    color: rgb(210,210,210);
+    color: rgb(220,220,220);
     /*text-shadow: 0.05em 0 black, -0.05em 0 black, 0 0.05em black, 0 -0.05em black;*/
-    text-shadow: 0 0 1px black;
+    text-shadow: 1px 1px 0 black;
     text-overflow: ellipsis;
 }
 .imgDesc .postText {
@@ -844,7 +857,7 @@ h2, h3 {
     bottom: 10px;
     left: 5px;
     right: 5px;
-    max-height: 3.2em;
+    max-height: 3.3em;
     box-sizing: border-box;
     padding: 0.5em;
     /*background: linear-gradient(to top, rgba(0,0,0,0.6), rgba(0,0,0,0.0));*/
@@ -864,6 +877,8 @@ h2, h3 {
 }
 .imgSubredditName {
     text-shadow: 1px 1px 0 black;
+    color: rgb(220,220,220);
+
 }
 :link, :visited {
     color: inherit;
