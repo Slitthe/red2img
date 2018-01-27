@@ -60,43 +60,52 @@ var elements = {
 	checkAll: $("#checkAll"),
 	resetImagesBtn: $("#resetImages"),
 	hideSubreddits: $("#hideSubreddits"),
-	subredditsContainer: $(".subreddits")
+	subredditsContainer: $(".subreddits"),
+	restoreSubreddits: $("#restoreSubreddits")
 };
+
+
 
 
 var localStorageData = {
 	initialData: {
-		list: ["itookapicture", "photography", "OldSchoolCool", "Cinemagraphs", "AbandonedPorn", "MilitaryPorn", "EarthPorn", "spaceporn", "Eyebleach"],
-		sortType: "hot",
-		sortTime: "day",
-		displayTitles: true,
-		adultContent: false
+		list: "[\"itookapicture\", \"photography\", \"OldSchoolCool\", \"Cinemagraphs\", \"AbandonedPorn\", \"MilitaryPorn\", \"EarthPorn\", \"spaceporn\", \"Eyebleach\"]",
+		sortType: "\"hot\"",
+		sortTime: "\"day\"",
+		displayTitles: "\"true\"",
+		adultContent: "\"false\""
 	},
-	locations: [
-		["list" , ["subreddits", "list"], true],
-		["sortType" , ["urlParams", "sortType"] ],
-		["sortTime" , ["urlParams", "sortTime", "value"] ],
-		["adultContent", ["urlParams", "adultContent", "value"] ],
-		["displayTitles", ["images", "displayTitles"] ]
-	],
-	updateStorage: function(){
-		for(var i = 0; i < this.locations.length; i++){
-			var item = window;
-			this.locations[i][1].forEach(function(current){
-				item = item[current];
-			});
-			if(this.locations[i][3]){
-				items = JSON.stringify(items);
-			}
-			localStorage.setItem(this.locations[i][0], JSON.stringify(item));
+	locations: {
+		"list": [ ["subreddits", "list"], true],
+		"sortType": [ ["urlParams", "sortType"] ],
+		"sortTime": [ ["urlParams", "sortTime", "value"] ],
+		"adultContent": [ ["urlParams", "adultContent", "value"] ],
+		"displayTitles": [ ["images", "displayTitles"] ]
+	},
+	updateStorage: function(name){
+		var item = window;
+		for(var i = 0; i < this.locations[name][0].length; i++){
+			item = item[this.locations[name][0][i]];
 		}
-		window.localStorage.setItem("list", JSON.stringify(subreddits.list));
+		console.log(item);
+		// console.log(item);
+		// for(var i = 0; i < this.locations.length; i++){
+		// 	var item = window[name];
+		// 	this.locations[i][1].forEach(function(current){
+		// 		item = item[current];
+		// 	});
+		// 	if(this.locations[i][3]){
+		// 		items = JSON.stringify(items);
+		// 	}
+		// 	localStorage.setItem(this.locations[i][0], JSON.stringify(item));
+		// }
+		window.localStorage.setItem(name, JSON.stringify(item));
 	},
 	deleteStorage: function(){
 		window.localStorage.clear();
 	},
 	getValue: function(name){
-		return window.localStorage.getItem(name) ? JSON.parse(window.localStorage.getItem(name)) : this.initialData[name];
+		return window.localStorage.getItem(name) ? JSON.parse(window.localStorage.getItem(name)) : JSON.parse(this.initialData[name]);
 	}
 }
 
@@ -200,13 +209,14 @@ var urlParams = {
 			if(loadImg){
 				images.getImages(true);	
 			}
-
+			localStorageData.updateStorage("sortType")
 		},
 		setTime: function(time, loadImg){
 			this.sortTime.value = time;
 			if(loadImg){
 				images.getImages(true);	
 			}
+			localStorageData.updateStorage("sortTime")
 		},
 }
 
@@ -278,6 +288,7 @@ var subreddits = {
 		});
 		autocomplete.aComplete.list = [];
 		autocomplete.aComplete.close();
+		localStorageData.updateStorage("list")
 
 	},
 	checkDuplicate: function(){
@@ -301,6 +312,7 @@ var subreddits = {
 		images.searchCount = 0;
 		images.getImages(true);
 		relatedSubs.getRelatedSubs()
+		localStorageData.updateStorage("list")
 	},
 	showList: function(element, add){ // constructs the subreddit list based on the subreddits.list (adds/removes if necessary)
 		var html = "", 
@@ -735,10 +747,12 @@ function init(){
 
 	elements.adultSettingInput.on("change", function(){
 		adultSettingsChange(this, true);
+		localStorageData.updateStorage("adultContent")
 	});
 
 	elements.titleSettingInput.on("change", function(){
 		titleSettingsChange(this);
+		localStorageData.updateStorage("displayTitles")
 	});
 
 	elements.addInput[0].addEventListener("awesomplete-selectcomplete", function(evt){
@@ -836,6 +850,11 @@ function init(){
 		images.getImages(true);
 	});
 
+	elements.restoreSubreddits.on("click", function(){
+		localStorageData.deleteStorage();
+		subreddits.list = JSON.parse(localStorageData.initialData.list);
+		subreddits.showList(elements.subredditList, true);
+	})
 
 
 	$(document.body).on("click", function(evt){
