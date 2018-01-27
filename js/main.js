@@ -876,7 +876,6 @@ function init(){
 
 		if(menuClosed && buttonTrigger && subredditsContainerTrigger && !isRecommandation && isDialog && isConfirmBox){
 			elements.subredditsContainer.addClass("slideHidden");
-			alert(menuClosed, buttonTrigger, subredditsContainerTrigger, isRecommandation, isDialog, isConfirmBox);
 				// console.log(evt.target, $(evt.target).parent(".subreddits").length);
 				generalSettings.menuClosed = true;
 				elements.hideSubreddits.toggleClass("open");
