@@ -424,7 +424,7 @@ var images = {
 			// if(current.domain.search("imgur") >= 0){
 			// 	current.url += ".jpg";
 			// }
-			return current.url.search(/(.jpg|.png|.jpeg|.bmp|.svg)$/gi) >= 0;
+			return current.url.search(/(.jpg|.png|.jpeg|.bmp|.svg|.gif)$/gi) >= 0;
 		});
 	},
 	getCorrectResolution: function(post){
@@ -847,11 +847,16 @@ function init(){
 	});
 
 	elements.restoreSubreddits.on("click", function(){
-		localStorageData.deleteStorage();
-		subreddits.list = JSON.parse(localStorageData.initialData.list);
-		subreddits.showList(elements.subredditList, true);
-		images.getImages(true);
-		relatedSubs.getRelatedSubs();
+		alertify.confirm("This will delete the current subreddits and replace them with the defaults one, are you sure you want to continue?", function () {
+		    localStorageData.deleteStorage();
+			subreddits.list = JSON.parse(localStorageData.initialData.list);
+			subreddits.showList(elements.subredditList, true);
+			images.getImages(true);
+			relatedSubs.getRelatedSubs();
+		}, function() {
+			
+		});
+		
 	})
 
 	function closeSideMenu(evt){
