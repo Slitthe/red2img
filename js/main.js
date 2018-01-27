@@ -854,6 +854,8 @@ function init(){
 		localStorageData.deleteStorage();
 		subreddits.list = JSON.parse(localStorageData.initialData.list);
 		subreddits.showList(elements.subredditList, true);
+		images.getImages(true);
+		relatedSubs.getRelatedSubs();
 	})
 
 

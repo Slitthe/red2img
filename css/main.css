@@ -863,7 +863,7 @@ h2, h3 {
     /*background: linear-gradient(to bottom, rgba(0,0,0,0.6), rgba(0,0,0,0.0));*/
 }
 .imgSubredditName {
-    text-shadow: 0.05em 0.05em 0 black;
+    text-shadow: 1px 1px 0 black;
 }
 :link, :visited {
     color: inherit;
