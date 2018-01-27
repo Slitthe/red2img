@@ -87,7 +87,6 @@ var localStorageData = {
 		for(var i = 0; i < this.locations[name][0].length; i++){
 			item = item[this.locations[name][0][i]];
 		}
-		console.log(item);
 		// console.log(item);
 		// for(var i = 0; i < this.locations.length; i++){
 		// 	var item = window[name];
@@ -297,7 +296,6 @@ var subreddits = {
 		});
 	},
 	remove: function(nameList){
-		console.log(nameList, this.list);
 		var dataIndex;
 		for(var i = 0; i < nameList.length; i++){
 			for(var j = 0; j < this.list.length; j++){
@@ -329,7 +327,6 @@ var subreddits = {
 				//     <input type="checkbox" class="checkAll hidden-input" id="checkAll">
 				//     <div class="faux-checkbox"></div>
 				// </div>
-				console.log(subreddits.list,inputs, inputs.indexOf(current.toLowerCase()), current);
 				if( inputs.indexOf(current) === -1){
 					html = "";
 					html += "<div class='subreddit-single clearfix' data-srname=\"" + current + "\">";
@@ -463,7 +460,6 @@ var images = {
 				urlParams.after.value = "";
 				images.rawResponseData = [];
 				elements.imagesContainer.html("<div class='col-width'></div>");
-				console.log(this.imageRequests);
 				this.imageRequests.forEach(function(req){
 					req.abort();
 				});
@@ -581,7 +577,6 @@ var autocomplete = {
 		}
 		this.recommendedListNSFW = [];
 		this.recommendedListSFW = [];
-		console.log(this.aSrNames);
 	},
 	addSuggestions: function(){
 		if(this.firstReqDone && this.secondReqDone){
@@ -866,15 +861,9 @@ function init(){
 		var isRecommandation = !(evt.target.classList.contains("recommandation"));
 		var isDialog = evt.target !== $(".alertify")[0];
 		var isConfirmBox = evt.target !== $(".dialog")[0] && $(evt.target).parents(".dialog").length === 0;
-		document.querySelector("h1").innerHTML = "";
-		document.querySelector("h1").innerHTML += menuClosed + "<br>";
-		document.querySelector("h1").innerHTML += buttonTrigger + "<br>";
-		document.querySelector("h1").innerHTML += subredditsContainerTrigger + "<br>";
-		document.querySelector("h1").innerHTML += isRecommandation + "<br>";
-		document.querySelector("h1").innerHTML += isDialog + "<br>";
-		document.querySelector("h1").innerHTML += isConfirmBox + "<br>";
+		console.log(menuClosed, buttonTrigger, subredditsContainerTrigger, isRecommandation, isDialog, isConfirmBox);
 
-		if(menuClosed && buttonTrigger && subredditsContainerTrigger && !isRecommandation && isDialog && isConfirmBox){
+		if(menuClosed && buttonTrigger && subredditsContainerTrigger && isRecommandation && isDialog && isConfirmBox){
 			elements.subredditsContainer.addClass("slideHidden");
 				// console.log(evt.target, $(evt.target).parent(".subreddits").length);
 				generalSettings.menuClosed = true;
