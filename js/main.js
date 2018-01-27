@@ -863,7 +863,7 @@ function init(){
 		var menuClosed = !generalSettings.menuClosed;
 		var buttonTrigger = evt.target !== elements.hideSubreddits[0] && !$(event.target).parents(".hideSubreddits").length;
 		var subredditsContainerTrigger = evt.target !== elements.subredditsContainer[0] && $(evt.target).parents(".subreddits").length === 0;
-		var isRecommandation = evt.target.classList.contains("recommandation");
+		var isRecommandation = !(evt.target.classList.contains("recommandation"));
 		var isDialog = evt.target !== $(".alertify")[0];
 		var isConfirmBox = evt.target !== $(".dialog")[0] && $(evt.target).parents(".dialog").length === 0;
 		document.querySelector("h1").innerHTML = "";
