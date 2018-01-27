@@ -286,9 +286,15 @@ var subreddits = {
 		});
 	},
 	remove: function(nameList){
+		console.log(nameList, this.list);
 		var dataIndex;
 		for(var i = 0; i < nameList.length; i++){
-			var dataIndex = this.list.indexOf(nameList[i]);
+			for(var j = 0; j < this.list.length; j++){
+				if(this.list[j].toLowerCase() === nameList[i].toLowerCase()){
+					dataIndex = j;
+					break;
+				}
+			}
 			this.list.splice(dataIndex, 1);
 		}
 		subreddits.showList(elements.subredditList, false);
@@ -303,7 +309,7 @@ var subreddits = {
 		currentIndex;
 		var elements = $("#subredditList > .subreddit-single");
 		for(i = 0; i < elements.length; i++){
-			inputs.push(elements[i].getAttribute("data-srname").toLowerCase());
+			inputs.push(elements[i].getAttribute("data-srname"));
 		}
 		if(add){
 			subreddits.list.forEach(function(current){
@@ -311,9 +317,10 @@ var subreddits = {
 				//     <input type="checkbox" class="checkAll hidden-input" id="checkAll">
 				//     <div class="faux-checkbox"></div>
 				// </div>
-				if( inputs.indexOf(current.toLowerCase()) === -1){
+				console.log(subreddits.list,inputs, inputs.indexOf(current.toLowerCase()), current);
+				if( inputs.indexOf(current) === -1){
 					html = "";
-					html += "<div class='subreddit-single clearfix' data-srname=\"" + current.toLowerCase() + "\">";
+					html += "<div class='subreddit-single clearfix' data-srname=\"" + current + "\">";
 					html += "<label class=\"custom-checkbox-wrapper\">";
 					html += "<input class=\"hidden-input\" type=\"checkbox\" name=\"" + current + "\">";
 					html += "<div class=\"faux-checkbox\"></div></label>";
@@ -327,9 +334,9 @@ var subreddits = {
 			});
 		}
 		else {
-			subreddits.list = subreddits.list.map(function(cr){
-				return cr.toLowerCase();
-			});
+			// subreddits.list = subreddits.list.map(function(cr){
+			// 	return cr.toLowerCase();
+			// });
 			inputs.forEach(function(current){
 				currentIndex = subreddits.list.indexOf(current);
 				if( currentIndex === -1){
