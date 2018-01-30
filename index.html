@@ -94,6 +94,8 @@
                     </select>
 
                     <button type="button" id="resetImages" class="resetImages no-input-style"><i class="fa fa-refresh"></i></button>
+
+
                 </div>
 <!--                 <label for="titles">Show Titles</label>
                 <input checked id="titles" type="checkbox" value="displayTitles" name="displayTitles"> -->
@@ -123,6 +125,24 @@
 
 
 
+        <div class="fullScreenShower hidden" id="fullScreenShower">
+            <button class="previousArrow no-input-style">&lt;</button>
+            <button class="nextArrow no-input-style">&gt;</button>
+            <button class="closeImageBtn no-input-style">X</button>
+            <div class="imgDesc clearfix">
+                <a href="https://www.reddit.com/r/logodesign/comments/7socgw/i_made_an_alternative_google_logo_by_accident/" class="postText" target="_blank" title="I made an alternative Google logo by accident.">I made an alternative Google logo by accident.</a>
+                <div class="imgSubredditName">r/logodesign</div>
+            </div>
+
+            <div class="positionIndicator">
+                <div class="loading"></div>
+                <span class="currentPosition"></span> / <span class="totalImages"></span>
+            </div>
+            <img class="content" src="https://upload.wikimedia.org/wikipedia/commons/d/d1/Mount_Everest_as_seen_from_Drukair2_PLW_edit.jpg">
+            <video preload="auto" autoplay="autoplay" loop="loop" class="hidden content">
+                <source src="#" type="#"></source>
+            </video>
+        </div>
 
         <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
 <!--         <script>window.jQuery || document.write('<script src="js/vendor/jquery-3.2.1.min.js"><\/script>')</script> -->

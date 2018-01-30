@@ -50,7 +50,7 @@ var elements = {
 	typeChange: $("#type"),
 	timeChange: $("#time"),
 	imagesContainer: $("#imagesContainer"),
-	loading: $("#loading"),
+	loading: $(".loading"),
 	recommendedList: $("#recommended"),
 	loadMore: $("#loadMore"),
 	// autocompleteDisplay: $("#autocomplete"),
@@ -61,7 +61,12 @@ var elements = {
 	resetImagesBtn: $("#resetImages"),
 	hideSubreddits: $("#hideSubreddits"),
 	subredditsContainer: $(".subreddits"),
-	restoreSubreddits: $("#restoreSubreddits")
+	restoreSubreddits: $("#restoreSubreddits"),
+	wholeScreenClose: $(".closeImageBtn"),
+	wholeScreenNext: $(".nextArrow"),
+	wholeScreenPrevious: $(".previousArrow"),
+	currentPositionDisplay: $(".currentPosition"),
+ 	totalImagesDisplay: $(".totalImages")
 };
 
 
@@ -206,14 +211,14 @@ var urlParams = {
 		setType: function(type, loadImg) { // makes it that when the type or time is changed, new images are fetched (it affects the results)
 			this.sortType = type;
 			if(loadImg){
-				images.getImages(true);	
+				images.getImages(true, true);	
 			}
 			localStorageData.updateStorage("sortType")
 		},
 		setTime: function(time, loadImg){
 			this.sortTime.value = time;
 			if(loadImg){
-				images.getImages(true);	
+				images.getImages(true, true);	
 			}
 			localStorageData.updateStorage("sortTime")
 		},
@@ -278,7 +283,7 @@ var subreddits = {
 		elements.addInput.val("");
 		subreddits.checkDuplicate();
 		subreddits.showList(elements.subredditList, true);
-		images.getImages(true);
+		images.getImages(true, true);
 		relatedSubs.getRelatedSubs();
 		autocomplete.autocompleteReq.forEach(function(req){
 			req.abort();
@@ -308,7 +313,7 @@ var subreddits = {
 		}
 		subreddits.showList(elements.subredditList, false);
 		images.searchCount = 0;
-		images.getImages(true);
+		images.getImages(true, true);
 		relatedSubs.getRelatedSubs()
 		localStorageData.updateStorage("list")
 	},
@@ -339,6 +344,7 @@ var subreddits = {
 					var el = $(html);
 					el.css("backgroundColor", colorGenerator());
 					el.appendTo(element);
+					wholeScreenImage.showHide();
 				}
 			});
 		}
@@ -404,6 +410,7 @@ var subreddits = {
 
 
 var images = {
+	currentImages: [],
 	displayTitles: localStorageData.getValue("displayTitles"),
 	imageRequests: [], // HTTP Requests for images data
 	continueSearch: true, // stops calling the getImages function when there is no more data to get
@@ -424,7 +431,9 @@ var images = {
 			// if(current.domain.search("imgur") >= 0){
 			// 	current.url += ".jpg";
 			// }
-			return current.url.search(/(.jpg|.png|.jpeg|.bmp|.svg|.gif)$/gi) >= 0;
+			var conditionOne = current.url.search(/(.jpg|.png|.jpeg|.svg|.gif|.gifv|.mp4|.webm)$/gi) >= 0;
+			var conditionTwo = current.url.search("gfycat.com") >= 0;
+			return conditionOne || conditionTwo;
 		});
 	},
 	getCorrectResolution: function(post){
@@ -450,13 +459,22 @@ var images = {
 			htmlS += "<div class='imgSubredditName'>" + current.subreddit_name_prefixed + "</div></div></div>";
 		});
 		var imagesElements = $(htmlS);
+		imagesElements.on("click", function(){
+			wholeScreenImage.show(this);
+		});
 		this.rawResponseData = [];
-
 		imagesElements.appendTo(elements.imagesContainer);
+		this.currentImages = [];
+		for (var i = 0; i < elements.imagesContainer.children(".imageResult").children("img").length; i++) {
+			this.currentImages.push(elements.imagesContainer.children(".imageResult").children("img")[i]);
+		};
+		elements.totalImagesDisplay.text(this.currentImages.length);
+		wholeScreenImage.showHide();
 	},
-	getImages(newSearch){ 
+	getImages(newSearch, freshSearch){ 
 		if(newSearch){
-			if(!this.searchCount){
+			console.log(this.searchCount);
+			if(!this.searchCount || freshSearch){
 				urlParams.after.value = "";
 				images.rawResponseData = [];
 				elements.imagesContainer.html("<div class='col-width'></div>");
@@ -471,10 +489,14 @@ var images = {
 		}
 		else {
 			this.searchCount = 0;
+			if(images.continueSearch ){
+				elements.wholeScreenNext.prop("disabled", true);
+			}
 		}
 		generalSettings.avoidMultipleRequests = false;
 		var url = requestUrls.postsData(subreddits.list);
 		var resData;
+
 		if(subreddits.list.length){
 			var req = ajaxRequest(url, images.continueSearch, 7000, {
 				reqName: "Getting Images",
@@ -505,9 +527,11 @@ var images = {
 								}
 								if((images.searchCount === images.maxNewSearchRequests) && imagesCount  === 0){
 									alertify.delay(5000).error("No images to load." );
+
 								}
 								else if(!succ.data.after){
 									alertify.delay(5000).error("No more images to load.");
+
 								}
 								if(newSearch && (imagesCount < images.imagesTarget) && (images.searchCount < images.maxNewSearchRequests)){
 									images.getImages(true);
@@ -519,9 +543,14 @@ var images = {
 							});
 				},
 				fail: function(){
+					console.log("fail");
+
 					generalSettings.avoidMultipleRequests = false;
+
 				},
 				complete: function() {
+					console.log("complete");
+					elements.wholeScreenNext.prop("disabled", false);
 					elements.loadMore.removeClass("hidden");
 				},
 
@@ -658,6 +687,106 @@ var relatedSubs = {
 	},
 };
 
+var wholeScreenImage = {
+	isVideo: "",
+	isGfyCat: "",
+	isImage: "", 
+	allowPrevious: true,
+	allowNext: true,
+	currentUrl: "",
+	currentTarget: "",
+	show: function(targetEl){
+		this.currentTarget = targetEl;
+		$(document.body).addClass("noScrollBody");
+		$(".fullScreenShower").removeClass("hidden");
+		this.change()
+		console.log(this.currentTarget);
+			elements.currentPositionDisplay.text(images.currentImages.indexOf($(this.currentTarget).children("img")[0]) + 1);
+			elements.totalImagesDisplay.text(images.currentImages.length);
+		this.showHide();
+	},
+	change: function(){
+		this.currentUrl = $(this.currentTarget).children("img").attr("data-fullurl");
+		this.isImage = this.currentUrl.search(/(.jpg|.png|.jpeg|.svg|.gif)$/gi) >= 0;
+		this.isVideo = this.currentUrl.search(/(.mp4|.webm|.gifv)$/i) >= 0;
+		this.isGyfCat = this.currentUrl.search(/^https:\/\/gfycat.com/) >= 0;
+		if(this.isImage){
+			console.log("is image");
+
+			$(".fullScreenShower > img").removeClass("hidden");
+			$(".fullScreenShower > video").addClass("hidden");
+
+		}
+		else if(this.isVideo || this.isGyfCat){
+			console.log("is video");
+			$(".fullScreenShower > img").addClass("hidden");
+			$(".fullScreenShower > video").removeClass("hidden");
+		}
+		console.log(this.isImage, this.isVideo, this.isGyfCat);
+
+		$(".fullScreenShower > img").prop("src", this.currentUrl);
+		$(".fullScreenShower > .imgDesc").html($(this.currentTarget).children(".imgDesc").html());
+		// console.log($(this.currentTarget).children(".imgDesc").html());
+
+	},
+	showHide: function(){
+		if(!$(this.currentTarget).prev()[0] || $(this.currentTarget).prev().hasClass("col-width") ){
+			elements.wholeScreenPrevious.addClass("hidden");
+			this.allowPrevious = false;
+		}
+		else {
+			elements.wholeScreenPrevious.removeClass("hidden");
+			this.allowPrevious = true;
+		}
+		if(!$(this.currentTarget).next()[0]){
+			elements.wholeScreenNext.addClass("hidden");
+			this.allowNext = false;
+		}
+		else {
+			elements.wholeScreenNext.removeClass("hidden");
+			this.allowNext = true;
+		}
+	},
+	hide: function(){
+		$(document.body).removeClass("noScrollBody");
+		$(".fullScreenShower").addClass("hidden");
+		msnry.layout();
+	},
+	previous: function(){
+		elements.wholeScreenPrevious.removeClass("hidden");
+		if($(this.currentTarget).prev()[0] || !$(this.currentTarget).prev().hasClass("col-width")){
+			this.currentTarget = $(this.currentTarget).prev();
+			this.change();
+		}
+
+		if(images.currentImages.indexOf($(this.currentTarget).children("img")[0]) !== -1){
+			elements.currentPositionDisplay.text(images.currentImages.indexOf($(this.currentTarget).children("img")[0]) + 1);
+			elements.totalImagesDisplay.text(images.currentImages.length);
+		}
+		wholeScreenImage.showHide();
+
+		// else {
+		// 	elements.wholeScreenPrevious.addClass("hidden");
+		// }
+	},
+	next: function(){
+		elements.wholeScreenNext.removeClass("hidden");
+
+		if($(this.currentTarget).next()[0]){
+			this.currentTarget = $(this.currentTarget).next();
+			this.change();
+		}
+		if( images.currentImages.indexOf($(this.currentTarget).children("img")[0]) === (images.currentImages.length - 1) ) {
+			images.getImages(false);
+		}
+		if(images.currentImages.indexOf($(this.currentTarget).children("img")[0]) !== -1){
+			elements.currentPositionDisplay.text(images.currentImages.indexOf($(this.currentTarget).children("img")[0]) + 1);
+			elements.totalImagesDisplay.text(images.currentImages.length);
+		}
+		wholeScreenImage.showHide();
+	},
+}
+
 var generalSettings = {
 	menuClosed: true,
 	delayList: [],
@@ -691,17 +820,17 @@ function init(){
 		urlParams[$(el).attr("name")].value = !el.checked;
 		images.searchCount = 0;
 		if(loadImg){
-			images.getImages(true);
+			images.getImages(true, true);
 		}
 		autocomplete.getAutocomplete(elements.addInput.val());
 	}
 	function titleSettingsChange(el){
 		images[$(el).attr("name")] = el.checked;
 		if(images[$(el).attr("name")]){
-			elements.imagesContainer.removeClass("no-titles");	
+			$(document.body).removeClass("no-titles");	
 		}
 		else {
-			elements.imagesContainer.addClass("no-titles");	
+			$(document.body).addClass("no-titles");	
 		}
 	}
 	function timeSettingsChange(el, loadImg){
@@ -843,7 +972,7 @@ function init(){
 		}
 	});
 	elements.resetImagesBtn.on("click", function(){
-		images.getImages(true);
+		images.getImages(true, true);
 	});
 
 	elements.restoreSubreddits.on("click", function(){
@@ -851,7 +980,7 @@ function init(){
 		    localStorageData.deleteStorage();
 			subreddits.list = JSON.parse(localStorageData.initialData.list);
 			subreddits.showList(elements.subredditList, true);
-			images.getImages(true);
+			images.getImages(true, true);
 			relatedSubs.getRelatedSubs();
 		}, function() {
 			
@@ -891,7 +1020,6 @@ function init(){
 		generalSettings.isTap = false;
 	});
 	$(document.body).on("touchend", function(evt){
-		console.log(evt.target);
 		if(generalSettings.isTap){
 			closeSideMenu(evt);
 		}
@@ -906,10 +1034,40 @@ function init(){
 		}
 	});
 
+	elements.wholeScreenClose.on("click", function(){
+		wholeScreenImage.hide();
+	});
+	elements.wholeScreenClose.on("click", function(){
+		wholeScreenImage.hide();
+	});
+	elements.wholeScreenPrevious.on("click", function(){
+		wholeScreenImage.previous();
+	});
+	elements.wholeScreenNext.on("click", function(){
+		wholeScreenImage.next();
+	});
+	$(document.body).on("keydown", function(evt){
+		if($(this).hasClass("noScrollBody")){
+			if(evt.which === 37) {
+				if(wholeScreenImage.allowPrevious){
+					wholeScreenImage.previous();
+				}
+			}
+			else if (evt.which === 39) {
+				if(wholeScreenImage.allowNext){
+					wholeScreenImage.next();
+				}
+			}
+			else if(evt.which === 27){
+				wholeScreenImage.hide();
+			}
+		}
+	});
+
 	var isTap = false;
 
 		subreddits.showList(elements.subredditList, true);
-	images.getImages(true);
+	images.getImages(true, true);
 	relatedSubs.getRelatedSubs();
 }
 
@@ -928,3 +1086,4 @@ function colorGenerator(){
 	var number = Math.floor(Math.random() * 361);
 	return "hsla(" + number + ", 35%, 35%, 0.2)";
 }
+
