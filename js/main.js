@@ -40,6 +40,32 @@ alertify.maxLogItems(5);
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // DOM elements
 var elements = {
 	subredditList: $("#subredditList"),
@@ -66,8 +92,53 @@ var elements = {
 	wholeScreenNext: $(".nextArrow"),
 	wholeScreenPrevious: $(".previousArrow"),
 	currentPositionDisplay: $(".currentPosition"),
- 	totalImagesDisplay: $(".totalImages")
+ 	totalImagesDisplay: $(".totalImages"),
+ 	wholeScreenVideo: $(".fullScreenShower > video"),
+ 	wholeScreenImg: $(".fullScreenShower > img"),
+ 	wholeScreenContainer: $(".fullScreenShower")
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -112,6 +183,49 @@ var localStorageData = {
 		return window.localStorage.getItem(name) ? JSON.parse(window.localStorage.getItem(name)) : JSON.parse(this.initialData[name]);
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 // Customized jQuery ajaxReqest, to avoid using $.ajaxSetup()
@@ -167,6 +281,49 @@ function ajaxRequest(reqUrl, condition, timeout, obj){
 		});
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // API URL parameters data & methods for retrieving / changing them
 var urlParams = {
@@ -225,6 +382,61 @@ var urlParams = {
 }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // Returns the API Requests URLs for different tasks
 var requestUrls = {
 	base: "https://www.reddit.com/",
@@ -262,6 +474,81 @@ var requestUrls = {
 		return "https://gfycat.com/cajax/get/" + name;
 	}
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -347,7 +634,7 @@ var subreddits = {
 					var el = $(html);
 					el.css("backgroundColor", colorGenerator());
 					el.appendTo(element);
-					wholeScreenImage.showHide();
+					wholeScreenShower.showHideArrows();
 				}
 			});
 		}
@@ -412,6 +699,86 @@ var subreddits = {
 };
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 var images = {
 	currentImages: [],
 	displayTitles: localStorageData.getValue("displayTitles"),
@@ -462,8 +829,8 @@ var images = {
 			htmlS += "<div class='imgSubredditName'>" + current.subreddit_name_prefixed + "</div></div></div>";
 		});
 		var imagesElements = $(htmlS);
-		imagesElements.on("click", function(){
-			wholeScreenImage.show(this);
+		imagesElements.children("img").on("click", function(){
+			wholeScreenShower.show(this);
 		});
 		this.rawResponseData = [];
 		imagesElements.appendTo(elements.imagesContainer);
@@ -472,7 +839,7 @@ var images = {
 			this.currentImages.push(elements.imagesContainer.children(".imageResult").children("img")[i]);
 		};
 		elements.totalImagesDisplay.text(this.currentImages.length);
-		wholeScreenImage.showHide();
+		wholeScreenShower.showHideArrows();
 	},
 	getImages(newSearch, freshSearch){ 
 		if(newSearch){
@@ -560,6 +927,60 @@ var images = {
 		}
 	}
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 var autocomplete = {
@@ -662,6 +1083,53 @@ var autocomplete = {
 	}
 };
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 var relatedSubs = {
 	relatedSubsReq: "",
 	getRelatedSubs: function(){
@@ -687,7 +1155,51 @@ var relatedSubs = {
 	},
 };
 
-var wholeScreenImage = {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+var wholeScreenShower = {
 	isVideo: "",
 	isGfyCat: "",
 	isImage: "", 
@@ -696,13 +1208,25 @@ var wholeScreenImage = {
 	currentUrl: "",
 	currentTarget: "",
 	show: function(targetEl){
-		this.currentTarget = targetEl;
+		this.currentTarget = $(targetEl).parent();;
 		$(document.body).addClass("noScrollBody");
 		$(".fullScreenShower").removeClass("hidden");
 		this.change()
 			elements.currentPositionDisplay.text(images.currentImages.indexOf($(this.currentTarget).children("img")[0]) + 1);
 			elements.totalImagesDisplay.text(images.currentImages.length);
-		this.showHide();
+		this.showHideArrows();
+	},
+	showHideContent: function(){
+		elements.wholeScreenVideo.children("source").prop("src", "");
+		elements.wholeScreenImg.prop("src", "");
+		if(this.isImage >= 0){
+			elements.wholeScreenImg.show()
+			elements.wholeScreenVideo.hide();
+		}
+		else {
+			elements.wholeScreenImg.hide()
+			elements.wholeScreenVideo.show();
+		}
 	},
 	change: function(){
 		var extension;
@@ -710,14 +1234,13 @@ var wholeScreenImage = {
 		this.isImage = this.currentUrl.search(/(.jpg|.png|.jpeg|.svg|.gif)$/gi);
 		this.isVideo = this.currentUrl.search(/(.mp4|.webm|.gifv)$/i);
 		this.isGfyCat = this.currentUrl.search(/^https:\/\/gfycat.com/);
+		this.showHideContent();
 		if(this.isImage >= 0){
 			$(".fullScreenShower > img").prop("src", this.currentUrl);
-			$(".fullScreenShower > img").removeClass("hidden");
-			$(".fullScreenShower > video").addClass("hidden");
+
 		}
 		else if(this.isVideo >= 0 || this.isGfyCat >= 0){
-			$(".fullScreenShower > img").addClass("hidden");
-			$(".fullScreenShower > video").removeClass("hidden");
+
 			if(this.isVideo >= 0){
 				// .gifv 
 				if(this.currentUrl.search(/.gifv$/i) >= 0){
@@ -727,9 +1250,9 @@ var wholeScreenImage = {
 				else {
 					extension = this.currentUrl.substring(isVideo);
 				}
-				$(".fullScreenShower > video source").prop("src", this.currentUrl);
-				$(".fullScreenShower > video source").prop("type", "video/" + extension.substring(1));
-				$(".fullScreenShower > video")[0].load();
+				elements.wholeScreenVideo.children("source").prop("src", this.currentUrl);
+				elements.wholeScreenVideo.children("source").prop("type", "video/" + extension.substring(1));
+				elements.wholeScreenVideo[0].load();
 
 			}
 			
@@ -743,7 +1266,8 @@ var wholeScreenImage = {
 						$(".fullScreenShower > video source").prop("src", res.gfyItem.mp4Url);
 						$(".fullScreenShower > video source").prop("type", "video/mp4");
 						$(".fullScreenShower > video")[0].load();
-					}
+					},
+					silent: true
 				});
 			}
 		}
@@ -754,7 +1278,7 @@ var wholeScreenImage = {
 		// console.log($(this.currentTarget).children(".imgDesc").html());
 
 	},
-	showHide: function(){
+	showHideArrows: function(){
 		if(!$(this.currentTarget).prev()[0] || $(this.currentTarget).prev().hasClass("col-width") ){
 			elements.wholeScreenPrevious.addClass("hidden");
 			this.allowPrevious = false;
@@ -788,7 +1312,7 @@ var wholeScreenImage = {
 			elements.currentPositionDisplay.text(images.currentImages.indexOf($(this.currentTarget).children("img")[0]) + 1);
 			elements.totalImagesDisplay.text(images.currentImages.length);
 		}
-		wholeScreenImage.showHide();
+		wholeScreenShower.showHideArrows();
 
 		// else {
 		// 	elements.wholeScreenPrevious.addClass("hidden");
@@ -808,7 +1332,7 @@ var wholeScreenImage = {
 			elements.currentPositionDisplay.text(images.currentImages.indexOf($(this.currentTarget).children("img")[0]) + 1);
 			elements.totalImagesDisplay.text(images.currentImages.length);
 		}
-		wholeScreenImage.showHide();
+		wholeScreenShower.showHideArrows();
 	},
 }
 
@@ -830,6 +1354,58 @@ function showOnload(el){
 	msnry.appended($(el).parent());
 	msnry.layout();
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1016,7 +1592,7 @@ function init(){
 	function closeSideMenu(evt){
 		var menuClosed = !generalSettings.menuClosed;
 		if(menuClosed){
-			var buttonTrigger = evt.target !== elements.hideSubreddits[0] && !$(event.target).parents(".hideSubreddits").length;
+			var buttonTrigger = evt.target !== elements.hideSubreddits[0] && !$(evt.target).parents(".hideSubreddits").length;
 			var subredditsContainerTrigger = evt.target !== elements.subredditsContainer[0] && $(evt.target).parents(".subreddits").length === 0;
 			var isRecommandation = !(evt.target.classList.contains("recommandation"));
 			var isDialog = evt.target !== $(".alertify")[0];
@@ -1034,20 +1610,19 @@ function init(){
 	$(document.body).on("click", function(evt){
 		closeSideMenu(evt);
 	});
-	$(document.body).on("touchstart", function(evt){
-		console.log("start");
-		generalSettings.isTap = true; 
+	// $(document.body).on("touchstart", function(evt){
+	// 	generalSettings.isTap = true; 
 
-	});
-	$(document.body).on("touchmove", function(){
-		console.log("move");
-		generalSettings.isTap = false;
-	});
-	$(document.body).on("touchend", function(evt){
-		if(generalSettings.isTap){
-			closeSideMenu(evt);
-		}
-	});
+	// });
+	// $(document.body).on("touchmove", function(){
+	// 	generalSettings.isTap = false;
+	// });
+	// $(document.body).on("touchend", function(evt){
+	// 		console.log(evt);
+	// 	if(generalSettings.isTap){
+	// 		closeSideMenu(evt);
+	// 	}
+	// });
 	$(window).on("scroll wheel", function(evt){
 		if(generalSettings.avoidMultipleRequests){
 			var bodyHeight = document.body.offsetHeight;
@@ -1059,34 +1634,41 @@ function init(){
 	});
 
 	elements.wholeScreenClose.on("click", function(){
-		wholeScreenImage.hide();
+		wholeScreenShower.hide();
 	});
 	elements.wholeScreenClose.on("click", function(){
-		wholeScreenImage.hide();
+		wholeScreenShower.hide();
 	});
 	elements.wholeScreenPrevious.on("click", function(){
-		wholeScreenImage.previous();
+		wholeScreenShower.previous();
 	});
 	elements.wholeScreenNext.on("click", function(){
-		wholeScreenImage.next();
+		wholeScreenShower.next();
 	});
 	$(document.body).on("keydown", function(evt){
 		if($(this).hasClass("noScrollBody")){
 			if(evt.which === 37) {
-				if(wholeScreenImage.allowPrevious){
-					wholeScreenImage.previous();
+				if(wholeScreenShower.allowPrevious){
+					wholeScreenShower.previous();
 				}
 			}
 			else if (evt.which === 39) {
-				if(wholeScreenImage.allowNext){
-					wholeScreenImage.next();
+				if(wholeScreenShower.allowNext){
+					wholeScreenShower.next();
 				}
 			}
 			else if(evt.which === 27){
-				wholeScreenImage.hide();
+				wholeScreenShower.hide();
 			}
 		}
 	});
+
+
+	var bodyHm = new Hammer(document.body);
+	bodyHm.on("tap", function(evt){
+		console.log("tap");
+		closeSideMenu(evt);
+	})
 
 	var isTap = false;
 
@@ -1111,3 +1693,18 @@ function colorGenerator(){
 	return "hsla(" + number + ", 35%, 35%, 0.2)";
 }
 
+
+
+
+var hm = new Hammer(elements.wholeScreenContainer[0]);
+hm.on('swipeleft', function(ev) {
+	if(wholeScreenShower.allowNext){
+		wholeScreenShower.next();
+	}
+});
+
+hm.on('swiperight', function(ev) {
+	if(wholeScreenShower.allowPrevious){
+		wholeScreenShower.previous();
+	}
+});

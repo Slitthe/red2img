@@ -857,7 +857,7 @@ h2, h3 {
     bottom: 10px;
     left: 5px;
     right: 5px;
-    max-height: 3.3em;
+    max-height: 2.8em;
     box-sizing: border-box;
     padding: 0.5em;
     /*background: linear-gradient(to top, rgba(0,0,0,0.6), rgba(0,0,0,0.0));*/
@@ -1194,6 +1194,8 @@ a:hover, a:active {
     max-height: initial;
     background: transparent;
     font-size: 1.2rem;
+    max-height: 4em;
+    overflow: hidden;
 }
 .fullScreenShower .imgSubredditName {
     letter-spacing: 0.08em;
