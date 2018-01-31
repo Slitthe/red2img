@@ -310,6 +310,7 @@ img {
     opacity: 0;   
     height: auto;
     width: 100%;
+    cursor: pointer;
 }
 
 .imageResult {
@@ -715,13 +716,13 @@ h2, h3 {
         list-style-type: none;
         font-size: 0.8rem;
         text-align: left;
-        padding: 10px 20px;
+        padding: 10px 10%;
     }
 
     .recommended li {
         border-radius: 7px;
         background: #bbb;
-        margin: 5px 10px;
+        margin: 5px 2.5%;
         padding: 5px;
         display: inline-block;
         cursor: pointer;
@@ -842,12 +843,15 @@ h2, h3 {
 .no-titles .imgDesc{
     display: none;
 }
-.imgDesc {
+
+.positionIndicator, .imgDesc {
     font-size: 0.8rem;
-    /*background: linear-gradient(to top, rgba(0,0,0,1), rgba(0,0,0,0.0));*/
     color: rgb(220,220,220);
-    /*text-shadow: 0.05em 0 black, -0.05em 0 black, 0 0.05em black, 0 -0.05em black;*/
     text-shadow: 1px 1px 0 black;
+
+
+}
+.imgDesc {
     text-overflow: ellipsis;
 }
 .imgDesc .postText {
@@ -1048,8 +1052,8 @@ a:hover, a:active {
 /* -----------Loading & Load More -------------- */
 
 .loadMore {
-    padding: 15px 7px;   
-    font-size: 1.3rem;
+    padding: 7px 7px;   
+    font-size: 1rem;
     border: 1px solid black;
     border-radius: 5px;
     margin: 50px auto 30px auto;
@@ -1092,7 +1096,7 @@ a:hover, a:active {
     right: 0;
     top: 0;
     bottom: 0;
-    background: gray;
+    background: #2f2f2f;
     z-index: 200;
     /*background-image: url(https://upload.wikimedia.org/wikipedia/commons/d/d1/Mount_Everest_as_seen_from_Drukair2_PLW_edit.jpg);*/
     /*background-size: contain;*/
@@ -1109,14 +1113,13 @@ a:hover, a:active {
 
 .fullScreenShower .loading {
     position: absolute;
-    left: -50px;
-    width: 1em;
-    height: 1em;
-    bottom: 0.2em;
-    margin: 0;
-    border-width: 5px;
+    left: -2.1em;
+    width: 0.7em;
+    height: 0.7em;
     bottom: 50%;
-    margin-bottom: -0.5em;
+    margin: 0;
+    margin-bottom: -0.35em;
+    border-width: 0.3em;
     box-shadow: 0 0px 2px 0px black;
 }
 
@@ -1139,10 +1142,13 @@ a:hover, a:active {
     right: 0;
     height: 50px;
     width: 50px;
-    border-radius: 30px;
-    border-top-right-radius: 0;
-    background: green;
+    border-bottom-left-radius: 50%;
+    background: rgba(255,255,255,0.1);
+    transition: background 0.05s linear;
+}
 
+.closeImageBtn:hover {
+    background: rgba(255,255,255,0.35);
 }
 
 .previousArrow, .nextArrow {
@@ -1150,14 +1156,35 @@ a:hover, a:active {
     margin-top: -50px;
     height: 100px;
     width: 40px;
-    background: rgba(0,200,0, 0.2);
+    transition: background 0.05s linear;
+    transition: color 0.1s linear;
+    border-radius:20px;
+    background: rgba(255,255,255,0.1);
+}
+
+.previousArrow, .nextArrow, .closeImageBtn {
+    color: rgb(190, 190, 190);
+}
+
+
+.previousArrow:hover , .nextArrow:hover, .closeImageBtn:hover {
+    background: rgba(255,255,255,0.2);
+}
+.previousArrow:active , .nextArrow:active, .closeImageBtn:active {
+    background: rgba(255,255,255,0.5);
+    color: rgb(15,15,15);
 }
 
 .previousArrow {
     left: 0;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
 }
 .nextArrow {
     right: 0;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+
 }
 
 /*@media screen and (orientation: landscape){
@@ -1180,20 +1207,18 @@ a:hover, a:active {
 
 .positionIndicator {
     bottom: 0;
-    right: 0;
-    transform: translateX(-50%);
-    height: 50px;
-    line-height: 50px;
+    right: 1em;
+    height: 1.6em;
     display: block;
 }
 
 .fullScreenShower .postText {
     left: 0;
+    font-size: 0.9em;
     width: 75%;
     bottom: 0;
     max-height: initial;
     background: transparent;
-    font-size: 1.2rem;
     max-height: 4em;
     overflow: hidden;
 }
@@ -1203,8 +1228,7 @@ a:hover, a:active {
 .fullScreenShower .postText, .fullScreenShower .imgSubredditName {
     z-index: 201;
     text-align: left;
-    font-size: 1.2rem;
     color: #fff;
-    text-shadow: 0.7px 0.7px 0 black, -0.7px -0.7px 0 black, -0.7px 0.7px 0 black, 0.7px -0.7px 0 black;
+    text-shadow: 1px 1px 0 black;
 }
-/* -------------------------------------------------- 
+/* -------------------------------------------------- */
