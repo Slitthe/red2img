@@ -257,6 +257,9 @@ var requestUrls = {
 		url += urlParams.getParams(["longQuery", "includeProfiles"]);
 		url += "&include_over_18=" + adult;
 		return url;
+	},
+	gfyCatVideo: function(name){
+		return "https://gfycat.com/cajax/get/" + name;
 	}
 };
 
@@ -473,7 +476,6 @@ var images = {
 	},
 	getImages(newSearch, freshSearch){ 
 		if(newSearch){
-			console.log(this.searchCount);
 			if(!this.searchCount || freshSearch){
 				urlParams.after.value = "";
 				images.rawResponseData = [];
@@ -543,13 +545,11 @@ var images = {
 							});
 				},
 				fail: function(){
-					console.log("fail");
 
 					generalSettings.avoidMultipleRequests = false;
 
 				},
 				complete: function() {
-					console.log("complete");
 					elements.wholeScreenNext.prop("disabled", false);
 					elements.loadMore.removeClass("hidden");
 				},
@@ -700,31 +700,56 @@ var wholeScreenImage = {
 		$(document.body).addClass("noScrollBody");
 		$(".fullScreenShower").removeClass("hidden");
 		this.change()
-		console.log(this.currentTarget);
 			elements.currentPositionDisplay.text(images.currentImages.indexOf($(this.currentTarget).children("img")[0]) + 1);
 			elements.totalImagesDisplay.text(images.currentImages.length);
 		this.showHide();
 	},
 	change: function(){
+		var extension;
 		this.currentUrl = $(this.currentTarget).children("img").attr("data-fullurl");
-		this.isImage = this.currentUrl.search(/(.jpg|.png|.jpeg|.svg|.gif)$/gi) >= 0;
-		this.isVideo = this.currentUrl.search(/(.mp4|.webm|.gifv)$/i) >= 0;
-		this.isGyfCat = this.currentUrl.search(/^https:\/\/gfycat.com/) >= 0;
-		if(this.isImage){
-			console.log("is image");
-
+		this.isImage = this.currentUrl.search(/(.jpg|.png|.jpeg|.svg|.gif)$/gi);
+		this.isVideo = this.currentUrl.search(/(.mp4|.webm|.gifv)$/i);
+		this.isGfyCat = this.currentUrl.search(/^https:\/\/gfycat.com/);
+		if(this.isImage >= 0){
+			$(".fullScreenShower > img").prop("src", this.currentUrl);
 			$(".fullScreenShower > img").removeClass("hidden");
 			$(".fullScreenShower > video").addClass("hidden");
-
 		}
-		else if(this.isVideo || this.isGyfCat){
-			console.log("is video");
+		else if(this.isVideo >= 0 || this.isGfyCat >= 0){
 			$(".fullScreenShower > img").addClass("hidden");
 			$(".fullScreenShower > video").removeClass("hidden");
-		}
-		console.log(this.isImage, this.isVideo, this.isGyfCat);
+			if(this.isVideo >= 0){
+				// .gifv 
+				if(this.currentUrl.search(/.gifv$/i) >= 0){
+					extension = ".mp4";
+					this.currentUrl = this.currentUrl.replace(/.gifv$/i, extension);
+				}
+				else {
+					extension = this.currentUrl.substring(isVideo);
+				}
+				$(".fullScreenShower > video source").prop("src", this.currentUrl);
+				$(".fullScreenShower > video source").prop("type", "video/" + extension.substring(1));
+				$(".fullScreenShower > video")[0].load();
 
-		$(".fullScreenShower > img").prop("src", this.currentUrl);
+			}
+			
+
+			if(this.isGfyCat >= 0) {
+				var vidName =  this.currentUrl.replace(/https:\/\/gfycat.com\/+/, "");
+				var reqUrl = requestUrls.gfyCatVideo(vidName);
+				ajaxRequest(reqUrl, true, 5000, {
+					success: function(res){
+						console.log(res.gfyItem.mp4Url)
+						$(".fullScreenShower > video source").prop("src", res.gfyItem.mp4Url);
+						$(".fullScreenShower > video source").prop("type", "video/mp4");
+						$(".fullScreenShower > video")[0].load();
+					}
+				});
+			}
+		}
+
+
+
 		$(".fullScreenShower > .imgDesc").html($(this.currentTarget).children(".imgDesc").html());
 		// console.log($(this.currentTarget).children(".imgDesc").html());
 
@@ -996,7 +1021,6 @@ function init(){
 			var isRecommandation = !(evt.target.classList.contains("recommandation"));
 			var isDialog = evt.target !== $(".alertify")[0];
 			var isConfirmBox = evt.target !== $(".dialog")[0] && $(evt.target).parents(".dialog").length === 0;
-			console.log(menuClosed, buttonTrigger, subredditsContainerTrigger, isRecommandation, isDialog, isConfirmBox);
 
 			if(buttonTrigger && subredditsContainerTrigger && isRecommandation && isDialog && isConfirmBox){
 				elements.subredditsContainer.addClass("slideHidden");
