@@ -1208,8 +1208,10 @@ var wholeScreenShower = {
 	allowNext: true,
 	currentUrl: "",
 	currentTarget: "",
+	scrollLocation: "",
 	show: function(targetEl){
 		this.currentTarget = $(targetEl).parent();;
+		this.scrollLocation = window.scrollY;
 		$(document.body).addClass("noScrollBody");
 		$(".fullScreenShower").removeClass("hidden");
 		this.change()
@@ -1219,13 +1221,14 @@ var wholeScreenShower = {
 	},
 	showHideContent: function(){
 		elements.wholeScreenVideo.children("source").prop("src", "");
-		elements.wholeScreenImg.prop("src", "");
+		// elements.wholeScreenImg.prop("src", "");
+		elements.wholeScreenContainer.css("backgroundImage", "");
 		if(this.isImage >= 0){
-			elements.wholeScreenImg.show()
+			// elements.wholeScreenImg.show()
 			elements.wholeScreenVideo.hide();
 		}
 		else {
-			elements.wholeScreenImg.hide()
+			// elements.wholeScreenImg.hide()
 			elements.wholeScreenVideo.show();
 		}
 	},
@@ -1237,7 +1240,7 @@ var wholeScreenShower = {
 		this.isGfyCat = this.currentUrl.search(/^https:\/\/gfycat.com/);
 		this.showHideContent();
 		if(this.isImage >= 0){
-			$(".fullScreenShower > img").prop("src", this.currentUrl);
+			elements.wholeScreenContainer.css("backgroundImage", "url(" + this.currentUrl + ")");
 
 		}
 		else if(this.isVideo >= 0 || this.isGfyCat >= 0){
@@ -1300,6 +1303,7 @@ var wholeScreenShower = {
 		}
 	},
 	hide: function(){
+		$("html")[0].scrollTop = this.scrollLocation;
 		$(document.body).removeClass("noScrollBody");
 		$(".fullScreenShower").addClass("hidden");
 		msnry.layout();
@@ -1610,6 +1614,9 @@ function init(){
 		}
 
 	}
+	var c = true;
+	$(window).on("resize", function(){
+	});
 	$(document.body).on("click", function(evt){
 		closeSideMenu(evt);
 	});
