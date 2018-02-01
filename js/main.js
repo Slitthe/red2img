@@ -1253,7 +1253,6 @@ var wholeScreenShower = {
 				elements.wholeScreenVideo.children("source").prop("src", this.currentUrl);
 				elements.wholeScreenVideo.children("source").prop("type", "video/" + extension.substring(1));
 				elements.wholeScreenVideo[0].load();
-				elements.wholeScreenVideo[0].play();
 
 			}
 			
@@ -1267,7 +1266,6 @@ var wholeScreenShower = {
 						$(".fullScreenShower > video source").prop("src", res.gfyItem.mp4Url);
 						$(".fullScreenShower > video source").prop("type", "video/mp4");
 						elements.wholeScreenVideo[0].load();
-						elements.wholeScreenVideo[0].play();
 					},
 					silent: true
 				});
@@ -1304,8 +1302,6 @@ var wholeScreenShower = {
 		msnry.layout();
 	},
 	previous: function(){
-		elements.wholeScreenVideo[0].pause();
-
 		elements.wholeScreenPrevious.removeClass("hidden");
 		if($(this.currentTarget).prev()[0] || !$(this.currentTarget).prev().hasClass("col-width")){
 			this.currentTarget = $(this.currentTarget).prev();
@@ -1323,8 +1319,6 @@ var wholeScreenShower = {
 		// }
 	},
 	next: function(){
-		elements.wholeScreenVideo[0].pause();
-		
 		elements.wholeScreenNext.removeClass("hidden");
 
 		if($(this.currentTarget).next()[0]){
