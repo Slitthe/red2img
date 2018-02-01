@@ -1303,7 +1303,7 @@ var wholeScreenShower = {
 		}
 	},
 	hide: function(){
-		$("html")[0].scrollTop = this.scrollLocation;
+		$("html, body").scrollTop(this.scrollLocation);
 		$(document.body).removeClass("noScrollBody");
 		$(".fullScreenShower").addClass("hidden");
 		msnry.layout();
