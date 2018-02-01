@@ -95,7 +95,8 @@ var elements = {
  	totalImagesDisplay: $(".totalImages"),
  	wholeScreenVideo: $(".fullScreenShower > video"),
  	wholeScreenImg: $(".fullScreenShower > img"),
- 	wholeScreenContainer: $(".fullScreenShower")
+ 	wholeScreenContainer: $(".fullScreenShower"),
+ 	toTopBtn: $(".toTop")
 };
 
 
@@ -1633,6 +1634,20 @@ function init(){
 					images.getImages(false);
 			}	
 		}
+	});
+	elements.toTopBtn.hide();
+	var isGreater = false;
+	$(window).on("scroll", function(){
+		if(window.scrollY >= 1200){
+			elements.toTopBtn.show();
+		}
+		else {
+			elements.toTopBtn.hide();
+		}
+	});
+	elements.toTopBtn.on("click", function(){
+		var scrollElements = $("html, body");
+		scrollElements.animate({scrollTop:0}, 500);
 	});
 
 	elements.wholeScreenClose.on("click", function(){

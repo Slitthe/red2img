@@ -59,6 +59,22 @@ h1 {
     margin: 0;
     padding: 50px 30px;
 }
+.toTop {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    border-radius: 50%;
+    background: rgba(0,0,0,0.2);
+    width: 40px;
+    height: 40px;
+    border: 1px solid rgba(255,255,255,0.5);
+    cursor: pointer;
+
+}
+.toTop:hover {
+    background: rgba(0,0,0,0.5);
+    color: rgb(255,255,255);
+}
 /* --------------------------------------------------- */
 
 
@@ -488,7 +504,7 @@ h1 {
     max-height: 2em;
     box-sizing: border-box;
     padding: 0.5em;
-     background: rgba(0,0,0,0.3);
+     background: rgba(0,0,0,0.4);
     overflow: hidden;
 }
 .imgDesc .imgSubredditName {
@@ -768,8 +784,8 @@ h1 {
 /* -----------Loading & Load More -------------- */
 .loading {
     margin: 20px auto;
-    width: 50px;
-    height: 50px;
+    width: 35px;
+    height: 35px;
     border: 9px solid rgba(0,0,0,0.1);
     border-top-color: rgba(0,0,0,0.8);
     border-radius: 50%;
@@ -888,12 +904,13 @@ h1 {
 }
 
 .previousArrow, .nextArrow, .closeImageBtn {
-    color: rgb(25, 25, 25);
+    color: rgba(25, 25, 25, 0.6);
 }
 
 
 .previousArrow:hover , .nextArrow:hover, .closeImageBtn:hover {
     background: rgba(255,255,255,0.2);
+    color: rgba(25, 25, 25, 0.8);
 }
 .previousArrow:active , .nextArrow:active, .closeImageBtn:active {
     background: rgba(255,255,255,0.5);
@@ -991,20 +1008,24 @@ h1 {
 }
 @media screen and (max-width: 1000px){
     .col-width, .imageResult { width: 33.3%; }
-    .imgDesc { font-size: 0.75rem;}
+    .imgDesc { font-size: 0.85rem;}
     .fullScreenShower .imgDesc, .positionIndicator { font-size: 1.1rem; }
 
 }
 @media screen and (max-width: 700px){
     .col-width, .imageResult { width: 50%; }
+    .imgDesc { font-size: 0.95rem;}
+
 }
 @media screen and (max-width: 400px){
     .col-width, .imageResult { width: 100%; }
+    .imgDesc { font-size: 1rem;}
     .fullScreenShower .imgDesc, .positionIndicator { font-size: 1.2rem; }
 }
 
 @media screen and (min-width: 1400px){
     .fullScreenShower .imgDesc, .positionIndicator { font-size: 1.1rem; }
+    .imgDesc { font-size: 0.85rem;}
 }
 @media screen and (min-width: 650px){
     .imgDesc .postText {
