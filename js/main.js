@@ -89,8 +89,8 @@ var elements = {
 	subredditsContainer: $(".subreddits"),
 	restoreSubreddits: $("#restoreSubreddits"),
 	wholeScreenClose: $(".closeImageBtn"),
-	wholeScreenNext: $(".nextArrow"),
-	wholeScreenPrevious: $(".previousArrow"),
+	wholeScreenNext: $(".next"),
+	wholeScreenPrevious: $(".previous"),
 	currentPositionDisplay: $(".currentPosition"),
  	totalImagesDisplay: $(".totalImages"),
  	wholeScreenVideo: $(".fullScreenShower > video"),
@@ -1220,16 +1220,17 @@ var wholeScreenShower = {
 		this.showHideArrows();
 	},
 	showHideContent: function(){
-		elements.wholeScreenVideo.children("source").prop("src", "");
 		// elements.wholeScreenImg.prop("src", "");
 		elements.wholeScreenContainer.css("backgroundImage", "");
 		if(this.isImage >= 0){
 			// elements.wholeScreenImg.show()
 			elements.wholeScreenVideo.hide();
+			elements.wholeScreenVideo.children("source").remove();
 		}
 		else {
 			// elements.wholeScreenImg.hide()
 			elements.wholeScreenVideo.show();
+			$("<source></source>").appendTo(elements.wholeScreenVideo);
 		}
 	},
 	change: function(){
@@ -1424,12 +1425,10 @@ function init(){
 		elements.typeChange.val(urlParams.sortType);
 		elements.timeChange.val(urlParams.sortTime.value);
 	}
-	function adultSettingsChange(el, loadImg){
+	function adultSettingsChange(el){
 		urlParams[$(el).attr("name")].value = !el.checked;
 		images.searchCount = 0;
-		if(loadImg){
-			images.getImages(true, true);
-		}
+		images.getImages(true, true);
 		autocomplete.getAutocomplete(elements.addInput.val());
 	}
 	function titleSettingsChange(el){
@@ -1479,7 +1478,7 @@ function init(){
 
 
 	elements.adultSettingInput.on("change", function(){
-		adultSettingsChange(this, true);
+		adultSettingsChange(this);
 		localStorageData.updateStorage("adultContent")
 	});
 

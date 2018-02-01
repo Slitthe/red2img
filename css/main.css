@@ -875,10 +875,32 @@ h1 {
     transform: translate(-50%, -50%);
 }
 
-.previousArrow, .nextArrow, .closeImageBtn, .positionIndicator {
+.previousArrow, .nextArrow, .closeImageBtn, .positionIndicator, .next, .previous {
     position: absolute;
     z-index: 202;
     cursor: pointer;
+}
+
+.previous {
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 33.3%;
+}
+
+.next {
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 33.3%;
+}
+
+.next:hover .nextArrow {
+    right: 0;
+}
+
+.previous:hover .previousArrow {
+    left: 0;
 }
 .closeImageBtn {
     top: 0;
@@ -888,6 +910,7 @@ h1 {
     border-bottom-left-radius: 50%;
     background: rgba(255,255,255,0.1);
     transition: background 0.05s linear;
+    z-index: 250;
 }
 
 .closeImageBtn:hover {
@@ -913,25 +936,26 @@ h1 {
 }
 
 
-.previousArrow:hover , .nextArrow:hover, .closeImageBtn:hover {
+.previous:hover .previousArrow , .next:hover .nextArrow, .closeImageBtn:hover {
     background: rgba(255,255,255,0.2);
     color: rgba(25, 25, 25, 0.8);
 }
-.previousArrow:active , .nextArrow:active, .closeImageBtn:active {
+.previous:active .previousArrow , .next:active .nextArrow, .closeImageBtn:active {
     background: rgba(255,255,255,0.5);
     color: rgb(15,15,15);
 }
 
 .previousArrow {
-    left: 0;
+    left: -35px;
+    transition: left 0.05s linear;
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
 }
 .nextArrow {
-    right: 0;
+    right: -35px;
+    transition: right 0.05s linear;
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
-
 }
 
 .noScrollBody {
@@ -947,16 +971,7 @@ h1 {
     display: block;
 }
 
-.fullScreenShower .postText {
-    left: 0;
-    font-size: 0.9em;
-    width: 75%;
-    bottom: 0;
-    max-height: initial;
-    background: transparent;
-    max-height: 3.5em;
-    overflow: hidden;
-}
+
 .fullScreenShower video {
     width: 100%;
     max-height: 100%;
@@ -976,6 +991,18 @@ h1 {
     text-align: left;
     color: #fff;
     text-shadow: 1px 1px 0 black;
+}
+
+.fullScreenShower .postText {
+    left: 0;
+    font-size: 0.9em;
+    width: 75%;
+    bottom: 0;
+    max-height: initial;
+    background: transparent;
+    max-height: 3.5em;
+    overflow: hidden;
+    z-index: 250;
 }
 /* -------------------------------------------------- */
 
