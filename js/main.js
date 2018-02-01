@@ -1253,6 +1253,7 @@ var wholeScreenShower = {
 				elements.wholeScreenVideo.children("source").prop("src", this.currentUrl);
 				elements.wholeScreenVideo.children("source").prop("type", "video/" + extension.substring(1));
 				elements.wholeScreenVideo[0].load();
+				elements.wholeScreenVideo[0].play();
 
 			}
 			
@@ -1266,6 +1267,7 @@ var wholeScreenShower = {
 						$(".fullScreenShower > video source").prop("src", res.gfyItem.mp4Url);
 						$(".fullScreenShower > video source").prop("type", "video/mp4");
 						elements.wholeScreenVideo[0].load();
+						elements.wholeScreenVideo[0].play();
 					},
 					silent: true
 				});
