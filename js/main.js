@@ -144,7 +144,7 @@ var elements = {
 
 var localStorageData = {
 	initialData: {
-		list: "[\"itookapicture\", \"photography\", \"OldSchoolCool\", \"Cinemagraphs\", \"AbandonedPorn\", \"MilitaryPorn\", \"EarthPorn\", \"spaceporn\", \"Eyebleach\"]",
+		list: "[\"itookapicture\", \"photography\", \"OldSchoolCool\", \"Cinemagraphs\", \"AbandonedPorn\", \"MilitaryPorn\", \"EarthPorn\", \"spaceporn\", \"Eyebleach\",\"gifs\",\"pics\"]",
 		sortType: "\"hot\"",
 		sortTime: "\"day\"",
 		displayTitles: "\"true\"",
