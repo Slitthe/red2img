@@ -18,9 +18,62 @@
         <!--[if lte IE 9]>
             <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
         <![endif]-->
-        <div class="heading-container">
-            <h1 class="main-heading">Red<span>2</span>IMG</h1>
-        </div>
+
+        <header>
+            <div class="main-heading-container">
+                <h1 class="main-heading">Red<span>2</span>IMG</h1>
+            </div>
+
+                    <div class="gallerySettings">
+
+                        <div id="settings" class="settings">
+                            <label>
+                                <div class="custom-slider-wrapper">
+                                    <input id="nsfw" type="checkbox" value="nsfw" name="adultContent" checked>
+                                    <div class="faux-checkbox"></div>
+                                    <span class="input-text"></span>
+                                </div>
+                                Safe For Work
+                            </label>
+
+                                <!-- <label for="nsfw">NSFW</label>
+                                <input id="nsfw" type="checkbox" value="nsfw" name="adultContent"> -->
+                            <label>
+                                <div class="custom-slider-wrapper">
+                                    <input checked id="titles" type="checkbox" value="displayTitles" name="displayTitles">
+                                    <div class="faux-checkbox"></div>
+                                    <span class="input-text"></span>
+                                </div>
+                                Show Info
+                            </label>
+                            <div class="sorting">
+                                Sort by: 
+                                <select class="no-input-style" name="type" id="type">
+                                    <option selected value="hot">Hot</option>
+                                    <option value="new">New</option>
+                                    <option value="rising">Rising</option>
+                                    <option value="controversial">Controversial</option>
+                                    <option value="top">Top</option>
+                                </select>
+                                <select class="hidden no-input-style" name="time" id="time">
+                                    <option value="hour">Hour</option>
+                                    <option selected value="day">Day</option>
+                                    <option value="week">Week</option>
+                                    <option value="controversial">Month</option>
+                                    <option value="year">Year</option>
+                                    <option value="all">All</option>
+                                </select>
+
+                                <button type="button" id="resetImages" class="resetImages no-input-style"><i class="fa fa-refresh"></i></button>
+
+
+                            </div>
+            <!--                 <label for="titles">Show Titles</label>
+                            <input checked id="titles" type="checkbox" value="displayTitles" name="displayTitles"> -->
+                        </div>
+                    </div>
+        </header>
+
         <button type="button" id="hideSubreddits" class="open hamburger-btn no-input-style hideSubreddits">
             <div class="bar"></div> 
             <div class="bar"></div> 
@@ -53,56 +106,7 @@
         </div>
 
 
-        <div class="gallerySettings">
 
-
-
-            <div id="settings" class="settings">
-                <label>
-                    <div class="custom-slider-wrapper">
-                        <input id="nsfw" type="checkbox" value="nsfw" name="adultContent" checked>
-                        <div class="faux-checkbox"></div>
-                        <span class="input-text"></span>
-                    </div>
-                    Safe For Work
-                </label>
-
-                    <!-- <label for="nsfw">NSFW</label>
-                    <input id="nsfw" type="checkbox" value="nsfw" name="adultContent"> -->
-                <label>
-                    <div class="custom-slider-wrapper">
-                        <input checked id="titles" type="checkbox" value="displayTitles" name="displayTitles">
-                        <div class="faux-checkbox"></div>
-                        <span class="input-text"></span>
-                    </div>
-                    Show Info
-                </label>
-                <div class="sorting">
-                    Sort by: 
-                    <select class="no-input-style" name="type" id="type">
-                        <option selected value="hot">Hot</option>
-                        <option value="new">New</option>
-                        <option value="rising">Rising</option>
-                        <option value="controversial">Controversial</option>
-                        <option value="top">Top</option>
-                    </select>
-                    <select class="hidden no-input-style" name="time" id="time">
-                        <option value="hour">Hour</option>
-                        <option selected value="day">Day</option>
-                        <option value="week">Week</option>
-                        <option value="controversial">Month</option>
-                        <option value="year">Year</option>
-                        <option value="all">All</option>
-                    </select>
-
-                    <button type="button" id="resetImages" class="resetImages no-input-style"><i class="fa fa-refresh"></i></button>
-
-
-                </div>
-<!--                 <label for="titles">Show Titles</label>
-                <input checked id="titles" type="checkbox" value="displayTitles" name="displayTitles"> -->
-            </div>
-        </div>
         
 
         

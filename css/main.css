@@ -111,11 +111,13 @@ audio, canvas, iframe, img, svg, video {
   background-size: cover;
   background-repeat:no-repeat;
 }
-.heading-container {
+.main-heading-container {
     text-align: center;
 }
-.settings, .heading-container {
+header {
     background: #e0e0e0;
+    margin-bottom: 70px;
+    box-shadow: 0px 6px 10px 0 rgba(0,0,0,0.35);
 }
 
 .settings {
