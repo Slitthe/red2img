@@ -93,7 +93,9 @@ audio, canvas, iframe, img, svg, video {
 .main-heading span {
   color: #ca1b1b;
   border: 1px solid gray;
-  border-bottom-color: transparent;
+  /*border-bottom-color: transparent;*/
+  border-radius: 10%;
+  background: rgba(100,100,100,0.25);
   padding: 0 4px;
   margin: 0 6px;
 }
