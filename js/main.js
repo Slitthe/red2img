@@ -1431,7 +1431,7 @@ function init(){
 	typeSettingsChange(elements.typeChange[0], false);
 
 	autocomplete.aComplete.list = [];
-	elements.typeChange.on("input", function(){
+	elements.typeChange.on("change", function(){
 		typeSettingsChange(this, true);
 	});
 	elements.timeChange.on("change", function(){
@@ -1510,6 +1510,11 @@ function init(){
 
 	elements.addBtn.on("click", function(){
 		subreddits.addWithCheck(elements.addInput);
+	});
+	elements.addInput.on("keydown", function(evt){
+		if( evt.which === 13 && $(this).val() ) {
+			subreddits.addWithCheck( $(this) );
+		}
 	});
 
 	elements.multipleDeleteBtn.on("click", function(){
@@ -1603,10 +1608,11 @@ function init(){
 	// 		closeSideMenu(evt);
 	// 	}
 	// });
-	$(window).on("scroll wheel", function(evt){
+	$(window).on("scroll wheel", function(evt) {
 		if(generalSettings.avoidMultipleRequests){
 			var bodyHeight = document.body.offsetHeight;
-			var windowScroll = window.scrollY + window.innerHeight;
+			var windowScroll = window.pageYOffset + window.innerHeight;
+			console.log(bodyHeight, windowScroll);
 			if(windowScroll >= (bodyHeight - 35)) {
 					images.getImages(false);
 			}	
