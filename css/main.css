@@ -932,7 +932,7 @@ h1 {
 }
 
 .previousArrow, .nextArrow, .closeImageBtn {
-    color: rgba(148, 146, 146, 0.8)
+    color: rgba(146, 146, 146, 0.8)
 }
 
 
@@ -940,7 +940,9 @@ h1 {
     background: rgba(255,255,255,0.2);
     color: rgba(25, 25, 25, 0.8);
 }
-.previous:active .previousArrow , .next:active .nextArrow, .closeImageBtn:active {
+.previous:active .previousArrow ,
+.next:active .nextArrow,
+.closeImageBtn:active {
     background: rgba(255,255,255,0.5);
     color: rgb(15,15,15);
 }

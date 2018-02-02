@@ -71,7 +71,7 @@ var elements = {
 	subredditList: $("#subredditList"),
 	addInput: $("#addSubreddit"),
 	addBtn: $("#addSubredditBtn"),
-	adultSettingInput:$(".settings #nsfw"),
+	adultSettingInput: $(".settings #nsfw"),
 	titleSettingInput: $(".settings #titles"),
 	typeChange: $("#type"),
 	timeChange: $("#time"),
@@ -79,8 +79,6 @@ var elements = {
 	loading: $(".loading"),
 	recommendedList: $("#recommended"),
 	loadMore: $("#loadMore"),
-	// autocompleteDisplay: $("#autocomplete"),
-	inputs: [],
 	srSearchContainer: $("#srSearchContainer"),
 	multipleDeleteBtn: $("#multipleDelete"),
 	checkAll: $("#checkAll"),
@@ -160,21 +158,11 @@ var localStorageData = {
 		"displayTitles": [ ["images", "displayTitles"] ]
 	},
 	updateStorage: function(name){
-		var item = window;
-		for(var i = 0; i < this.locations[name][0].length; i++){
+		var item = window, i;
+		for(i = 0; i < this.locations[name][0].length; i++){
 			item = item[this.locations[name][0][i]];
 		}
-		// console.log(item);
-		// for(var i = 0; i < this.locations.length; i++){
-		// 	var item = window[name];
-		// 	this.locations[i][1].forEach(function(current){
-		// 		item = item[current];
-		// 	});
-		// 	if(this.locations[i][3]){
-		// 		items = JSON.stringify(items);
-		// 	}
-		// 	localStorage.setItem(this.locations[i][0], JSON.stringify(item));
-		// }
+
 		window.localStorage.setItem(name, JSON.stringify(item));
 	},
 	deleteStorage: function(){
@@ -183,7 +171,7 @@ var localStorageData = {
 	getValue: function(name){
 		return window.localStorage.getItem(name) ? JSON.parse(window.localStorage.getItem(name)) : JSON.parse(this.initialData[name]);
 	}
-}
+};
 
 
 
@@ -231,56 +219,48 @@ var localStorageData = {
 
 // Customized jQuery ajaxReqest, to avoid using $.ajaxSetup()
 function ajaxRequest(reqUrl, condition, timeout, obj){
+
 	if(condition){
+
 		if(obj.loading){
 			elements.loading.removeClass("hidden");
 			elements.loadMore.addClass("hidden");
-
 		}
+
 		return $.ajax({
-			 url: reqUrl,
-			 method: "GET",
-			 crossDomain: true,
-			 dataType: "json",
-			 timeout: timeout,
-			 success: function(succData){
-			 	if(obj.success){ obj.success(succData);	}
-			 },
-			 error: function(errorData){
-			 	if(obj.fail){
-			 		obj.fail(errorData);
-			 	}
+			url: reqUrl,
+			method: "GET",
+			crossDomain: true,
+			dataType: "json",
+			timeout: timeout,
+			success: function(succData){
+				if(obj.success){ obj.success(succData); }
+			},
+			error: function(errorData){
+				if(obj.fail){
+					obj.fail(errorData);
+				}
 
-			 	if (!obj.silent){
-			 		// Timeout message
-			 		// General error message (unless the request is aborted by the script via .abort())
-			 		if(errorData.statusText === "timeout"){
-			 			alertify.delay(5000).error("<strong>" + obj.reqName + "</strong>: Request timeout.");
-			 		}
-			 		else if(errorData.statusText !== "abort") {
+				if (!obj.silent){
 
-			 			alertify.delay(5000).error("<strong>" + obj.reqName + "</strong>: Communication failed.");
-			 		}
-			 		// else if(errorData.statusText === "errror"){
-			 		// 	alertify.delay(5000).error("<strong>" + obj.reqName + "</strong>: Communication failed.");
-			 		// }
-			 	}
+					if(errorData.statusText === "timeout") {
+						alertify.delay(5000).error("<strong>" + obj.reqName + "</strong>: Request timeout.");
+					}
+					else if(errorData.statusText !== "abort") {
+						alertify.delay(5000).error("<strong>" + obj.reqName + "</strong>: Communication failed.");
+					}
+				}
+			},
+			complete: function(completeData){
+				if(obj.complete){ obj.complete(completeData);	}
+				if(obj.loading){
+					elements.loading.addClass("hidden");
+					elements.loadMore.removeClass("hidden");
+				}
+			}
+		}); // AJAX req return end
 
-
-			 	// if(!obj.silent && errorData.statusText !== "abort"){
-			 	// 	alertify.delay(5000).error("<strong>" + obj.reqName + "</strong>: Communication error.");
-			 	// }
-			 },
-			 complete: function(completeData){
-
-			 	if(obj.complete){ obj.complete(completeData);	}
-			 	if(obj.loading){
-			 		elements.loading.addClass("hidden");
-			 		elements.loadMore.removeClass("hidden");
-			 	}
-			 }
-		});
-	}
+	} //Condition end
 }
 
 
@@ -342,7 +322,7 @@ var urlParams = {
 		},
 		limit: {
 			name: "limit",
-			value: 15,
+			value: 15
 		},
 		adultContent: {
 			name: "include_over_18",
@@ -350,7 +330,7 @@ var urlParams = {
 		},
 		after: {
 			name: "after",
-			value: "",
+			value: ""
 		},
 		// Time and type start out as whatever their HTML value is		
 		sortTime: {
@@ -358,29 +338,29 @@ var urlParams = {
 			value: localStorageData.getValue("sortTime")
 		},
 		sortType: localStorageData.getValue("sortType"),
-		getParams: function(paramList){ // <-- takes an array of params obj names (ex: "sortTime"); --> returns that name:value pairs in an URL-friendly string
-			var params = [];
-			for(var i = 0; i < paramList.length; i++){
+		getParams: function(paramList) { // <-- takes an array of params obj names (ex: "sortTime"); --> returns that name:value pairs in an URL-friendly string
+			var params = [], i;
+			for(i = 0; i < paramList.length; i++){
 				params.push(this[paramList[i]].name + "=" + this[paramList[i]].value);
 			}
-			return params.join("&");Add
+			return params.join("&");
 
 		},
 		setType: function(type, loadImg) { // makes it that when the type or time is changed, new images are fetched (it affects the results)
 			this.sortType = type;
-			if(loadImg){
+			if(loadImg) {
 				images.getImages(true, true);	
 			}
-			localStorageData.updateStorage("sortType")
+			localStorageData.updateStorage("sortType");
 		},
-		setTime: function(time, loadImg){
+		setTime: function(time, loadImg) {
 			this.sortTime.value = time;
-			if(loadImg){
+			if(loadImg) {
 				images.getImages(true, true);	
 			}
-			localStorageData.updateStorage("sortTime")
-		},
-}
+			localStorageData.updateStorage("sortTime");
+		}
+};
 
 
 
@@ -442,32 +422,28 @@ var urlParams = {
 var requestUrls = {
 	base: "https://www.reddit.com/",
 	corsProxy: "https://cors-anywhere.herokuapp.com/",
-	postsData: function(subreddits){
+	postsData: function(subreddits) {
+		var url;
 		subreddits = subreddits.join("+").toLowerCase();
-		var url = this.base + "r/" + subreddits;
+		url = this.base + "r/" + subreddits;
 		url += "/" + urlParams.sortType + ".json?";
 		return url + urlParams.getParams(["limit", "after", "sortTime"]);
 	},
-	// search: function(query) {
-	// 	var url = this.base + "search.json?";
-	// 	urlParams.searchQuery.value = query;
-	// 	return url + urlParams.getParams(["searchLimit", "adultContent", "searchQuery"]);
-	// },
 	subExists: function(subName) {
-		var url = this.corsProxy + this.base
+		var url = this.corsProxy + this.base;
 		url += "r/" + subName + "/about/rules.json";
 		return url;
 	},
-	recommended: function(){
+	recommended: function() {
 		var url = this.base + "api/recommend/sr/srnames?";
 		url += "srnames=" + subreddits.list.join(",") + "&";
 		url += urlParams.getParams(["adultContent"]);
 		return this.corsProxy + url;
 	},
-	searchAutocomplete: function(query, adult){
+	searchAutocomplete: function(query, adult) {
 		var url = this.base + "api/subreddit_autocomplete.json?";
 		urlParams.longQuery.value = query;
-		url += urlParams.getParams(["longQuery", "includeProfiles"]);
+		url += urlParams.getParams( ["longQuery", "includeProfiles"] );
 		url += "&include_over_18=" + adult;
 		return url;
 	},
@@ -557,45 +533,42 @@ var requestUrls = {
 // Contains the subreddits data, as well as the related methods for adding/removing them from the list
 var subreddits = {
 	list: localStorageData.getValue("list"),
-	addWithCheck: function(element){
-		var value = encodeURI(element.val());
+	addWithCheck: function(element) {
+		var value = encodeURI( element.val() );
 		if(value) {
 			element.val("");
-			this.checkSubExist(value, function(){
+			this.checkSubExist(value, function() {
 				subreddits.addWithoutCheck(value);
-			}, function(){
-				// elements.autocompleteDisplay.html("");
-				// elements.autocompleteDisplay.addClass("hidden");
-			})
+			});
 		}
 	},
-	addWithoutCheck: function(value){
+	addWithoutCheck: function(value) {
 		subreddits.list.push(value);
 		elements.addInput.val("");
 		subreddits.checkDuplicate();
 		subreddits.showList(elements.subredditList, true);
 		images.getImages(true, true);
 		relatedSubs.getRelatedSubs();
-		autocomplete.autocompleteReq.forEach(function(req){
+		autocomplete.autocompleteReq.forEach(function(req) {
 			req.abort();
 			autocomplete.secondReqDone = false;
 			autocomplete.firstReqDone = false;
 		});
 		autocomplete.aComplete.list = [];
 		autocomplete.aComplete.close();
-		localStorageData.updateStorage("list")
+		localStorageData.updateStorage("list");
 
 	},
-	checkDuplicate: function(){
-		this.list = this.list.filter(function(curr, ind, arr){
+	checkDuplicate: function() {
+		this.list = this.list.filter(function(curr, ind, arr) {
 			return arr.slice(ind + 1).indexOf(curr) === -1;
 		});
 	},
-	remove: function(nameList){
-		var dataIndex;
-		for(var i = 0; i < nameList.length; i++){
-			for(var j = 0; j < this.list.length; j++){
-				if(this.list[j].toLowerCase() === nameList[i].toLowerCase()){
+	remove: function(nameList) {
+		var dataIndex, i, j;
+		for(i = 0; i < nameList.length; i++){
+			for(j = 0; j < this.list.length; j++){
+				if( this.list[j].toLowerCase() === nameList[i].toLowerCase() ) {
 					dataIndex = j;
 					break;
 				}
@@ -605,25 +578,21 @@ var subreddits = {
 		subreddits.showList(elements.subredditList, false);
 		images.searchCount = 0;
 		images.getImages(true, true);
-		relatedSubs.getRelatedSubs()
-		localStorageData.updateStorage("list")
+		relatedSubs.getRelatedSubs();
+		localStorageData.updateStorage("list");
 	},
-	showList: function(element, add){ // constructs the subreddit list based on the subreddits.list (adds/removes if necessary)
+	showList: function(element, add) { // constructs the subreddit list based on the subreddits.list (adds/removes if necessary)
 		var html = "", 
 		inputs = [], 
 		i,
-		currentIndex;
-		var elements = $("#subredditList > .subreddit-single");
-		for(i = 0; i < elements.length; i++){
-			inputs.push(elements[i].getAttribute("data-srname"));
+		currentIndex,
+		srElements = $("#subredditList > .subreddit-single");
+		for(i = 0; i < srElements.length; i++){
+			inputs.push( srElements[i].getAttribute("data-srname") );
 		}
-		if(add){
-			subreddits.list.forEach(function(current){
-				// <div class="custom-checkbox-wrapper">
-				//     <input type="checkbox" class="checkAll hidden-input" id="checkAll">
-				//     <div class="faux-checkbox"></div>
-				// </div>
-				if( inputs.indexOf(current) === -1){
+		if(add) {
+			subreddits.list.forEach(function(current) {
+				if( inputs.indexOf(current) === -1 ) {
 					html = "";
 					html += "<div class='subreddit-single clearfix' data-srname=\"" + current + "\">";
 					html += "<label class=\"custom-checkbox-wrapper\">";
@@ -640,55 +609,45 @@ var subreddits = {
 			});
 		}
 		else {
-			// subreddits.list = subreddits.list.map(function(cr){
-			// 	return cr.toLowerCase();
-			// });
-			inputs.forEach(function(current){
+			inputs.forEach(function(current) {
 				currentIndex = subreddits.list.indexOf(current);
-				if( currentIndex === -1){
-					$("#subredditList").children(".subreddit-single[data-srname='" + current + "']").fadeOut(function(){
+				if( currentIndex === -1 ) {
+					$("#subredditList").children(".subreddit-single[data-srname='" + current + "']").fadeOut(function() {
 						$(this).remove();
 					});
 				}
 			});
 		}
 	},
-	checkSubExist(subName, succesful, unsuccesful){
-		var reqName = "Subreddit Validation";
-		var success = function(data){
-			if(data.hasOwnProperty("site_rules")){
+	checkSubExist: function(subName, succesful) {
+		var reqName = "Subreddit Validation",
+		success = function(data){
+			if( data.hasOwnProperty("site_rules") ) {
 				succesful();
 			}
 			else {
 				alertify.delay(5000).error("<strong>" + reqName + "</strong>:Subreddit doesn't exist.");
-					unsuccesful();
 			}
-		};
-		var error = function(data){
-			if(data.status === 404){
+		},
+		error = function(data) {
+			if(data.status === 404) {
 				if(data.hasOwnProperty("responseJSON")){
-					if(data.responseJSON.hasOwnProperty("reason")){
+					if( data.responseJSON.hasOwnProperty("reason") ) {
 						alertify.delay(5000).error("<strong>" + reqName + "</strong>:Private or banned subreddit");
-						unsuccesful();
 					}
 					else {
 						alertify.delay(5000).error("<strong>" + reqName + "</strong>:Subreddit doesn't exist");
-						unsuccesful();
 					}
 				}
-				else {
-					unsuccesful();
-				}
 			}
-			else if(data.status === 403 && data.hasOwnProperty("responseJSON") && data.responseJSON.reason === "private"){
+			else if(data.status === 403 && data.hasOwnProperty("responseJSON") && data.responseJSON.reason === "private") {
 				alertify.delay(5000).error("<strong>" + reqName + "</strong>:Private  subreddit");
-				unsuccesful();
 			}
 			else {
 				alertify.delay(5000).error("<strong>" + reqName + "</strong>: Communication error.");
-
 			}
 		};
+
 		ajaxRequest(requestUrls.subExists(subName),true, 4000, {
 			success: success,
 			fail: error,
@@ -790,27 +749,26 @@ var images = {
 	searchCount: 0, // keeps track of the no. of requests for fresh image requests
 	maximumResWidth: 320, // the image resolution target for previews, can go lower than this, but not higher
 	rawResponseData: [], // unfiltered (for adult and images) response data
-	filterAdult: function(){
-		if(!urlParams.adultContent.value){
-			this.rawResponseData = this.rawResponseData.filter(function(current){
+	filterAdult: function() {
+		if(!urlParams.adultContent.value) {
+			this.rawResponseData = this.rawResponseData.filter(function(current) {
 				return !current.over_18;
 			});
 		}
 	},
-	keepOnlyImages: function(){
+	keepOnlyImages: function() {
 		this.rawResponseData = this.rawResponseData.filter(function(current){
-			// if(current.domain.search("imgur") >= 0){
-			// 	current.url += ".jpg";
-			// }
 			var conditionOne = current.url.search(/(.jpg|.png|.jpeg|.svg|.gif|.gifv|.mp4|.webm)$/gi) >= 0;
 			var conditionTwo = current.url.search("gfycat.com") >= 0;
 			return conditionOne || conditionTwo;
 		});
 	},
-	getCorrectResolution: function(post){
-		if(post.hasOwnProperty("preview")){
-			for(var i = post.preview.images[0].resolutions.length - 1; i >= 0; i--){
-				if(post.preview.images[0].resolutions[i].width <= 320){
+	getCorrectResolution: function(post) {
+		var i, l;
+		if(post.hasOwnProperty("preview")) {
+			l = post.preview.images[0].resolutions.length;
+			for(i = l - 1; i >= 0; i--) {
+				if(post.preview.images[0].resolutions[i].width <= 320) {
 					return post.preview.images[0].resolutions[i].url;
 				}
 			}
@@ -819,36 +777,39 @@ var images = {
 			return post.url;
 		}
 	},
-	displayImages: function(){
-		var htmlS = "";
-		this.rawResponseData.forEach(function(current, indx, arr){
-			//  
+	displayImages: function() {
+		var htmlS = "", imagesElements, len, i, crImages;
+		this.rawResponseData.forEach(function(current, indx, arr) {
 			htmlS += "<div class='imageResult'>";
 			htmlS += "<img onerror=\"deleteEl(this);\" onload=\"showOnload(this);\" class=\"content faded\" src=\"" + images.getCorrectResolution(current);
 			htmlS += "\" data-fullurl=\"" + current.url + "\"" + "\">";
 			htmlS += "<div class=\"imgDesc clearfix\"><a href=\"" + requestUrls.base + current.permalink.substring(1) + "\" class='postText' target=\"_blank\" title=\"" +current.title + "\">" + current.title + "</a>";
 			htmlS += "<div class='imgSubredditName'>" + current.subreddit_name_prefixed + "</div></div></div>";
 		});
-		var imagesElements = $(htmlS);
+		imagesElements = $(htmlS);
 		imagesElements.children("img").on("click", function(){
 			wholeScreenShower.show(this);
 		});
 		this.rawResponseData = [];
 		imagesElements.appendTo(elements.imagesContainer);
 		this.currentImages = [];
-		for (var i = 0; i < elements.imagesContainer.children(".imageResult").children("img").length; i++) {
-			this.currentImages.push(elements.imagesContainer.children(".imageResult").children("img")[i]);
-		};
+		// elements.imagesContainer.children(".imageResult").children("img").length;
+		len = elements.imagesContainer.children(".imageResult").length;
+		crImages = elements.imagesContainer.children(".imageResult").children("img");
+		for (i = 0; i < len; i++) {
+			this.currentImages.push(crImages[i]);
+		}
 		elements.totalImagesDisplay.text(this.currentImages.length);
 		wholeScreenShower.showHideArrows();
 	},
-	getImages(newSearch, freshSearch){ 
-		if(newSearch){
-			if(!this.searchCount || freshSearch){
+	getImages: function(newSearch, freshSearch) { 
+		var url, req;
+		if(newSearch) {
+			if(!this.searchCount || freshSearch) {
 				urlParams.after.value = "";
 				images.rawResponseData = [];
 				elements.imagesContainer.html("<div class='col-width'></div>");
-				this.imageRequests.forEach(function(req){
+				this.imageRequests.forEach(function(req) {
 					req.abort();
 				});
 				this.imageRequests = [];
@@ -859,76 +820,100 @@ var images = {
 		}
 		else {
 			this.searchCount = 0;
-			if(images.continueSearch ){
+			if(images.continueSearch) {
 				elements.wholeScreenNext.prop("disabled", true);
 			}
 		}
 		generalSettings.avoidMultipleRequests = false;
-		var url = requestUrls.postsData(subreddits.list);
-		var resData;
+		url = requestUrls.postsData(subreddits.list);
 
-		if(subreddits.list.length){
-			var req = ajaxRequest(url, images.continueSearch, 7000, {
+		if(subreddits.list.length) {
+			req = ajaxRequest(url, images.continueSearch, 7000, {
 				reqName: "Getting Images",
 				silent: false,
 				loading: true,
-				success: function(succ){
+				success: function(succ) {
+							var imagesCount;
 							succ.data.children.forEach(function(cr){
 								images.rawResponseData.push(cr.data);
 							});
 							images.keepOnlyImages();
-							images.filterAdult()
+							images.filterAdult();
 							urlParams.after.value = succ.data.after;
-							var displayImg = new Promise(function(res, rej){
-								images.displayImages();
-								setTimeout(function(){
-									res();
-								}, 250);
-							}).then(function(){
-								var imagesCount = $("#imagesContainer .imageResult").length;
-								if(!succ.data.after) {
-									images.searchCount = 5;
-									images.continueSearch = false;
-									elements.loadMore.addClass("hidden");
+							images.displayImages();
+							imagesCount = $("#imagesContainer .imageResult").length;
+							if(!succ.data.after) {
+								images.searchCount = 5;
+								images.continueSearch = false;
+								elements.loadMore.addClass("hidden");
+							}
+							else {
+								elements.loadMore.removeClass("hidden");							
+							}
+							if( (images.searchCount === images.maxNewSearchRequests) && imagesCount  === 0){
+								alertify.delay(5000).error("No images to load." );
 
-								}
-								else {
-									elements.loadMore.removeClass("hidden");							
-								}
-								if((images.searchCount === images.maxNewSearchRequests) && imagesCount  === 0){
-									alertify.delay(5000).error("No images to load." );
+							}
+							else if(!succ.data.after) {
+								alertify.delay(5000).error("No more images to load.");
 
-								}
-								else if(!succ.data.after){
-									alertify.delay(5000).error("No more images to load.");
-
-								}
-								if(newSearch && (imagesCount < images.imagesTarget) && (images.searchCount < images.maxNewSearchRequests)){
-									images.getImages(true);
-								}
-								else {
-									images.searchCount = 0;
-									generalSettings.avoidMultipleRequests = true;
-								}
-							});
+							}
+							if(newSearch && (imagesCount < images.imagesTarget) && (images.searchCount < images.maxNewSearchRequests)){
+								images.getImages(true);
+							}
+							else {
+								images.searchCount = 0;
+								generalSettings.avoidMultipleRequests = true;
+							}
 				},
-				fail: function(){
-
+				fail: function() {
 					generalSettings.avoidMultipleRequests = false;
-
 				},
 				complete: function() {
 					elements.wholeScreenNext.prop("disabled", false);
 					elements.loadMore.removeClass("hidden");
 				},
-
 			});
-			if(req){this.imageRequests.push(req);}
-			
+			if(req) { this.imageRequests.push(req); }
 		}
 	}
 };
 
+/*PROMISE IN CASE I FUCKED SOMETHING UP TRYING TO REPLACE IT
+
+var displayImg = new Promise(function(res, rej){
+	images.displayImages();
+	setTimeout(function(){
+		res();
+	}, 250);
+}).then(function() {
+	var imagesCount = $("#imagesContainer .imageResult").length;
+	if(!succ.data.after) {
+		images.searchCount = 5;
+		images.continueSearch = false;
+		elements.loadMore.addClass("hidden");
+
+	}
+	else {
+		elements.loadMore.removeClass("hidden");							
+	}
+	if( (images.searchCount === images.maxNewSearchRequests) && imagesCount  === 0){
+		alertify.delay(5000).error("No images to load." );
+
+	}
+	else if(!succ.data.after) {
+		alertify.delay(5000).error("No more images to load.");
+
+	}
+	if(newSearch && (imagesCount < images.imagesTarget) && (images.searchCount < images.maxNewSearchRequests)){
+		images.getImages(true);
+	}
+	else {
+		images.searchCount = 0;
+		generalSettings.avoidMultipleRequests = true;
+	}
+});
+*/
 
 
 
@@ -952,6 +937,9 @@ var images = {
 
 
 
+
+
+	
 
 
 
@@ -995,56 +983,57 @@ var autocomplete = {
 	recommendedListSFW: [],
 	recommendedListNSFW: [],
 	autocompleteReq: [], // HTTP Requests for autocomplete data
-	combineSuggestions: function(){
-		autocomplete.aComplete.list = [];
+	combineSuggestions: function() {
+		var i;
+		this.aComplete.list = [];
 		this.combinedSuggestions = [];
 		if(!urlParams.adultContent.value){
 			this.recommendedListNSFW = [];
 		}
-		var i = 0;
-		while(this.combinedSuggestions.length <= 5){
-			if(i % 3 === 0 && this.recommendedListNSFW.length){
+		i = 0;
+		while(this.combinedSuggestions.length <= 5) {
+			if(i % 3 === 0 && this.recommendedListNSFW.length) {
 				this.combinedSuggestions.push(this.recommendedListNSFW.shift());
 			}
 			else if(this.recommendedListSFW.length) {
-				this.combinedSuggestions.push(this.recommendedListSFW.shift())		
+				this.combinedSuggestions.push(this.recommendedListSFW.shift());		
 			}
-			if(!this.recommendedListSFW.length && !this.recommendedListNSFW.length){
+			if(!this.recommendedListSFW.length && !this.recommendedListNSFW.length) {
 				break;
 			}
 			i++;
 		}
-		if(this.combinedSuggestions.length){
-			autocomplete.aSrNames = [];
-			this.combinedSuggestions.forEach(function(sr){
+		if(this.combinedSuggestions.length) {
+			this.aSrNames = [];
+			this.combinedSuggestions.forEach(function(sr) {
 				autocomplete.aSrNames.push(sr);
 			});
-			autocomplete.aComplete.list = autocomplete.aSrNames;
-			autocomplete.aComplete.evaluate();
+			this.aComplete.list = this.aSrNames;
+			this.aComplete.evaluate();
 		}
 		else {
-			autocomplete.aComplete.list = [];
-			autocomplete.aComplete.close();
+			this.aComplete.list = [];
+			this.aComplete.close();
 		}
 		this.recommendedListNSFW = [];
 		this.recommendedListSFW = [];
 	},
-	addSuggestions: function(){
-		if(this.firstReqDone && this.secondReqDone){
+	addSuggestions: function() {
+		if(this.firstReqDone && this.secondReqDone) {
 			this.firstReqDone = false;
 			this.secondReqDone = false;
 			this.combineSuggestions();
 		}
 	},
-	getAutocomplete: function(value){
-		this.autocompleteReq.forEach(function(req){
+	getAutocomplete: function(value) {
+		this.autocompleteReq.forEach(function(req) {
 			req.abort();
 			autocomplete.secondReqDone = false;
 			autocomplete.firstReqDone = false;
 		});
-		if(elements.addInput.val()){
+		if(elements.addInput.val()) {
 			this.autocompleteReq.push( ajaxRequest(requestUrls.searchAutocomplete(value, true), true, 1500, {
-				complete: function(data){
+				complete: function(data) {
 					if(data.responseJSON){
 						data.responseJSON.subreddits.forEach(function(sr){
 							if(sr.allowedPostTypes.images && sr.name.substring(0,2) !== "u_" && sr.numSubscribers >= 1){
@@ -1073,13 +1062,13 @@ var autocomplete = {
 			}) );
 		}
 		else {
-			this.autocompleteReq.forEach(function(req){
+			this.autocompleteReq.forEach(function(req) {
 				req.abort();
 				autocomplete.secondReqDone = false;
 				autocomplete.firstReqDone = false;
 			});
-			autocomplete.aComplete.list = [];
-			autocomplete.aComplete.close();
+			this.aComplete.list = [];
+			this.aComplete.close();
 		}
 	}
 };
@@ -1133,27 +1122,27 @@ var autocomplete = {
 
 var relatedSubs = {
 	relatedSubsReq: "",
-	getRelatedSubs: function(){
-		if(this.relatedSubsReq){
+	getRelatedSubs: function() {
+		var html = "";
+		if(this.relatedSubsReq) {
 			this.relatedSubsReq.abort();
 		}
-		var html = "";
-		if(subreddits.list.length){
-			this.relatedSubsReq = ajaxRequest(requestUrls.recommended(), true, 5000, {
-				success: function(res){
-				res.forEach(function(srname){
+		if(subreddits.list.length) {
+			this.relatedSubsReq = ajaxRequest( requestUrls.recommended(), true, 5000, {
+				success: function(res) {
+				res.forEach(function(srname) {
 					html += "<li class=\"recommandation\" data-srname=" + srname.sr_name + ">/r/" + srname.sr_name + "</li>"; 
 				});
 				elements.recommendedList.html(html);
 			},
 			silent: true,
-			loading: false,
+			loading: false
 			});
 		}
 		else {
 			elements.recommendedList.html(html);
 		}
-	},
+	}
 };
 
 
@@ -1209,44 +1198,39 @@ var wholeScreenShower = {
 	currentUrl: "",
 	currentTarget: "",
 	scrollLocation: "",
-	show: function(targetEl){
-		this.currentTarget = $(targetEl).parent();;
+	show: function(targetEl) {
+		this.currentTarget = $(targetEl).parent();
 		this.scrollLocation = window.scrollY;
 		$(document.body).addClass("noScrollBody");
-		$(".fullScreenShower").removeClass("hidden");
-		this.change()
-			elements.currentPositionDisplay.text(images.currentImages.indexOf($(this.currentTarget).children("img")[0]) + 1);
-			elements.totalImagesDisplay.text(images.currentImages.length);
+		elements.wholeScreenContainer.removeClass("hidden");
+		this.change();
+		elements.currentPositionDisplay.text(images.currentImages.indexOf($(this.currentTarget).children("img")[0]) + 1);
+		elements.totalImagesDisplay.text(images.currentImages.length);
 		this.showHideArrows();
 	},
-	showHideContent: function(){
-		// elements.wholeScreenImg.prop("src", "");
+	showHideContent: function() {
 		elements.wholeScreenContainer.css("backgroundImage", "");
-		if(this.isImage >= 0){
-			// elements.wholeScreenImg.show()
+		if(this.isImage >= 0) {
 			elements.wholeScreenVideo.hide();
 			elements.wholeScreenVideo.children("source").remove();
 		}
 		else {
-			// elements.wholeScreenImg.hide()
 			elements.wholeScreenVideo.show();
 			$("<source></source>").appendTo(elements.wholeScreenVideo);
 		}
 	},
-	change: function(){
+	change: function() {
 		var extension;
 		this.currentUrl = $(this.currentTarget).children("img").attr("data-fullurl");
 		this.isImage = this.currentUrl.search(/(.jpg|.png|.jpeg|.svg|.gif)$/gi);
 		this.isVideo = this.currentUrl.search(/(.mp4|.webm|.gifv)$/i);
 		this.isGfyCat = this.currentUrl.search(/^https:\/\/gfycat.com/);
 		this.showHideContent();
-		if(this.isImage >= 0){
+		if(this.isImage >= 0) {
 			elements.wholeScreenContainer.css("backgroundImage", "url(" + this.currentUrl + ")");
-
 		}
-		else if(this.isVideo >= 0 || this.isGfyCat >= 0){
-
-			if(this.isVideo >= 0){
+		else if(this.isVideo >= 0 || this.isGfyCat >= 0) {
+			if(this.isVideo >= 0) {
 				// .gifv 
 				if(this.currentUrl.search(/.gifv$/i) >= 0){
 					extension = ".mp4";
@@ -1262,15 +1246,13 @@ var wholeScreenShower = {
 
 			}
 			
-
 			if(this.isGfyCat >= 0) {
 				var vidName =  this.currentUrl.replace(/https:\/\/gfycat.com\/+/, "");
 				var reqUrl = requestUrls.gfyCatVideo(vidName);
 				ajaxRequest(reqUrl, true, 5000, {
-					success: function(res){
-						console.log(res.gfyItem.mp4Url)
-						$(".fullScreenShower > video source").prop("src", res.gfyItem.mp4Url);
-						$(".fullScreenShower > video source").prop("type", "video/mp4");
+					success: function(res) {
+						elements.wholeScreenVideo.children("source").prop("src", res.gfyItem.mp4Url);
+						elements.wholeScreenVideo.children("source").prop("type", "video/mp4");
 						elements.wholeScreenVideo[0].load();
 						elements.wholeScreenVideo[0].play();
 					},
@@ -1278,15 +1260,10 @@ var wholeScreenShower = {
 				});
 			}
 		}
-
-
-
-		$(".fullScreenShower > .imgDesc").html($(this.currentTarget).children(".imgDesc").html());
-		// console.log($(this.currentTarget).children(".imgDesc").html());
-
+		elements.wholeScreenContainer.children(".imgDesc").html( $(this.currentTarget).children(".imgDesc").html() );
 	},
-	showHideArrows: function(){
-		if(!$(this.currentTarget).prev()[0] || $(this.currentTarget).prev().hasClass("col-width") ){
+	showHideArrows: function() {
+		if( !$(this.currentTarget).prev()[0] || $(this.currentTarget).prev().hasClass("col-width") ) {
 			elements.wholeScreenPrevious.addClass("hidden");
 			this.allowPrevious = false;
 		}
@@ -1294,7 +1271,7 @@ var wholeScreenShower = {
 			elements.wholeScreenPrevious.removeClass("hidden");
 			this.allowPrevious = true;
 		}
-		if(!$(this.currentTarget).next()[0]){
+		if( !$(this.currentTarget).next()[0] ) {
 			elements.wholeScreenNext.addClass("hidden");
 			this.allowNext = false;
 		}
@@ -1303,53 +1280,47 @@ var wholeScreenShower = {
 			this.allowNext = true;
 		}
 	},
-	hide: function(){
+	hide: function() {
 		$("html, body").scrollTop(this.scrollLocation);
 		$(document.body).removeClass("noScrollBody");
-		$(".fullScreenShower").addClass("hidden");
+		elements.wholeScreenContainer.addClass("hidden");
 		msnry.layout();
 	},
-	previous: function(){
+	previous: function() {
 		elements.wholeScreenPrevious.removeClass("hidden");
-		if($(this.currentTarget).prev()[0] || !$(this.currentTarget).prev().hasClass("col-width")){
+		if( $(this.currentTarget).prev()[0] || !$(this.currentTarget).prev().hasClass("col-width") ) {
 			this.currentTarget = $(this.currentTarget).prev();
 			this.change();
 		}
-
-		if(images.currentImages.indexOf($(this.currentTarget).children("img")[0]) !== -1){
-			elements.currentPositionDisplay.text(images.currentImages.indexOf($(this.currentTarget).children("img")[0]) + 1);
-			elements.totalImagesDisplay.text(images.currentImages.length);
-		}
-		wholeScreenShower.showHideArrows();
-
-		// else {
-		// 	elements.wholeScreenPrevious.addClass("hidden");
-		// }
+		this.updatePosition();
+		
 	},
-	next: function(){
+	next: function() {
 		elements.wholeScreenNext.removeClass("hidden");
-
-		if($(this.currentTarget).next()[0]){
+		if( $(this.currentTarget).next()[0] ) {
 			this.currentTarget = $(this.currentTarget).next();
 			this.change();
 		}
 		if( images.currentImages.indexOf($(this.currentTarget).children("img")[0]) === (images.currentImages.length - 1) ) {
 			images.getImages(false);
 		}
-		if(images.currentImages.indexOf($(this.currentTarget).children("img")[0]) !== -1){
+		this.updatePosition();
+	},
+	updatePosition: function() {
+		if( images.currentImages.indexOf( $(this.currentTarget).children("img")[0] ) !== -1 ) {
 			elements.currentPositionDisplay.text(images.currentImages.indexOf($(this.currentTarget).children("img")[0]) + 1);
 			elements.totalImagesDisplay.text(images.currentImages.length);
 		}
 		wholeScreenShower.showHideArrows();
-	},
-}
+	}
+};
 
 var generalSettings = {
 	menuClosed: true,
 	delayList: [],
 	avoidMultipleRequests: true,
 	isTap: false
-}
+};
 
 
 // don't show images with broken "src" link
