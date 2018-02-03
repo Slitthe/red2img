@@ -861,6 +861,7 @@ header {
 
     /*Sorting*/
     .sorting {
+        padding-left: 10px;
         border-top: 4px solid black;
         padding-top: 10px;
     }
