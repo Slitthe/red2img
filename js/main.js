@@ -1240,7 +1240,7 @@ var wholeScreenShower = {
 		this.currentUrl = $(this.currentTarget).children("img").attr("data-fullurl");
 		this.isImage = this.currentUrl.search(/(.jpg|.png|.jpeg|.svg|.gif)$/gi);
 		this.isVideo = this.currentUrl.search(/(.mp4|.webm|.gifv)$/i);
-		this.isGfyCat = this.currentUrl.search(/^https?:\/\/gfycat.com/);
+		this.isGfyCat = this.currentUrl.search(/^https?:\/\/gfycat.com);
 		this.showHideContent();
 		if(this.isImage >= 0) {
 			elements.wholeScreenContainer.css("backgroundImage", "url(" + this.currentUrl + ")");
@@ -1263,7 +1263,7 @@ var wholeScreenShower = {
 			}
 			
 			if(this.isGfyCat >= 0) {
-				var vidName =  this.currentUrl.replace(/http?s:\/\/gfycat.com\/+/, "");
+				var vidName =  this.currentUrl.replace(/http?s:\/\/gfycat.com\/*/, "");
 				var reqUrl = requestUrls.gfyCatVideo(vidName);
 				ajaxRequest(reqUrl, true, 5000, {
 					success: function(res) {
