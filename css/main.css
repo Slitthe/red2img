@@ -567,7 +567,7 @@ header {
 
 /* ----------------------Images----------------- */
 .col-width {
-    width: 12.5%;
+    width: 100%;
 }
 .imageResult .content {
     visibility: hidden;
@@ -579,7 +579,7 @@ header {
 }
 
 .imageResult {
-    width: 12.5%;
+    width: 100%;
     overflow: hidden;
     padding: 10px 5px;
     box-sizing: border-box;
@@ -1189,57 +1189,62 @@ header {
 
 /* ----------------MEDIA QUERIES--------------------- */
 
-@media screen and (max-width: 2100px){
-    .col-width, .imageResult { width: 16.6%; }
+@media screen and (max-width: 1920px){
+  .col-width, .imageResult {width: 16.6%;}
     .imgDesc { font-size: 1rem;}
 }
-@media screen and (max-width: 1700px){
-    .col-width, .imageResult { width: 20%; }
+@media screen and (max-width: 1600px){
+    .col-width, .imageResult {width: 20%;}
     .imgDesc { font-size: 0.9rem;}
 }
-@media screen and (max-width: 1400px){
-    .col-width, .imageResult { width: 25%; }
+@media screen and (max-width: 1280px){
+  .col-width, .imageResult {width: 25%;}
     .imgDesc { font-size: 0.85rem;}
 }
-@media screen and (max-width: 1000px){
-    .col-width, .imageResult { width: 33.3%; }
+@media screen and (max-width: 960px){
+  .col-width, .imageResult {width: 33.3%;}
     .imgDesc { font-size: 0.85rem;}
     .fullScreenShower .imgDesc, .positionIndicator { font-size: 1.1rem; }
-    .main-heading-container { font-size: 1.35rem; }
+    .main-heading-container { font-size: 1.15rem; }
 
 }
-@media screen and (max-width: 650px){
-    .col-width, .imageResult { width: 50%; }
+@media screen and (max-width: 640px){
+    .col-width, .imageResult {width: 50%;}
     .imgDesc { font-size: 0.95rem;}
     .main-heading-container { font-size: 1.15rem; }
     .main-heading-container .heading-info { font-size: 1em; }
-
 }
 @media screen and (max-width: 360px){
-    .col-width, .imageResult { width: 100%; }
+    .col-width, .imageResult {width: 100%;}
     .imgDesc { font-size: 1rem;}
     .fullScreenShower .imgDesc, .positionIndicator { font-size: 1.2rem; }
     .main-heading-container { font-size: 1rem; }
 }
 
-@media screen and (min-width: 1400px){
-    .fullScreenShower .imgDesc, .positionIndicator { font-size: 1.1rem; }
-    .imgDesc { font-size: 0.85rem;}
-}
-@media screen and (min-width: 1000px){
-  .main-heading-container {
-    font-size: 1.75rem;
-  }
-}
-@media screen and (min-width: 650px){
+
+
+
+
+@media screen and (min-width: 640px){
     .imgDesc .postText {
         max-height: 3.4em;
     }
 }
+@media screen and (min-width: 960px){
+  .main-heading-container {
+    font-size: 1.55rem;
+  }
+}
+@media screen and (min-width: 1280px){
+ 
+    .fullScreenShower .imgDesc, .positionIndicator { font-size: 1.1rem; }
+    .imgDesc { font-size: 0.85rem;}
+}
+@media screen and (min-width: 1920px){
+    .col-width, .imageResult {width: 14.2%;}
+}
+
 /* -------------------------------------------------- */
-
-
-
 
 
 
