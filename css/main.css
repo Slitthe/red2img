@@ -197,12 +197,6 @@ header {
 
 
 
-
-
-
-
-
-
     /* ======Show/hide button */
     .hideSubreddits {
         width: 40px;
@@ -391,11 +385,10 @@ header {
         position: relative;
         text-align: center;
         background: white;
-        padding: 7px 0;
         /*box-shadow: 0 0 7px 0px rgba(0,0,0,0.1);*/
         color: #222;
     }
-    .subreddit-single > .custom-checkbox-wrapper {
+    .subreddit-single .custom-checkbox-wrapper {
         position: absolute;
         left: 10px;
         top: 50%;
@@ -403,9 +396,12 @@ header {
         -webkit-transform: translateY(-50%);
         -moz-transform: translateY(-50%);
         -ms-transform: translateY(-50%);
-
     }
-    .subreddit-single > .removeSubreddit {
+    .subreddit-single > label {
+        height: 35px;
+        line-height: 35px;
+    }
+    .subreddit-single .removeSubreddit {
         transition: background 0.1s linear;
         -webkit-transition: background 0.1s linear;
         -moz-transition: background 0.1s linear;
@@ -603,6 +599,7 @@ header {
     display: block;
     /* Image Description (title link and subreddit which it belongs it) */
 }
+
 .no-titles .imgDesc{
     display: none;
 }

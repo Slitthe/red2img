@@ -595,10 +595,10 @@ var subreddits = {
 				if( inputs.indexOf(current) === -1 ) {
 					html = "";
 					html += "<div class='subreddit-single clearfix' data-srname=\"" + current + "\">";
-					html += "<label class=\"custom-checkbox-wrapper\">";
+					html += "<label><div class=\"custom-checkbox-wrapper\">";
 					html += "<input class=\"hidden-input\" type=\"checkbox\" name=\"" + current + "\">";
-					html += "<div class=\"faux-checkbox\"></div></label>";
-					html += "<div class='subredditName'>" + current + "</div>";
+					html += "<div class=\"faux-checkbox\"></div></div>";
+					html += "<div class='subredditName'>" + current + "</div></label>";
 					html += "<button class='removeSubreddit no-input-style' type='button'><i class=\"fa fa-trash-o\"></i></button>";
 					html += "</div>";
 					var el = $(html);
@@ -1659,6 +1659,11 @@ function init(){
 			else if(evt.which === 27){
 				wholeScreenShower.hide();
 			}
+		}
+		if(evt.which === 27 && !generalSettings.menuClosed){
+			elements.subredditsContainer.addClass("slideHidden");
+			generalSettings.menuClosed = true;
+			elements.hideSubreddits.toggleClass("open");
 		}
 	});
 
