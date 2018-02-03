@@ -79,25 +79,48 @@ audio, canvas, iframe, img, svg, video {
     background: rgba(0,0,0,0.6);
     color: rgb(255,255,255);
 }
-.main-heading {
+
+
+.main-heading-container {
   color: #2b1f1f;
-  font-size: 3.5rem;
   font-family: 'Montserrat', sans-serif;
+  font-size: 3rem;
+
+
+}
+
+
+.main-heading {
   text-shadow: 2px 2px 0 rgba(50,50,50,0.8),
     4px 4px 0 rgba(100,100,100,0.4);
   position: relative;
   display: inline-block;
   margin-top: 60px;
-    padding-right: 1.2em;
+  padding-right: 1.2em;
+  margin-bottom: 10px;
 }
 
-.main-heading span {
+
+.main-heading-container .normal-text {
+  font-weight: bold;
+}
+
+.main-heading-container .special-text {
   color: #ca1b1b;
-  border: 1px solid gray;
+  font-weight: bold;
+}
+
+.heading-info {
+  font-size: 0.75em;
+  margin: 0 0 10px 0;
+}
+
+.main-heading .special-text {
   /*border-bottom-color: transparent;*/
-  border-radius: 10%;
   background: rgba(100,100,100,0.25);
+  border: 1px solid gray;
   padding: 0 4px;
+  border-radius: 10%;
   margin: 0 6px;
 }
 .main-heading:after {
@@ -1182,25 +1205,31 @@ header {
     .col-width, .imageResult { width: 33.3%; }
     .imgDesc { font-size: 0.85rem;}
     .fullScreenShower .imgDesc, .positionIndicator { font-size: 1.1rem; }
-    .main-heading { font-size: 3rem; }
+    .main-heading-container { font-size: 1.35rem; }
 
 }
-@media screen and (max-width: 700px){
+@media screen and (max-width: 650px){
     .col-width, .imageResult { width: 50%; }
     .imgDesc { font-size: 0.95rem;}
-    .main-heading { font-size: 2.5rem; }
+    .main-heading-container { font-size: 1.15rem; }
+    .main-heading-container .heading-info { font-size: 1em; }
 
 }
-@media screen and (max-width: 400px){
+@media screen and (max-width: 360px){
     .col-width, .imageResult { width: 100%; }
     .imgDesc { font-size: 1rem;}
     .fullScreenShower .imgDesc, .positionIndicator { font-size: 1.2rem; }
-    .main-heading { font-size: 1.75rem; }
+    .main-heading-container { font-size: 1rem; }
 }
 
 @media screen and (min-width: 1400px){
     .fullScreenShower .imgDesc, .positionIndicator { font-size: 1.1rem; }
     .imgDesc { font-size: 0.85rem;}
+}
+@media screen and (min-width: 1000px){
+  .main-heading-container {
+    font-size: 1.75rem;
+  }
 }
 @media screen and (min-width: 650px){
     .imgDesc .postText {
