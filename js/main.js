@@ -1612,7 +1612,6 @@ function init(){
 		if(generalSettings.avoidMultipleRequests){
 			var bodyHeight = document.body.offsetHeight;
 			var windowScroll = window.pageYOffset + window.innerHeight;
-			console.log(bodyHeight, windowScroll);
 			if(windowScroll >= (bodyHeight - 35)) {
 					images.getImages(false);
 			}	
@@ -1666,7 +1665,6 @@ function init(){
 
 	var bodyHm = new Hammer(document.body);
 	bodyHm.on("tap", function(evt){
-		console.log("tap");
 		closeSideMenu(evt);
 	})
 
