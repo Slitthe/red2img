@@ -73,6 +73,7 @@ audio, canvas, iframe, img, svg, video {
     border: 2px solid rgba(255,255,255,0.5);
     cursor: pointer;
     z-index: 2;
+    display: none;
 
 }
 .toTop:hover {
@@ -566,39 +567,32 @@ header {
     width: 100%;
 }
 .imageResult .content {
-    visibility: hidden;
-    opacity: 0;   
     height: auto;
     width: 100%;
     cursor: pointer;
-    border: 1px solid black;
+    border: 1px solid rgb(175,175,175);
 }
 
 .imageResult {
     width: 100%;
+    opacity: 0;
     overflow: hidden;
     padding: 10px 5px;
     box-sizing: border-box;
-        
+    transition: opacity 0.5s ease-in;
+    -webkit-transition: opacity 0.5s ease-in;
+    -moz-transition: opacity 0.5s ease-in;  
 }
-.imageResult.visible .content {
+.imageResult.visible {
     opacity: 1;
-    visibility: visible;
-    transition: opacity 0.8s ease-in;
-    -webkit-transition: opacity 0.8s ease-in;
-    -moz-transition: opacity 0.8s ease-in;
 }
 .images {
     padding: 10px;
+    padding-bottom: 40px;
     clear: both;
+    position: relative;
 }
-.imageResult {
-    display: none;
-}
-.imageResult.visible {
-    display: block;
-    /* Image Description (title link and subreddit which it belongs it) */
-}
+
 
 .no-titles .imgDesc{
     display: none;
@@ -615,24 +609,21 @@ header {
     text-overflow: ellipsis;
 }
 .imgDesc .postText {
-
     position: absolute;
     bottom: 10px;
     left: 5px;
     right: 5px;
-    max-height: 2em;
+    max-height: 2.1em;
     box-sizing: border-box;
     padding: 0.5em;
-     background: rgba(0,0,0,0.4);
+     background: rgba(0,0,0,0.3);
     overflow: hidden;
 }
 .imgDesc .imgSubredditName {
-
     position: absolute;
     padding: 5px 0 0 5px;
     top: 10px;
     left: 5px;
-    right: 5px;
     text-align: left;
 
 }
@@ -941,7 +932,8 @@ header {
     font-size: 1rem;
     border: 1px solid black;
     border-radius: 5px;
-    margin: 50px auto 30px auto;
+    left: 50%;
+    transform: translateX(-50%);
     display: block;
     max-width: 500px;
     width: 75%;
@@ -951,6 +943,8 @@ header {
     font-weight: bold;
     background: #e4dfc7;
     color: #232323;
+    position: absolute;
+    bottom: 0;
 
 }
 
@@ -1013,7 +1007,7 @@ header {
     -ms-transform: translate(-50%, -50%);
 }
 
-.previousArrow, .nextArrow, .closeImageBtn, .positionIndicator, .next, .previous {
+.previousArrow, .nextArrow, .closeImageBtn, .positionIndicator, .next, .previous, .close {
     position: absolute;
     z-index: 202;
     cursor: pointer;
@@ -1033,12 +1027,25 @@ header {
     width: 33.3%;
 }
 
+.previous:hover .previousArrow {
+    left: -25px;
+}
 .next:hover .nextArrow {
+    right: -25px;
+}
+.next:active .nextArrow {
     right: 0;
 }
-
-.previous:hover .previousArrow {
+.previous:active .previousArrow {
     left: 0;
+}
+
+.close {
+    z-index: 249;
+    top: 0;
+    right: 0;
+    width: 100px;
+    height: 100px;
 }
 .closeImageBtn {
     top: 0;
@@ -1080,30 +1087,30 @@ header {
 }
 
 
-.previous:hover .previousArrow , .next:hover .nextArrow, .closeImageBtn:hover {
+.previous:hover .previousArrow , .next:hover .nextArrow, .close:hover .closeImageBtn {
     background: rgba(255,255,255,0.2);
     color: rgba(25, 25, 25, 0.8);
 }
 .previous:active .previousArrow ,
 .next:active .nextArrow,
-.closeImageBtn:active {
+.close:active .closeImageBtn {
     background: rgba(255,255,255,0.5);
     color: rgb(15,15,15);
 }
 
 .previousArrow {
     left: -35px;
-    transition: left 0.05s linear;
-    -webkit-transition: left 0.05s linear;
-    -moz-transition: left 0.05s linear;
+    transition: left 0.12s linear;
+    -webkit-transition: left 0.12s linear;
+    -moz-transition: left 0.12s linear;
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
 }
 .nextArrow {
     right: -35px;
-    transition: right 0.05s linear;
-    -webkit-transition: right 0.05s linear;
-    -moz-transition: right 0.05s linear;
+    transition: right 0.12s linear;
+    -webkit-transition: right 0.12s linear;
+    -moz-transition: right 0.12s linear;
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
 }
@@ -1208,13 +1215,13 @@ header {
 }
 @media screen and (max-width: 640px){
     .col-width, .imageResult {width: 50%;}
-    .imgDesc { font-size: 0.95rem;}
+    .imgDesc { font-size: 0.8rem;}
     .main-heading-container { font-size: 1.15rem; }
     .main-heading-container .heading-info { font-size: 1em; }
 }
 @media screen and (max-width: 400px){
     .col-width, .imageResult {width: 100%;}
-    .imgDesc { font-size: 1rem;}
+    .imgDesc { font-size: 0.75rem;}
     .fullScreenShower .imgDesc, .positionIndicator { font-size: 1.2rem; }
     .main-heading-container { font-size: 1rem; }
 }
@@ -1223,7 +1230,7 @@ header {
 
 
 
-@media screen and (min-width: 640px){
+@media screen and (min-width: 960px){
     .imgDesc .postText {
         max-height: 3.4em;
     }

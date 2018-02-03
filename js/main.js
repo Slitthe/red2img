@@ -86,9 +86,10 @@ var elements = {
 	hideSubreddits: $("#hideSubreddits"),
 	subredditsContainer: $(".subreddits"),
 	restoreSubreddits: $("#restoreSubreddits"),
-	wholeScreenClose: $(".closeImageBtn"),
+	wholeScreenCloseBtn: $(".closeImageBtn"),
 	wholeScreenNext: $(".next"),
 	wholeScreenPrevious: $(".previous"),
+	wholeScreenClose: $(".close"),
 	currentPositionDisplay: $(".currentPosition"),
  	totalImagesDisplay: $(".totalImages"),
  	wholeScreenVideo: $(".fullScreenShower > video"),
@@ -96,6 +97,15 @@ var elements = {
  	wholeScreenContainer: $(".fullScreenShower"),
  	toTopBtn: $(".toTop")
 };
+
+var es = document.querySelector('.imagesContainer');
+var msnry = new Masonry( es, {
+  itemSelector: '.imageResult',
+  columnWidth: '.col-width',
+    percentPosition: true,
+	gutter: 0,
+	transitionDuration: 0
+});
 
 
 
@@ -781,12 +791,18 @@ var images = {
 		var htmlS = "", imagesElements, len, i, crImages;
 		this.rawResponseData.forEach(function(current, indx, arr) {
 			htmlS += "<div class='imageResult'>";
+			// htmlS += "<img onerror=\"deleteEl(this);\" onload=\"showOnload(this);\" class=\"content faded\" src=\"" + current.url;
 			htmlS += "<img onerror=\"deleteEl(this);\" onload=\"showOnload(this);\" class=\"content faded\" src=\"" + images.getCorrectResolution(current);
-			htmlS += "\" data-fullurl=\"" + current.url + "\"" + "\">";
+			htmlS += "\" data-fullurl=\"" + current.url + "\">";
 			htmlS += "<div class=\"imgDesc clearfix\"><a href=\"" + requestUrls.base + current.permalink.substring(1) + "\" class='postText' target=\"_blank\" title=\"" +current.title + "\">" + current.title + "</a>";
 			htmlS += "<div class='imgSubredditName'>" + current.subreddit_name_prefixed + "</div></div></div>";
 		});
 		imagesElements = $(htmlS);
+		// for(var i = 0; i < imagesElements.length; i++){
+		// 	msnry.appended( imagesElements[i] );
+		// }
+		msnry.layout();
+		
 		imagesElements.children("img").on("click", function(){
 			wholeScreenShower.show(this);
 		});
@@ -809,6 +825,7 @@ var images = {
 				urlParams.after.value = "";
 				images.rawResponseData = [];
 				elements.imagesContainer.html("<div class='col-width'></div>");
+				msnry.layout();
 				this.imageRequests.forEach(function(req) {
 					req.abort();
 				});
@@ -852,7 +869,6 @@ var images = {
 							}
 							if( (images.searchCount === images.maxNewSearchRequests) && imagesCount  === 0){
 								alertify.delay(5000).error("No images to load." );
-
 							}
 							else if(!succ.data.after) {
 								alertify.delay(5000).error("No more images to load.");
@@ -1635,9 +1651,7 @@ function init(){
 	elements.wholeScreenClose.on("click", function(){
 		wholeScreenShower.hide();
 	});
-	elements.wholeScreenClose.on("click", function(){
-		wholeScreenShower.hide();
-	});
+
 	elements.wholeScreenPrevious.on("click", function(){
 		wholeScreenShower.previous();
 	});
@@ -1683,13 +1697,7 @@ function init(){
 
 init();
 
-var es = document.querySelector('.imagesContainer');
-var msnry = new Masonry( es, {
-  itemSelector: '.imageResult',
-  columnWidth: '.col-width',
-    percentPosition: true,
-	gutter: 0
-});
+
 
 function colorGenerator(){
 	var number = Math.floor(Math.random() * 361);
