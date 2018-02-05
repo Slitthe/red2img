@@ -286,9 +286,10 @@ header {
         width: 100%;
         background: #eee;
         border-top-right-radius: 20px;
+        position: relative;
     }
     .srSearchContainer > .awesomplete {
-        width: 85%;
+        width: 70%;
         float: left;
         border-bottom: 1px solid black;
     }
@@ -298,24 +299,38 @@ header {
     .srSearchContainer input {
         width: 100%;
     }
-
-    .addSubredditBtn {
+    .addSubredditBtn, .clearInputBtn {
         width: 15%;
-        float: left;
+        position: absolute;
+        top: 0;
+        bottom: 0;
         cursor: pointer;
         color: #222;
         border-left: 1px solid black;
         border-bottom: 1px solid black;
-        border-top-right-radius: 20px;
+        transition: background 0.05s linear;
+        
     }
-    .addSubredditBtn:hover {
-        background: rgb(120, 150, 140);
+    .addSubredditBtn {
+       border-top-right-radius: 20px;
+        right: 0;
+        
+        
+    }
+    .addSubredditBtn:hover, .clearInputBtn:hover {
+        background: rgb(236, 233, 216);
+    }
+    .addSubredditBtn:active, .clearInputBtn:active {
+        background: rgb(216, 213, 186);
     }
     .addSubredditBtn, .addSubreddit {
         font-size: 1rem;
         padding: 0.65em 0.3em;
         box-sizing: border-box;
         letter-spacing: 0.03em;
+    }
+    .clearInputBtn {
+        right: 15%;
     }
 
 
@@ -422,7 +437,7 @@ header {
         background: rgba(130, 30,30, 0.8);
     }
     .restoreSubreddits {
-        border: 1px solid black;
+        border: 1px solid rgb(164, 165, 138);
         border-radius: 5px;
         border-top-left-radius: 0;
         border-top-right-radius: 0;
@@ -930,7 +945,7 @@ header {
 .loadMore {
     padding: 7px 7px;   
     font-size: 1rem;
-    border: 1px solid black;
+    border: 1px solid rgb(164, 165, 138);
     border-radius: 5px;
     left: 50%;
     transform: translateX(-50%);
@@ -945,16 +960,13 @@ header {
     color: #232323;
     position: absolute;
     bottom: 0;
+    transition: background 0.05s linear;
 
 }
 
 .loadMore:hover {
-    background: #b2ae9b;
+    background: #c4c0ac;
 
-}
-.loadMore:active{
-    position: relative;
-    top: 2px;
 }
 /* --------------------------------------------- */
 

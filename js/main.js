@@ -71,6 +71,7 @@ var elements = {
 	subredditList: $("#subredditList"),
 	addInput: $("#addSubreddit"),
 	addBtn: $("#addSubredditBtn"),
+	clearBtn: $(".clearInputBtn"),
 	adultSettingInput: $(".settings #nsfw"),
 	titleSettingInput: $(".settings #titles"),
 	typeChange: $("#type"),
@@ -754,7 +755,7 @@ var images = {
 	displayTitles: localStorageData.getValue("displayTitles"),
 	imageRequests: [], // HTTP Requests for images data
 	continueSearch: true, // stops calling the getImages function when there is no more data to get
-	imagesTarget: 25, // roughly how many images to display for the fresh image requests
+	imagesTarget: 1, // roughly how many images to display for the fresh image requests
 	maxNewSearchRequests: 5, // stops trying to get the imagesTarget no. of images when the requests for that exeed this amount
 	searchCount: 0, // keeps track of the no. of requests for fresh image requests
 	maximumResWidth: 320, // the image resolution target for previews, can go lower than this, but not higher
@@ -1222,6 +1223,9 @@ var wholeScreenShower = {
 		this.change();
 		elements.currentPositionDisplay.text(images.currentImages.indexOf($(this.currentTarget).children("img")[0]) + 1);
 		elements.totalImagesDisplay.text(images.currentImages.length);
+		if( images.currentImages.indexOf($(this.currentTarget).children("img")[0]) === (images.currentImages.length - 1) ) {
+			images.getImages(false);
+		}
 		this.showHideArrows();
 	},
 	showHideContent: function() {
@@ -1454,6 +1458,10 @@ function init(){
 		timeSettingsChange(this, true);
 	});
 
+	elements.clearBtn.on("click", function(){
+		elements.addInput.val("");
+	});
+
 	elements.subredditList.on("click", ".removeSubreddit", function(){
 		subreddits.remove([$(this).prev().text()]);
 	});
@@ -1643,10 +1651,12 @@ function init(){
 			elements.toTopBtn.hide();
 		}
 	});
+
 	elements.toTopBtn.on("click", function(){
 		var scrollElements = $("html, body");
 		scrollElements.animate({scrollTop:0}, 500);
 	});
+
 
 	elements.wholeScreenClose.on("click", function(){
 		wholeScreenShower.hide();
@@ -1718,4 +1728,10 @@ hm.on('swiperight', function(ev) {
 	if(wholeScreenShower.allowPrevious){
 		wholeScreenShower.previous();
 	}
+});
+
+var toTopHm = new Hammer(elements.toTopBtn[0]);
+toTopHm.on("tap", function(){
+	var scrollElements = $("html, body");
+	scrollElements.animate({scrollTop:0}, 500);
 });
