@@ -590,6 +590,7 @@ header {
 
 .imageResult {
     width: 100%;
+    max-width: 100%;
     opacity: 0;
     overflow: hidden;
     padding: 10px 5px;
@@ -597,7 +598,9 @@ header {
     transition: opacity 0.5s ease-in;
     -webkit-transition: opacity 0.5s ease-in;
     -moz-transition: opacity 0.5s ease-in;  
+    min-height: 5rem;
 }
+
 .imageResult.visible {
     opacity: 1;
 }
@@ -1208,18 +1211,26 @@ header {
 
 @media screen and (max-width: 2200px){
   .col-width, .imageResult {width: 16.6%;}
+  .imageResult.double { width: 33.2%; }
+  .imageResult.triple {  width: 49.8%;}
     .imgDesc { font-size: 1rem;}
 }
 @media screen and (max-width: 1800px){
     .col-width, .imageResult {width: 20%;}
+    .imageResult.double { width: 40%; }
+    .imageResult.triple { width: 60%;}
     .imgDesc { font-size: 0.9rem;}
 }
 @media screen and (max-width: 1380px){
   .col-width, .imageResult {width: 25%;}
+  .imageResult.double { width: 50%; }
+  .imageResult.triple {  width: 75%;}
     .imgDesc { font-size: 0.85rem;}
 }
 @media screen and (max-width: 1100px){
   .col-width, .imageResult {width: 33.3%;}
+  .imageResult.double { width: 66.6%; }
+  .imageResult.triple {  width: 100%;}
     .imgDesc { font-size: 0.85rem;}
     .fullScreenShower .imgDesc, .positionIndicator { font-size: 1.1rem; }
     .main-heading-container { font-size: 1.15rem; }
@@ -1227,12 +1238,16 @@ header {
 }
 @media screen and (max-width: 640px){
     .col-width, .imageResult {width: 50%;}
+    .imageResult.double { width: 100%; }
+    .imageResult.triple {  width: 100%;}
     .imgDesc { font-size: 0.8rem;}
     .main-heading-container { font-size: 1.15rem; }
     .main-heading-container .heading-info { font-size: 1em; }
 }
 @media screen and (max-width: 400px){
     .col-width, .imageResult {width: 100%;}
+    .imageResult.double { width: 100%; }
+    .imageResult.triple {  width: 100%;}
     .imgDesc { font-size: 0.75rem;}
     .fullScreenShower .imgDesc, .positionIndicator { font-size: 1.2rem; }
     .main-heading-container { font-size: 1rem; }

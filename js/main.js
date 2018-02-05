@@ -101,9 +101,9 @@ var elements = {
 
 var es = document.querySelector('.imagesContainer');
 var msnry = new Masonry( es, {
-  itemSelector: '.imageResult',
-  columnWidth: '.col-width',
-    percentPosition: true,
+   itemSelector: '.imageResult',
+   columnWidth: '.col-width',
+   percentPosition: true,
 	gutter: 0,
 	transitionDuration: 0
 });
@@ -234,8 +234,7 @@ function ajaxRequest(reqUrl, condition, timeout, obj){
 	if(condition){
 
 		if(obj.loading){
-			elements.loading.removeClass("hidden");
-			elements.loadMore.addClass("hidden");
+			elements.loading.removeClass("invisible");
 		}
 
 		return $.ajax({
@@ -265,8 +264,7 @@ function ajaxRequest(reqUrl, condition, timeout, obj){
 			complete: function(completeData){
 				if(obj.complete){ obj.complete(completeData);	}
 				if(obj.loading){
-					elements.loading.addClass("hidden");
-					elements.loadMore.removeClass("hidden");
+					elements.loading.addClass("invisible");
 				}
 			}
 		}); // AJAX req return end
@@ -333,7 +331,7 @@ var urlParams = {
 		},
 		limit: {
 			name: "limit",
-			value: 15
+			value: 20
 		},
 		adultContent: {
 			name: "include_over_18",
@@ -755,7 +753,7 @@ var images = {
 	displayTitles: localStorageData.getValue("displayTitles"),
 	imageRequests: [], // HTTP Requests for images data
 	continueSearch: true, // stops calling the getImages function when there is no more data to get
-	imagesTarget: 1, // roughly how many images to display for the fresh image requests
+	imagesTarget: 25, // roughly how many images to display for the fresh image requests
 	maxNewSearchRequests: 5, // stops trying to get the imagesTarget no. of images when the requests for that exeed this amount
 	searchCount: 0, // keeps track of the no. of requests for fresh image requests
 	maximumResWidth: 320, // the image resolution target for previews, can go lower than this, but not higher
@@ -832,8 +830,8 @@ var images = {
 				});
 				this.imageRequests = [];
 				this.continueSearch = true;
+				// elements.loadMore.removeClass("invisible");
 			}
-			elements.loadMore.addClass("hidden");
 			this.searchCount++;
 		}
 		else {
@@ -846,11 +844,13 @@ var images = {
 		url = requestUrls.postsData(subreddits.list);
 
 		if(subreddits.list.length) {
+			elements.loadMore.addClass("invisible");
 			req = ajaxRequest(url, images.continueSearch, 7000, {
 				reqName: "Getting Images",
 				silent: false,
 				loading: true,
 				success: function(succ) {
+							elements.loadMore.removeClass("invisible");
 							var imagesCount;
 							succ.data.children.forEach(function(cr){
 								images.rawResponseData.push(cr.data);
@@ -862,17 +862,22 @@ var images = {
 							imagesCount = $("#imagesContainer .imageResult").length;
 							if(!succ.data.after) {
 								images.searchCount = 5;
-								images.continueSearch = false;
-								elements.loadMore.addClass("hidden");
+								// images.continueSearch = false;
 							}
 							else {
-								elements.loadMore.removeClass("hidden");							
 							}
 							if( (images.searchCount === images.maxNewSearchRequests) && imagesCount  === 0){
 								alertify.delay(5000).error("No images to load." );
+								images.continueSearch = false;
+								elements.loadMore.addClass("invisible");
 							}
 							else if(!succ.data.after) {
 								alertify.delay(5000).error("No more images to load.");
+								images.continueSearch = false;
+								elements.loadMore.addClass("invisible");
+							}
+							else {
+								// elements.loadMore.removeClass("invisible");
 
 							}
 							if(newSearch && (imagesCount < images.imagesTarget) && (images.searchCount < images.maxNewSearchRequests)){
@@ -885,11 +890,13 @@ var images = {
 				},
 				fail: function() {
 					generalSettings.avoidMultipleRequests = false;
+					elements.loadMore.removeClass("invisible");
+
+					// elements.loadMore.removeClass("hidden");
 				},
 				complete: function() {
 					elements.wholeScreenNext.prop("disabled", false);
-					elements.loadMore.removeClass("hidden");
-				},
+				}
 			});
 			if(req) { this.imageRequests.push(req); }
 		}
@@ -1258,7 +1265,7 @@ var wholeScreenShower = {
 					this.currentUrl = this.currentUrl.replace(/.gifv$/i, extension);
 				}
 				else {
-					extension = this.currentUrl.substring(isVideo);
+					extension = this.currentUrl.substring(this.isVideo);
 				}
 				elements.wholeScreenVideo.children("source").prop("src", this.currentUrl);
 				elements.wholeScreenVideo.children("source").prop("type", "video/" + extension.substring(1));
@@ -1300,8 +1307,8 @@ var wholeScreenShower = {
 		}
 	},
 	hide: function() {
-		$("html, body").scrollTop(this.scrollLocation);
 		$(document.body).removeClass("noScrollBody");
+		$("html, body").scrollTop(this.scrollLocation);
 		elements.wholeScreenContainer.addClass("hidden");
 		msnry.layout();
 	},
@@ -1348,7 +1355,15 @@ function deleteEl(el) {
 };
 // Shows an image only when it's fully loaded
 function showOnload(el){
-	$(el).parent().addClass("visible");
+	var parent = $(el).parent();
+	console.dir(el.naturalWidth / el.naturalHeight);
+	if(el.naturalWidth / el.naturalHeight >= 2.6){
+		parent.addClass("triple");
+	}
+	else if (el.naturalWidth / el.naturalHeight >= 2){
+		parent.addClass("double");
+	}
+	parent.addClass("visible");
 	msnry.appended($(el).parent());
 	msnry.layout();
 }
@@ -1492,7 +1507,7 @@ function init(){
 
 	elements.loadMore.on("click", function(){
 		images.getImages(false);
-		$(this).addClass("hidden");
+		// $(this).addClass("hidden");
 	});
 
 	elements.recommendedList.on("click", "li", function(){
