@@ -1232,11 +1232,12 @@ var wholeScreenShower = {
 		elements.wholeScreenContainer.css("backgroundImage", "");
 		if(this.isImage >= 0) {
 			elements.wholeScreenVideo.hide();
-			elements.wholeScreenVideo.children("source").remove();
+			elements.wholeScreenVideo.children("source").prop("src", "#");
+			elements.wholeScreenVideo[0].load();
 		}
 		else {
 			elements.wholeScreenVideo.show();
-			$("<source></source>").appendTo(elements.wholeScreenVideo);
+			// $("<source></source>").appendTo(elements.wholeScreenVideo);
 		}
 	},
 	change: function() {
@@ -1262,7 +1263,6 @@ var wholeScreenShower = {
 				elements.wholeScreenVideo.children("source").prop("src", this.currentUrl);
 				elements.wholeScreenVideo.children("source").prop("type", "video/" + extension.substring(1));
 				elements.wholeScreenVideo[0].load();
-				elements.wholeScreenVideo[0].play();
 
 			}
 			
@@ -1274,7 +1274,6 @@ var wholeScreenShower = {
 						elements.wholeScreenVideo.children("source").prop("src", res.gfyItem.mp4Url);
 						elements.wholeScreenVideo.children("source").prop("type", "video/mp4");
 						elements.wholeScreenVideo[0].load();
-						elements.wholeScreenVideo[0].play();
 					},
 					silent: true
 				});
