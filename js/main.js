@@ -84,7 +84,7 @@ var elements = {
 	multipleDeleteBtn: $("#multipleDelete"),
 	checkAll: $("#checkAll"),
 	resetImagesBtn: $("#resetImages"),
-	hideSubreddits: $("#hideSubreddits"),
+	menuBtn: $("#menu-btn"),
 	subredditsContainer: $(".subreddits"),
 	restoreSubreddits: $("#restoreSubreddits"),
 	wholeScreenCloseBtn: $(".closeImageBtn"),
@@ -1553,7 +1553,7 @@ function init(){
 	// 	autocomplete.aComplete.close();
 	// });
 
-	elements.hideSubreddits.on("click", function(){
+	elements.menuBtn.on("click", function(){
 		$(this).toggleClass("open");
 		elements.subredditsContainer.toggleClass("slideHidden");
 		// elements.subredditsContainer.toggleClass("slideOpen");
@@ -1637,7 +1637,7 @@ function init(){
 	function closeSideMenu(evt){
 		var menuClosed = !generalSettings.menuClosed;
 		if(menuClosed){
-			var buttonTrigger = evt.target !== elements.hideSubreddits[0] && !$(evt.target).parents(".hideSubreddits").length;
+			var buttonTrigger = evt.target !== elements.menuBtn[0] && !$(evt.target).parents(".menu-btn").length;
 			var subredditsContainerTrigger = evt.target !== elements.subredditsContainer[0] && $(evt.target).parents(".subreddits").length === 0;
 			var isRecommandation = !(evt.target.classList.contains("recommandation"));
 			var isDialog = evt.target !== $(".alertify")[0];
@@ -1646,7 +1646,7 @@ function init(){
 			if(buttonTrigger && subredditsContainerTrigger && isRecommandation && isDialog && isConfirmBox){
 				elements.subredditsContainer.addClass("slideHidden");
 					generalSettings.menuClosed = true;
-					elements.hideSubreddits.toggleClass("open");
+					elements.menuBtn.toggleClass("open");
 			}
 		}
 
@@ -1724,7 +1724,7 @@ function init(){
 		if(evt.which === 27 && !generalSettings.menuClosed){
 			elements.subredditsContainer.addClass("slideHidden");
 			generalSettings.menuClosed = true;
-			elements.hideSubreddits.toggleClass("open");
+			elements.menuBtn.toggleClass("open");
 		}
 	});
 
