@@ -1360,7 +1360,7 @@ function showOnload(el){
 	if(el.naturalWidth / el.naturalHeight >= 2.6){
 		parent.addClass("triple");
 	}
-	else if (el.naturalWidth / el.naturalHeight >= 2){
+	else if (el.naturalWidth / el.naturalHeight >= 1.8){
 		parent.addClass("double");
 	}
 	parent.addClass("visible");
