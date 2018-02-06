@@ -1755,7 +1755,6 @@ function colorGenerator(){
 
 
 var hm = new Hammer(elements.wholeScreenContainer[0]);
-hm.get('pinch').set({ enable: true });
 hm.on('swipeleft', function(ev) {
 	if(wholeScreenShower.allowNext){
 		wholeScreenShower.next();
