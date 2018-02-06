@@ -430,7 +430,6 @@ var urlParams = {
 // Returns the API Requests URLs for different tasks
 var requestUrls = {
 	base: "https://www.reddit.com/",
-	corsProxy: "https://cors-anywhere.herokuapp.com/",
 	postsData: function(subreddits) {
 		var url;
 		subreddits = subreddits.join("+").toLowerCase();
@@ -439,15 +438,15 @@ var requestUrls = {
 		return url + urlParams.getParams(["limit", "after", "sortTime"]);
 	},
 	subExists: function(subName) {
-		var url = this.corsProxy + this.base;
+		var url = this.base;
 		url += "r/" + subName + "/about/rules.json";
 		return url;
 	},
 	recommended: function() {
-		var url = this.base + "api/recommend/sr/srnames?";
+		var url = this.base + "api/recommend/sr/srnames.json?";
 		url += "srnames=" + subreddits.list.join(",") + "&";
 		url += urlParams.getParams(["adultContent"]);
-		return this.corsProxy + url;
+		return url;
 	},
 	searchAutocomplete: function(query, adult) {
 		var url = this.base + "api/subreddit_autocomplete.json?";
@@ -653,7 +652,15 @@ var subreddits = {
 				alertify.delay(5000).error("<strong>" + reqName + "</strong>:Private  subreddit");
 			}
 			else {
-				alertify.delay(5000).error("<strong>" + reqName + "</strong>: Communication error.");
+				var online = function(){
+					alertify.delay(5000).error("<strong>" + reqName + "</strong>:Subreddit doesn't exist");
+
+				};
+				var offline = function(){
+					alertify.delay(5000).error("<strong>" + reqName + "</strong>: Communication error.");
+
+				};
+				doesConnectionExist(online, offline);
 			}
 		};
 
@@ -1248,6 +1255,9 @@ var wholeScreenShower = {
 		}
 	},
 	change: function() {
+		elements.wholeScreenVideo.hide();
+		elements.wholeScreenVideo.children("source").prop("src", "#");
+		elements.wholeScreenVideo[0].load();
 		var extension;
 		this.currentUrl = $(this.currentTarget).children("img").attr("data-fullurl");
 		this.isImage = this.currentUrl.search(/(.jpg|.png|.jpeg|.svg|.gif)$/gi);
@@ -1356,7 +1366,6 @@ function deleteEl(el) {
 // Shows an image only when it's fully loaded
 function showOnload(el){
 	var parent = $(el).parent();
-	console.dir(el.naturalWidth / el.naturalHeight);
 	if(el.naturalWidth / el.naturalHeight >= 2.6){
 		parent.addClass("triple");
 	}
@@ -1371,8 +1380,24 @@ function showOnload(el){
 
 
 
-
-
+/*Tests for internet connectivity by making a "HEAD" request to the hostname*/
+function doesConnectionExist(succ, fail) {
+    var xhr = new XMLHttpRequest();
+    var randomNum = Math.round(Math.random() * 10000);
+ 
+    xhr.open('HEAD', "" + "?rand=" + randomNum, true);
+    xhr.send();
+     
+    xhr.addEventListener("readystatechange", function(){
+		      if (xhr.readyState == 4) {
+        if (xhr.status >= 200 && xhr.status < 304) {
+          succ();
+        } else {
+          fail();
+        }
+      }
+	}, false);
+}
 
 
 
@@ -1620,7 +1645,6 @@ function init(){
 
 			if(buttonTrigger && subredditsContainerTrigger && isRecommandation && isDialog && isConfirmBox){
 				elements.subredditsContainer.addClass("slideHidden");
-					// console.log(evt.target, $(evt.target).parent(".subreddits").length);
 					generalSettings.menuClosed = true;
 					elements.hideSubreddits.toggleClass("open");
 			}
@@ -1641,7 +1665,6 @@ function init(){
 	// 	generalSettings.isTap = false;
 	// });
 	// $(document.body).on("touchend", function(evt){
-	// 		console.log(evt);
 	// 	if(generalSettings.isTap){
 	// 		closeSideMenu(evt);
 	// 	}
