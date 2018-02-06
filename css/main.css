@@ -327,6 +327,8 @@ header {
         font-size: 1rem;
         padding: 0.65em 0.3em;
         box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
         letter-spacing: 0.03em;
     }
     .clearInputBtn {
@@ -349,6 +351,8 @@ header {
         width: 40%;
 
         box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
     }
     .multipleDeleteContainer .fa-trash {
         width: 3rem;
@@ -595,9 +599,11 @@ header {
     overflow: hidden;
     padding: 10px 5px;
     box-sizing: border-box;
-    transition: opacity 0.5s ease-in;
-    -webkit-transition: opacity 0.5s ease-in;
-    -moz-transition: opacity 0.5s ease-in;  
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    transition: opacity 0.5s linear;
+    -webkit-transition: opacity 0.5s linear;
+    -moz-transition: opacity 0.5s linear;  
     min-height: 5rem;
 }
 
@@ -633,6 +639,8 @@ header {
     right: 5px;
     max-height: 2.1em;
     box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
     padding: 0.5em;
      background: rgba(0,0,0,0.3);
     overflow: hidden;
@@ -817,6 +825,8 @@ header {
         width: 100%;
         display: inline-block;
         box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
         padding-right: 1em;
     }
 
