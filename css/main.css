@@ -934,7 +934,7 @@ header {
     margin: 20px auto;
     width: 35px;
     height: 35px;
-    border: 9px solid rgba(0,0,0,0.1);
+    border: 9px solid rgba(109, 109, 109, 0.1);
     border-top-color: rgba(0,0,0,0.8);
     border-radius: 50%;
     position: relative;
@@ -1015,11 +1015,9 @@ header {
     left: -2.1em;
     width: 0.7em;
     height: 0.7em;
-    bottom: 50%;
     margin: 0;
     margin-bottom: -0.35em;
     border-width: 0.3em;
-    box-shadow: 0 0 3px 1px rgba(255, 255, 255, 0.18)
 }
 
 .fullScreenShower .whole-screen-content {
@@ -1034,10 +1032,19 @@ header {
     -ms-transform: translate(-50%, -50%);
 }
 
-.previousArrow, .nextArrow, .closeImageBtn, .positionIndicator, .next, .previous, .close {
+.previousArrow, 
+.nextArrow, 
+.closeImageBtn, 
+.positionIndicator, 
+.next, 
+.previous, 
+.close {
     position: absolute;
-    z-index: 202;
+    z-index: 210;
     cursor: pointer;
+}
+.next, .previous, .close {
+    z-index: 230;
 }
 
 .previous {
@@ -1054,21 +1061,20 @@ header {
     width: 25%;
 }
 
-.previous:hover .previousArrow {
-    left: -25px;
+.previous:hover + .previousArrow {
+    left: -20px;
 }
-.next:hover .nextArrow {
-    right: -25px;
+.next:hover + .nextArrow {
+    right: -20px;
 }
-.next:active .nextArrow {
+.next:active + .nextArrow {
     right: 0;
 }
-.previous:active .previousArrow {
+.previous:active + .previousArrow {
     left: 0;
 }
 
 .close {
-    z-index: 249;
     top: 0;
     right: 0;
     width: 100px;
@@ -1084,7 +1090,6 @@ header {
     transition: background 0.05s linear;
     -webkit-transition: background 0.05s linear;
     -moz-transition: background 0.05s linear;
-    z-index: 250;
 }
 
 .closeImageBtn:hover {
@@ -1098,7 +1103,7 @@ header {
     top: 50%;
     margin-top: -50px;
     height: 100px;
-    width: 40px;
+    width: 30px;
     transition: background 0.05s linear;
     -webkit-transition: background 0.05s linear;
     -moz-transition: background 0.05s linear;
@@ -1114,19 +1119,19 @@ header {
 }
 
 
-.previous:hover .previousArrow , .next:hover .nextArrow, .close:hover .closeImageBtn {
+.previous:hover + .previousArrow , .next:hover + .nextArrow, .close:hover + .closeImageBtn {
     background: rgba(255,255,255,0.2);
     color: rgba(25, 25, 25, 0.8);
 }
-.previous:active .previousArrow ,
-.next:active .nextArrow,
-.close:active .closeImageBtn {
+.previous:active + .previousArrow ,
+.next:active + .nextArrow,
+.close:active + .closeImageBtn {
     background: rgba(255,255,255,0.5);
     color: rgb(15,15,15);
 }
 
 .previousArrow {
-    left: -35px;
+    left: -20px;
     transition: left 0.12s linear;
     -webkit-transition: left 0.12s linear;
     -moz-transition: left 0.12s linear;
@@ -1134,12 +1139,16 @@ header {
     border-bottom-left-radius: 0;
 }
 .nextArrow {
-    right: -35px;
+    right: -20px;
     transition: right 0.12s linear;
     -webkit-transition: right 0.12s linear;
     -moz-transition: right 0.12s linear;
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
+}
+.previous.hidden + .previousArrow,
+.next.hidden + .nextArrow {
+    display: none;
 }
 
 .noScrollBody {
@@ -1151,7 +1160,7 @@ header {
 .positionIndicator {
     bottom: 0;
     right: 1em;
-    height: 1.6em;
+    padding: 0.3rem;
     display: block;
 }
 
@@ -1183,7 +1192,6 @@ header {
     width: 75%;
     bottom: 0;
     background: transparent;
-
     overflow: hidden;
     z-index: 250;
 }
