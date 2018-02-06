@@ -1772,3 +1772,6 @@ toTopHm.on("tap", function(){
 	var scrollElements = $("html, body");
 	scrollElements.animate({scrollTop:0}, 500);
 });
+
+var hammertime = new Hammer(document.body);
+hammertime.get('pinch').set({ enable: true });
