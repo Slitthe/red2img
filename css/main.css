@@ -637,7 +637,6 @@ header {
     bottom: 10px;
     left: 5px;
     right: 5px;
-    max-height: 2.1em;
     box-sizing: border-box;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
@@ -657,6 +656,9 @@ header {
     text-shadow: 1px 1px 0 black;
     color: rgb(220,220,220);
 
+}
+.postText {
+    max-height: 3.5em;
 }
 
 /* --------------------------------------------- */
@@ -1042,14 +1044,14 @@ header {
     left: 0;
     top: 0;
     bottom: 0;
-    width: 33.3%;
+    width: 25%;
 }
 
 .next {
     right: 0;
     top: 0;
     bottom: 0;
-    width: 33.3%;
+    width: 25%;
 }
 
 .previous:hover .previousArrow {
@@ -1180,9 +1182,8 @@ header {
     font-size: 0.9em;
     width: 75%;
     bottom: 0;
-    max-height: initial;
     background: transparent;
-    max-height: 3.5em;
+
     overflow: hidden;
     z-index: 250;
 }
@@ -1259,7 +1260,7 @@ header {
     .imageResult.double { width: 100%; }
     .imageResult.triple {  width: 100%;}
     .imgDesc { font-size: 0.75rem;}
-    .fullScreenShower .imgDesc, .positionIndicator { font-size: 1.2rem; }
+    .fullScreenShower .imgDesc, .positionIndicator { font-size: 1.1rem; }
     .main-heading-container { font-size: 1rem; }
 }
 
@@ -1267,9 +1268,9 @@ header {
 
 
 
-@media screen and (min-width: 960px){
-    .imgDesc .postText {
-        max-height: 3.4em;
+@media screen and (max-width: 960px){
+    .postText {
+        max-height: 2.0em;
     }
 }
 @media screen and (min-width: 960px){
