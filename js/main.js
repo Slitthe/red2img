@@ -1754,24 +1754,21 @@ function colorGenerator(){
 
 
 
-var hm = new Hammer(elements.wholeScreenContainer[0]);
-hm.on('swipeleft', function(ev) {
-	if(wholeScreenShower.allowNext){
-		wholeScreenShower.next();
-	}
-});
+// var hm = new Hammer(elements.wholeScreenContainer[0]);
+// hm.on('swipeleft', function(ev) {
+// 	if(wholeScreenShower.allowNext){
+// 		wholeScreenShower.next();
+// 	}
+// });
 
-hm.on('swiperight', function(ev) {
-	if(wholeScreenShower.allowPrevious){
-		wholeScreenShower.previous();
-	}
-});
+// hm.on('swiperight', function(ev) {
+// 	if(wholeScreenShower.allowPrevious){
+// 		wholeScreenShower.previous();
+// 	}
+// });
 
 var toTopHm = new Hammer(elements.toTopBtn[0]);
 toTopHm.on("tap", function(){
 	var scrollElements = $("html, body");
 	scrollElements.animate({scrollTop:0}, 500);
 });
-
-var hammertime = new Hammer(document.body);
-hammertime.get('pinch').set({ enable: true });
