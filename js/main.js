@@ -68,10 +68,10 @@ alertify.maxLogItems(5);
 
 // DOM elements
 var elements = {
-	subredditList: $("#subredditList"),
-	addInput: $("#addSubreddit"),
-	addBtn: $("#addSubredditBtn"),
-	clearBtn: $(".clearInputBtn"),
+	subredditList: $("#sr-list"),
+	addInput: $("#add-sr"),
+	addSrBtn: $("#add-sr-btn"),
+	clearBtn: $(".clear-input-btn"),
 	adultSettingInput: $(".settings #nsfw"),
 	titleSettingInput: $(".settings #titles"),
 	typeChange: $("#type"),
@@ -79,29 +79,29 @@ var elements = {
 	imagesContainer: $("#imagesContainer"),
 	loading: $(".loading"),
 	recommendedList: $("#recommended"),
-	loadMore: $("#loadMore"),
-	srSearchContainer: $("#srSearchContainer"),
-	multipleDeleteBtn: $("#multipleDelete"),
+	loadMore: $("#load-more"),
+	srSearchContainer: $("#sr-search-container"),
+	multipleDeleteBtn: $("#mult-del"),
 	checkAll: $("#checkAll"),
-	resetImagesBtn: $("#resetImages"),
+	reloadImgsBtn: $("#reload-imgs"),
 	menuBtn: $("#menu-btn"),
 	subredditsContainer: $(".subreddits"),
-	restoreSubreddits: $("#restoreSubreddits"),
-	wholeScreenCloseBtn: $(".closeImageBtn"),
+	restoreSubreddits: $("#restore-sr"),
+	wholeScreenCloseBtn: $(".close-full-screen"),
 	wholeScreenNext: $(".next"),
 	wholeScreenPrevious: $(".previous"),
 	wholeScreenClose: $(".close"),
 	currentPositionDisplay: $(".currentPosition"),
  	totalImagesDisplay: $(".totalImages"),
- 	wholeScreenVideo: $(".fullScreenShower > video"),
- 	wholeScreenImg: $(".fullScreenShower > img"),
- 	wholeScreenContainer: $(".fullScreenShower"),
- 	toTopBtn: $(".toTop")
+ 	wholeScreenVideo: $(".full-screen-container > video"),
+ 	wholeScreenImg: $(".full-screen-container > img"),
+ 	wholeScreenContainer: $(".full-screen-container"),
+ 	toTopBtn: $(".to-top")
 };
 
 var es = document.querySelector('.imagesContainer');
 var msnry = new Masonry( es, {
-   itemSelector: '.imageResult',
+   itemSelector: '.img-result',
    columnWidth: '.col-width',
    percentPosition: true,
 	gutter: 0,
@@ -594,7 +594,7 @@ var subreddits = {
 		inputs = [], 
 		i,
 		currentIndex,
-		srElements = $("#subredditList > .subreddit-single");
+		srElements = $("#sr-list > .subreddit-single");
 		for(i = 0; i < srElements.length; i++){
 			inputs.push( srElements[i].getAttribute("data-srname") );
 		}
@@ -607,7 +607,7 @@ var subreddits = {
 					html += "<input class=\"hidden-input\" type=\"checkbox\" name=\"" + current + "\">";
 					html += "<div class=\"faux-checkbox\"></div></div>";
 					html += "<div class='subredditName'>" + current + "</div></label>";
-					html += "<button class='removeSubreddit no-input-style' type='button'><i class=\"fa fa-trash-o\"></i></button>";
+					html += "<button class='del-sr no-input-style' type='button'><i class=\"fa fa-trash-o\"></i></button>";
 					html += "</div>";
 					var el = $(html);
 					el.css("backgroundColor", colorGenerator());
@@ -620,7 +620,7 @@ var subreddits = {
 			inputs.forEach(function(current) {
 				currentIndex = subreddits.list.indexOf(current);
 				if( currentIndex === -1 ) {
-					$("#subredditList").children(".subreddit-single[data-srname='" + current + "']").fadeOut(function() {
+					$("#sr-list").children(".subreddit-single[data-srname='" + current + "']").fadeOut(function() {
 						$(this).remove();
 					});
 				}
@@ -796,12 +796,12 @@ var images = {
 	displayImages: function() {
 		var htmlS = "", imagesElements, len, i, crImages;
 		this.rawResponseData.forEach(function(current, indx, arr) {
-			htmlS += "<div class='imageResult'>";
+			htmlS += "<div class='img-result'>";
 			// htmlS += "<img onerror=\"deleteEl(this);\" onload=\"showOnload(this);\" class=\"content faded\" src=\"" + current.url;
 			htmlS += "<img onerror=\"deleteEl(this);\" onload=\"showOnload(this);\" class=\"content faded\" src=\"" + images.getCorrectResolution(current);
 			htmlS += "\" data-fullurl=\"" + current.url + "\">";
-			htmlS += "<div class=\"imgDesc clearfix\"><a href=\"" + requestUrls.base + current.permalink.substring(1) + "\" class='postText' target=\"_blank\" title=\"" +current.title + "\">" + current.title + "</a>";
-			htmlS += "<div class='imgSubredditName'>" + current.subreddit_name_prefixed + "</div></div></div>";
+			htmlS += "<div class=\"img-desc clearfix\"><a href=\"" + requestUrls.base + current.permalink.substring(1) + "\" class='post-txt' target=\"_blank\" title=\"" +current.title + "\">" + current.title + "</a>";
+			htmlS += "<div class='img-sr-name'>" + current.subreddit_name_prefixed + "</div></div></div>";
 		});
 		imagesElements = $(htmlS);
 		// for(var i = 0; i < imagesElements.length; i++){
@@ -815,9 +815,9 @@ var images = {
 		this.rawResponseData = [];
 		imagesElements.appendTo(elements.imagesContainer);
 		this.currentImages = [];
-		// elements.imagesContainer.children(".imageResult").children("img").length;
-		len = elements.imagesContainer.children(".imageResult").length;
-		crImages = elements.imagesContainer.children(".imageResult").children("img");
+		// elements.imagesContainer.children(".img-result").children("img").length;
+		len = elements.imagesContainer.children(".img-result").length;
+		crImages = elements.imagesContainer.children(".img-result").children("img");
 		for (i = 0; i < len; i++) {
 			this.currentImages.push(crImages[i]);
 		}
@@ -866,7 +866,7 @@ var images = {
 							images.filterAdult();
 							urlParams.after.value = succ.data.after;
 							images.displayImages();
-							imagesCount = $("#imagesContainer .imageResult").length;
+							imagesCount = $("#imagesContainer .img-result").length;
 							if(!succ.data.after) {
 								images.searchCount = 5;
 								// images.continueSearch = false;
@@ -1232,7 +1232,7 @@ var wholeScreenShower = {
 	show: function(targetEl) {
 		this.currentTarget = $(targetEl).parent();
 		this.scrollLocation = window.scrollY;
-		$(document.body).addClass("noScrollBody");
+		$(document.body).addClass("no-scroll-body");
 		elements.wholeScreenContainer.removeClass("hidden");
 		this.change();
 		elements.currentPositionDisplay.text(images.currentImages.indexOf($(this.currentTarget).children("img")[0]) + 1);
@@ -1296,7 +1296,7 @@ var wholeScreenShower = {
 				});
 			}
 		}
-		elements.wholeScreenContainer.children(".imgDesc").html( $(this.currentTarget).children(".imgDesc").html() );
+		elements.wholeScreenContainer.children(".img-desc").html( $(this.currentTarget).children(".img-desc").html() );
 	},
 	showHideArrows: function() {
 		if( !$(this.currentTarget).prev()[0] || $(this.currentTarget).prev().hasClass("col-width") ) {
@@ -1317,7 +1317,7 @@ var wholeScreenShower = {
 		}
 	},
 	hide: function() {
-		$(document.body).removeClass("noScrollBody");
+		$(document.body).removeClass("no-scroll-body");
 		$("html, body").scrollTop(this.scrollLocation);
 		elements.wholeScreenContainer.addClass("hidden");
 		msnry.layout();
@@ -1501,7 +1501,7 @@ function init(){
 		elements.addInput.val("");
 	});
 
-	elements.subredditList.on("click", ".removeSubreddit", function(){
+	elements.subredditList.on("click", ".del-sr", function(){
 		subreddits.remove([$(this).prev().text()]);
 	});
 
@@ -1527,7 +1527,7 @@ function init(){
 
 	})
 
-	$("#imagesContainer").on("error", ".imageResult img", function(){
+	$("#imagesContainer").on("error", ".img-result img", function(){
 	});
 
 	elements.loadMore.on("click", function(){
@@ -1555,9 +1555,9 @@ function init(){
 
 	elements.menuBtn.on("click", function(){
 		$(this).toggleClass("open");
-		elements.subredditsContainer.toggleClass("slideHidden");
+		elements.subredditsContainer.toggleClass("slide-closed");
 		// elements.subredditsContainer.toggleClass("slideOpen");
-		generalSettings.menuClosed = elements.subredditsContainer.hasClass("slideHidden");
+		generalSettings.menuClosed = elements.subredditsContainer.hasClass("slide-closed");
 		if(generalSettings.menuClosed){
 			generalSettings.delayList.push(setTimeout(function(){
 				$(elements.subredditsContainer.addClass("invisible"));
@@ -1571,7 +1571,7 @@ function init(){
 		}
 	});
 
-	elements.addBtn.on("click", function(){
+	elements.addSrBtn.on("click", function(){
 		subreddits.addWithCheck(elements.addInput);
 	});
 	elements.addInput.on("keydown", function(evt){
@@ -1617,7 +1617,7 @@ function init(){
 			$(".subreddit-single input").prop("checked", false);
 		}
 	});
-	elements.resetImagesBtn.on("click", function(){
+	elements.reloadImgsBtn.on("click", function(){
 		images.getImages(true, true);
 	});
 
@@ -1644,7 +1644,7 @@ function init(){
 			var isConfirmBox = evt.target !== $(".dialog")[0] && $(evt.target).parents(".dialog").length === 0;
 
 			if(buttonTrigger && subredditsContainerTrigger && isRecommandation && isDialog && isConfirmBox){
-				elements.subredditsContainer.addClass("slideHidden");
+				elements.subredditsContainer.addClass("slide-closed");
 					generalSettings.menuClosed = true;
 					elements.menuBtn.toggleClass("open");
 			}
@@ -1706,7 +1706,7 @@ function init(){
 		wholeScreenShower.next();
 	});
 	$(document.body).on("keydown", function(evt){
-		if($(this).hasClass("noScrollBody")){
+		if($(this).hasClass("no-scroll-body")){
 			if(evt.which === 37) {
 				if(wholeScreenShower.allowPrevious){
 					wholeScreenShower.previous();
@@ -1722,7 +1722,7 @@ function init(){
 			}
 		}
 		if(evt.which === 27 && !generalSettings.menuClosed){
-			elements.subredditsContainer.addClass("slideHidden");
+			elements.subredditsContainer.addClass("slide-closed");
 			generalSettings.menuClosed = true;
 			elements.menuBtn.toggleClass("open");
 		}

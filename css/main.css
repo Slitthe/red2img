@@ -1,3 +1,19 @@
+/* 
+    --= General
+    --= Custom Inputs
+    --= Main heading / Title
+    --= Add subreddits input
+    --= Subreddits list / deletion
+    --= Subreddits / side bar
+    --= Toggle menu button
+    --= Images
+    --= Settings / sortin
+    --= Loading / load more
+    --= Full screen content showing
+    --= Media queries
+
+
+ */
 /* ----------------------General---------------------- */
 ::-moz-selection {
     background: #b3d4fc;
@@ -69,7 +85,7 @@ header {
     padding: 0.2em 0;
 }
 /* Scroll to top btn --> */
-.toTop {
+.to-top {
     position: fixed;
     right: 20px;
     bottom: 20px;
@@ -83,7 +99,7 @@ header {
     display: none;
 
 }
-.toTop:hover {
+.to-top:hover {
     background: rgba(0, 0, 0, 0.6);
     color: rgb(255, 255, 255);
 }
@@ -353,7 +369,7 @@ header {
 .main-heading-container {
     color: #2b1f1f;
     font-family: "Montserrat", "Lato", sans-serif;
-    font-size: 3rem;
+    font-size: 1.55rem;
     text-align: center;
 }
 .main-heading {
@@ -520,23 +536,23 @@ header {
 
 
 /* -------------Add subreddit input------------------- */
-.srSearchContainer {
+.sr-search-container {
     width: 100%;
     background: #eee;
     border-top-right-radius: 20px;
     position: relative;
 }
-.srSearchContainer > .awesomplete {
+.sr-search-container > .awesomplete {
     width: 70%;  /* Width of the input container */
     float: left;
     border-bottom: 1px solid rgb(90, 90, 90);
 }
-.awesomplete > .awesomplete, .srSearchContainer input {
+.awesomplete > .awesomplete, .sr-search-container input {
     width: 100%;
 }
 /* Add and clear buttons next to the input */
-.addSubredditBtn, 
-.clearInputBtn {
+.add-sr-btn, 
+.clear-input-btn {
     width: 15%;
     position: absolute;
     top: 0;
@@ -547,22 +563,22 @@ header {
     transition: background 0.05s linear;
     
 }
-.addSubredditBtn {
+.add-sr-btn {
     border-top-right-radius: 20px;
     right: 0;
 }
-.clearInputBtn { right: 15%; }
+.clear-input-btn { right: 15%; }
 
-.addSubredditBtn:hover, 
-.clearInputBtn:hover {
+.add-sr-btn:hover, 
+.clear-input-btn:hover {
     background: rgb(236, 233, 216);
 }
-.addSubredditBtn:active, 
-.clearInputBtn:active {
+.add-sr-btn:active, 
+.clear-input-btn:active {
     background: rgb(216, 213, 186);
 }
 /* Applies indentical padding to buttons and input */
-.addSubredditBtn, .addSubreddit {
+.add-sr-btn, .add-sr {
     font-size: 1rem;
     padding: 0.65em 0.3em;
     letter-spacing: 0.03em;
@@ -640,7 +656,7 @@ header {
 
 /* -------------Subreddits list & Deletion----------------*/
 /* General select all and delete styling --> */
-.multipleDeleteContainer {
+.mult-del-container {
     height: 35px;
     line-height: 35px;
     font-size: 0.9rem;
@@ -648,7 +664,7 @@ header {
     border-bottom: 2px solid black;
     text-align: center;
 }
-.multipleDeleteContainer > * {
+.mult-del-container > * {
     line-height: 35px;
     float: left;
     width: 40%;
@@ -661,12 +677,12 @@ header {
 
 
 /* Check all --> */
-.multipleDeleteContainer label {
+.mult-del-container label {
    border-right: 1px solid #444;
    position: relative;
 }
     /* Checkboxes */
-.multipleDeleteContainer .custom-checkbox-wrapper,
+.mult-del-container .custom-checkbox-wrapper,
 .subreddit-single .custom-checkbox-wrapper {
     position: absolute;
     left: 10px;
@@ -679,16 +695,16 @@ header {
 /* <-- */
 
 /* Remove selected btn --> */
-.multipleDelete {
+.mult-del {
     color: rgba(130, 30,30, 0.8);
     width: 60%;
 }
-.multipleDelete:hover { text-decoration: underline; }
-.multipleDelete:hover .fa-trash {
+.mult-del:hover { text-decoration: underline; }
+.mult-del:hover .fa-trash {
     background: rgba(130, 30,30, 0.8);
     color: #cbcbcb;
 }
-.multipleDeleteContainer .fa-trash {
+.mult-del-container .fa-trash {
     width: 3rem;
     height: 35px;
     display: inline-block;
@@ -713,7 +729,7 @@ header {
     line-height: 35px;
 }
 
-.subreddit-single .removeSubreddit {
+.subreddit-single .del-sr {
     position: absolute;
     right: 0;
     width: 3rem;
@@ -725,14 +741,14 @@ header {
        -moz-transition: background 0.1s linear;
             transition: background 0.1s linear;
 }
-.removeSubreddit:hover {
+.del-sr:hover {
     color: #aaa;
     background: rgba(130, 30,30, 0.8);
 }
 /* <-- */
 
 /* Restore Subreddits Btn --> */
-.restoreSubreddits {
+.restore-sr {
     border: 1px solid rgb(164, 165, 138);
     border-bottom-left-radius: 5px;
     border-bottom-right-radius: 5px;
@@ -740,7 +756,7 @@ header {
     background: #e4dfc7;
     color: #232323;
 }
-.restoreSubreddits:hover {
+.restore-sr:hover {
     background: #c4c0ac
 }
 /* <-- */
@@ -824,16 +840,16 @@ header {
             transition: transform 0.5s ease-in-out;
 }
     /* Handles the sliding motion of the side menu when this class is applied */
-.slideHidden {
+.slide-closed {
     -webkit-transform: translateX(-100%);
        -moz-transform: translateX(-100%);
         -ms-transform: translateX(-100%);
             transform: translateX(-100%);
 }
 
-.subredditList, 
-.multipleDeleteContainer, 
-.restoreSubreddits {
+.sr-list, 
+.mult-del-container, 
+.restore-sr {
     width: 75%;
     margin: 0 auto;
     border-left: 1px solid #454545;
@@ -1138,10 +1154,13 @@ header {
 
 
 /* ----------------------Images----------------- */
-.col-width {
-    width: 100%;
+.images {
+    padding: 10px;
+    padding-bottom: 40px;
+    position: relative;
 }
-.imageResult {
+.col-width { width: 100%; }
+.img-result {
     width: 100%;
     opacity: 0;
     overflow: hidden;
@@ -1154,53 +1173,48 @@ header {
        -moz-transition: opacity 0.5s linear;  
             transition: opacity 0.5s linear;
 }
-.imageResult .content {
+.img-result.visible { opacity: 1;}
+
+.no-titles .img-desc{ display: none; }
+
+
+/* Images and description --> */
+.img-result .content {
     width: 100%;
     cursor: pointer;
-    border: 1px solid rgb(175,175,175);
+    border: 1px solid rgb(130,130,130);
 }
-.imageResult.visible { opacity: 1;}
-.images {
-    padding: 10px;
-    padding-bottom: 40px;
-    position: relative;
-}
-.no-titles .imgDesc{
-    display: none;
-}
-
-.positionIndicator, 
-.imgDesc {
+.pos-indicator, 
+.img-desc {
     font-size: 0.8rem;
     color: rgb(220,220,220);
     text-shadow: 1px 1px 0 black;
 }
-.imgDesc .postText {
+.img-desc .post-txt {
     position: absolute;
     bottom: 10px;
     left: 5px;
     right: 5px;
-    box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
     padding: 0.5em;
      background: rgba(0,0,0,0.3);
     overflow: hidden;
+    -webkit-box-sizing: border-box;
+       -moz-box-sizing: border-box;
+            box-sizing: border-box;
 }
-.imgDesc .imgSubredditName {
+.img-desc .img-sr-name {
     position: absolute;
     padding: 5px 0 0 5px;
     top: 10px;
     left: 5px;
     text-align: left;
 }
-.imgSubredditName {
+.img-sr-name {
     text-shadow: 1px 1px 0 black;
     color: rgb(220,220,220);
 }
-.postText {
-    max-height: 3.5em;
-} 
+.post-txt { max-height: 3.5em; } 
+/* <-- */
 /* --------------------------------------------- */
 
 
@@ -1318,40 +1332,36 @@ header {
 
 
 /* ----------------------Settings / Sorting----------------- */
-
-.gallerySettings {
-    clear: both;
-    margin-bottom: 50px;
+.settings-sort-container {
     border-bottom: 2px solid #444;
     position: relative;
 }
 
-    /* Custom sliders */
-    .settings label {
-        display: inline-block;
-        width: 200px;
-        text-align: left;
-    }
+/* Preferences --> */
+.settings label {
+    display: inline-block;
+    width: 200px;
+}
+/* <-- */
 
+/* Sorting --> */
+.sorting {
+    padding-left: 10px;
+    border-top: 4px solid rgb(50, 50, 50);
+    padding-top: 10px;
+}
+.sorting select {
+    border: 1px solid rgb(50, 50, 50);
+    border-radius: 5px;
+    padding: 5px 10px;
+}
+.sorting select:first-child {
+    margin: 0 10px 10px 7px;
+}
+/* <-- */
 
-
-    /*Sorting*/
-    .sorting {
-        padding-left: 10px;
-        border-top: 4px solid black;
-        padding-top: 10px;
-    }
-
-    .sorting select {
-        border: 1px solid black;
-        border-radius: 5px;
-        padding: 5px 10px;
-    }
-    .sorting select:first-child {
-        margin: 0 10px 0 7px;
-    }
-
-.resetImages {
+/* Reload / Re-fetch images --> */
+.reload-imgs {
     position: absolute;
     bottom: -59px;
     left: 50%;
@@ -1361,22 +1371,20 @@ header {
     font-size: 1.7rem;
     border-radius: 4px;
 }
-.resetImages .fa {
-    transition: transform 0.3s linear;
+.reload-imgs .fa {
     -webkit-transition: transform 0.3s linear;
-    -moz-transition: transform 0.3s linear;
+       -moz-transition: transform 0.3s linear;
+            transition: transform 0.3s linear;
 }
-.resetImages:hover .fa {
-   transform: rotate(270deg);
+.reload-imgs:hover .fa {
    -webkit-transform: rotate(270deg);
-   -moz-transform: rotate(270deg);
-   -ms-transform: rotate(270deg);
+      -moz-transform: rotate(270deg);
+       -ms-transform: rotate(270deg);
+           transform: rotate(270deg);
    
 }
-
-.resetImages:hover {
-    background: #ada996;
-}
+.reload-imgs:hover { background: rgb(173, 169, 150); }
+/* --> */
 
 /* --------------------------------------------- */
 
@@ -1443,40 +1451,40 @@ header {
 
 
 /* -----------Loading & Load More -------------- */
+/* Loading circle --> */
 .loading {
     margin: 20px auto;
     width: 35px;
     height: 35px;
-    border: 9px solid rgba(109, 109, 109, 0.1);
-    border-top-color: rgba(0,0,0,0.8);
+    border: 9px solid rgba(109, 109, 109, 0.1); /* "Background" of the loading circle */
+    border-top-color: rgba(0,0,0,0.8); /* Moving part of the loading circle */
     border-radius: 50%;
     position: relative;
-    animation-duration: 1s;
-    animation-iteration-count: infinite;
-    animation-name: rotate;
-    animation-timing-function: linear;
+    animation: rotate 1s linear infinite;
 }
 @keyframes rotate {
     0%{
-        transform: rotate(0deg);
         -webkit-transform: rotate(0deg);
-        -moz-transform: rotate(0deg);
-        -ms-transform: rotate(0deg);
+           -moz-transform: rotate(0deg);
+            -ms-transform: rotate(0deg);
+                transform: rotate(0deg);
     }
     100%{
-        transform: rotate(360deg);
         -webkit-transform: rotate(360deg);
-        -moz-transform: rotate(360deg);
-        -ms-transform: rotate(360deg);
+           -moz-transform: rotate(360deg);
+            -ms-transform: rotate(360deg);
+                transform: rotate(360deg);
     }
 }
-.loadMore {
+/* <-- */
+
+/* Load more button --> */
+.load-more {
     padding: 7px 7px;   
     font-size: 1rem;
     border: 1px solid rgb(164, 165, 138);
     border-radius: 5px;
-    left: 50%;
-    transform: translateX(-50%);
+    margin: 50px auto 0 auto;
     display: block;
     max-width: 500px;
     width: 75%;
@@ -1485,16 +1493,11 @@ header {
     font-weight: bold;
     background: #e4dfc7;
     color: #232323;
-    position: absolute;
-    bottom: 0;
     transition: background 0.05s linear;
-
 }
 
-.loadMore:hover {
-    background: #c4c0ac;
-
-}
+.load-more:hover { background: #c4c0ac; }
+/* <-- */
 /* --------------------------------------------- */
 
 
@@ -1553,22 +1556,63 @@ header {
 
 
 /* -----------Full Screen Image Showing -------------- */
-.fullScreenShower {
+.no-scroll-body { /* overflow: hidden alone not enough to stop scrolling on mobile devices */
+    position: fixed;
+    z-index: -1;
+    overflow: hidden;
+}
+.full-screen-container {
     text-align: center;
     position: fixed;
     left: 0;
     right: 0;
     top: 0;
     bottom: 0;
-    background: #2f2f2f;
+    background: rgb(47, 47, 47) center/contain no-repeat;
     z-index: 200;
-    background-size: contain;
-    background-position: center;
-    background-repeat: no-repeat;
 }
+/* Content image/video --> */
+.full-screen-container .whole-screen-content {
+    width: 100%;
+    max-height: 100%;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translate(-50%, -50%);
+       -moz-transform: translate(-50%, -50%);
+        -ms-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+}
+/* <-- */
 
-
-.fullScreenShower .loading {
+/* Content description (subreddit, post text, images indicator) --> */
+.full-screen-container .post-txt, 
+.full-screen-container .img-sr-name {
+    z-index: 201;
+    text-align: left;
+    color: rgb(255, 255, 255);
+    text-shadow: 1px 1px 0 black;
+}
+.full-screen-container .img-sr-name { 
+    font-size: 0.85em; 
+    letter-spacing: 0.08em;
+}
+.full-screen-container .post-txt {
+    width: 75%;
+    left: 0;
+    bottom: 0;
+    font-size: 0.9em;
+    background: transparent;
+    overflow: hidden;
+    z-index: 250;
+}
+.pos-indicator {
+    bottom: 0;
+    right: 1em;
+    padding: 0.3rem;
+    display: block;
+}
+.full-screen-container .loading {
     position: absolute;
     left: -2.1em;
     width: 0.7em;
@@ -1577,23 +1621,16 @@ header {
     margin-bottom: -0.35em;
     border-width: 0.3em;
 }
+/* <-- */
 
-.fullScreenShower .whole-screen-content {
-/*    max-width: 100%;
-    max-height: 100%;*/
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    -webkit-transform: translate(-50%, -50%);
-    -moz-transform: translate(-50%, -50%);
-    -ms-transform: translate(-50%, -50%);
-}
 
-.previousArrow, 
-.nextArrow, 
-.closeImageBtn, 
-.positionIndicator, 
+
+
+/* Previous, next and close --> */
+.prev-arrow, 
+.next-arrow, 
+.close-full-screen, 
+.pos-indicator, 
 .next, 
 .previous, 
 .close {
@@ -1606,33 +1643,15 @@ header {
 .close {
     z-index: 230;
 }
-
+.next, 
 .previous {
-    left: 0;
+    width: 25%;
     top: 0;
     bottom: 0;
-    width: 25%;
-}
 
-.next {
-    right: 0;
-    top: 0;
-    bottom: 0;
-    width: 25%;
 }
-
-.previous:hover + .previousArrow {
-    left: -20px;
-}
-.next:hover + .nextArrow {
-    right: -20px;
-}
-.next:active + .nextArrow {
-    right: 0;
-}
-.previous:active + .previousArrow {
-    left: 0;
-}
+.previous { left: 0; }
+.next { right: 0;}
 
 .close {
     top: 0;
@@ -1640,127 +1659,74 @@ header {
     width: 100px;
     height: 100px;
 }
-.closeImageBtn {
+.prev-arrow, 
+.next-arrow, 
+.close-full-screen {
+    color: rgba(146, 146, 146, 0.8);
+}
+.prev-arrow, 
+.next-arrow {
+    top: 50%;
+    margin-top: -50px;
+    height: 100px;
+    width: 30px;
+    border-radius:20px;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+
+.prev-arrow {
+    left: -20px;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    -webkit-transition: left 0.12s linear;
+       -moz-transition: left 0.12s linear;
+            transition: left 0.12s linear;
+}
+.next-arrow {
+    right: -20px;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    -webkit-transition: right 0.12s linear;
+       -moz-transition: right 0.12s linear;
+            transition: right 0.12s linear;
+}
+
+.close-full-screen {
     top: 0;
     right: 0;
     height: 50px;
     width: 50px;
     border-bottom-left-radius: 50%;
-    background: rgba(255,255,255,0.1);
-    transition: background 0.05s linear;
-    -webkit-transition: background 0.05s linear;
-    -moz-transition: background 0.05s linear;
+    background: rgba(255, 255, 255, 0.1);
 }
 
-.closeImageBtn:hover {
-    background: rgba(255,255,255,0.35);
+.previous.hidden + .prev-arrow,
+.next.hidden + .next-arrow {
+    display: none;
 }
 
-.fullScreenShower .imgSubredditName {
-    font-size: 0.85em;
-}
-.previousArrow, 
-.nextArrow {
-    top: 50%;
-    margin-top: -50px;
-    height: 100px;
-    width: 30px;
-    transition: background 0.05s linear;
-    -webkit-transition: background 0.05s linear;
-    -moz-transition: background 0.05s linear;
-    transition: color 0.1s linear;
-    -webkit-transition: color 0.1s linear;
-    -moz-transition: color 0.1s linear;
-    border-radius:20px;
-    background: rgba(255,255,255,0.1);
-}
-
-.previousArrow, 
-.nextArrow, 
-.closeImageBtn {
-    color: rgba(146, 146, 146, 0.8)
-}
-
-
-.previous:hover + .previousArrow , 
-.next:hover + .nextArrow, 
-.close:hover + .closeImageBtn {
+.previous:hover + .prev-arrow , 
+.next:hover + .next-arrow, 
+.close:hover + .close-full-screen {
     background: rgba(255,255,255,0.2);
     color: rgba(25, 25, 25, 0.8);
 }
-.previous:active + .previousArrow ,
-.next:active + .nextArrow,
-.close:active + .closeImageBtn {
+
+.previous:hover + .prev-arrow { left: -20px; }
+.next:hover + .next-arrow { right: -20px; }
+.close-full-screen:hover { background: rgba(255,255,255,0.35); }
+
+.previous:active + .prev-arrow ,
+.next:active + .next-arrow,
+.close:active + .close-full-screen {
     background: rgba(255,255,255,0.5);
     color: rgb(15,15,15);
 }
 
-.previousArrow {
-    left: -20px;
-    transition: left 0.12s linear;
-    -webkit-transition: left 0.12s linear;
-    -moz-transition: left 0.12s linear;
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-}
-.nextArrow {
-    right: -20px;
-    transition: right 0.12s linear;
-    -webkit-transition: right 0.12s linear;
-    -moz-transition: right 0.12s linear;
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-}
-.previous.hidden + .previousArrow,
-.next.hidden + .nextArrow {
-    display: none;
-}
-
-.noScrollBody {
-    position: fixed;
-    z-index: -1;
-    overflow: hidden;
-}
-
-.positionIndicator {
-    bottom: 0;
-    right: 1em;
-    padding: 0.3rem;
-    display: block;
-}
-
-
-.fullScreenShower video {
-    width: 100%;
-    max-height: 100%;
-}
-
-.fullScreenShower img {
-    max-height: 100%;
-    max-width: 100%;
-    width: auto;
-       height: auto;
-}
-.fullScreenShower .imgSubredditName {
-    letter-spacing: 0.08em;
-}
-.fullScreenShower .postText, 
-.fullScreenShower .imgSubredditName {
-    z-index: 201;
-    text-align: left;
-    color: #fff;
-    text-shadow: 1px 1px 0 black;
-}
-
-.fullScreenShower .postText {
-    left: 0;
-    font-size: 0.9em;
-    width: 75%;
-    bottom: 0;
-    background: transparent;
-    overflow: hidden;
-    z-index: 250;
-}
+.next:active + .next-arrow { right: 0; }
+.previous:active + .prev-arrow { left: 0; }
+/* <-- */
 /* -------------------------------------------------- */
 
 
@@ -1817,140 +1783,150 @@ header {
 
 
 /* ----------------MEDIA QUERIES--------------------- */
-
-/* Media  */
+/* Side bar */
 @media screen and (max-width: 400px){
-    .subredditList, 
-    .multipleDeleteContainer, 
-    .restoreSubreddits {
+    .sr-list, 
+    .mult-del-container, 
+    .restore-sr {
         width: 90%;
         margin: 0 auto;
-        border-left: 1px solid #454545;
     }
-    .recommended {
-        padding: 10px 2.5%;
-    }
-    .multipleDeleteContainer {
-        height: auto;
-    }
-    .multipleDeleteContainer > * {
-        width: 100%;
-    }
-    .multipleDeleteContainer label {
+    .mult-del-container { height: auto; }
+    .mult-del-container > * { width: 100%; }
+    .mult-del-container label {
         border-right: none;
-        border-bottom: 1px solid black;
+        border-bottom: 1px solid rgb(125, 125, 125);
     }
-    .multipleDelete {
+    .mult-del {
         position: relative;
         text-align: center;
     }
-    .multipleDelete .fa-trash {
+    .mult-del .fa-trash {
         position: absolute;
         right: 0;
         top: 0;
         bottom: 0;
     }
-    .recommended li {
-        font-size: 0.9em;
-    }
+    .recommended { padding: 10px 2.5%; }
+    .recommended li { font-size: 0.9em; }
 }
+/* <-- */
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+/* Images percentages changes breakpoints (along with other related changes)  --> */
 @media screen and (max-width: 2200px){
-  .col-width, 
-  .imageResult {
-    width: 16.6%;
+    .col-width, 
+    .img-result {
+        width: 16.6%;
     }
-  .imageResult.double { width: 33.2%; }
-  .imageResult.triple {  width: 49.8%;}
-    .imgDesc { font-size: 1rem;}
+    .img-result.double { width: 33.2%; }
+    .img-result.triple {  width: 49.8%;}
+
+    /*===============*/
+    .img-desc { font-size: 1rem;}
 }
+
 @media screen and (max-width: 1800px){
     .col-width, 
-    .imageResult {
+    .img-result {
         width: 20%;
     }
-    .imageResult.double { width: 40%; }
-    .imageResult.triple { width: 60%;}
-    .imgDesc { font-size: 0.9rem;}
+    .img-result.double { width: 40%; }
+    .img-result.triple { width: 60%;}
+
+    /*===============*/
+    .img-desc { font-size: 0.9rem;}
 }
+
 @media screen and (max-width: 1380px){
-  .col-width, 
-  .imageResult {
+    .col-width, 
+    .img-result {
         width: 25%;
     }
-  .imageResult.double { width: 50%; }
-  .imageResult.triple {  width: 75%;}
-    .imgDesc { font-size: 0.85rem;}
+    .img-result.double { width: 50%; }
+    .img-result.triple {  width: 75%; }
+
+    /*===============*/
+    .img-desc { font-size: 0.85rem;}
 }
+
 @media screen and (max-width: 1100px){
-  .col-width, 
-  .imageResult {width: 33.3%;}
-  .imageResult.double { width: 66.6%; }
-  .imageResult.triple {  width: 100%;}
-    .imgDesc { font-size: 0.85rem;}
-    .fullScreenShower .imgDesc, 
-    .positionIndicator { 
+    .col-width, 
+    .img-result {
+        width: 33.3%;
+    }
+    .img-result.double { width: 66.6%; }
+    .img-result.triple {  width: 100%;}
+
+    /*===============*/
+    .img-desc { font-size: 0.85rem;}
+    .full-screen-container .img-desc, 
+    .pos-indicator { 
         font-size: 1.1rem; 
     }
     .main-heading-container { font-size: 1.15rem; }
-
 }
+
 @media screen and (max-width: 640px){
     .col-width, 
-    .imageResult {
+    .img-result {
         width: 50%;
     }
-    .imageResult.double { width: 100%; }
-    .imageResult.triple {  width: 100%;}
-    .imgDesc { font-size: 0.8rem;}
+    .img-result.double { width: 100%; }
+    .img-result.triple {  width: 100%; }
+
+    /*===============*/
+    .img-desc { font-size: 0.8rem;}
     .main-heading-container { font-size: 1.15rem; }
     .main-heading-container .heading-info { font-size: 1em; }
 }
 @media screen and (max-width: 400px){
     .col-width, 
-    .imageResult {
+    .img-result {
         width: 100%;
     }
-    .imageResult.double { width: 100%; }
-    .imageResult.triple {  width: 100%;}
-    .imgDesc { font-size: 0.75rem;}
-    .fullScreenShower .imgDesc, 
-    .positionIndicator { 
+    .img-result.double { width: 100%; }
+    .img-result.triple {  width: 100%; }
+
+    /*===============*/
+    .img-desc { font-size: 0.75rem;}
+    .full-screen-container .img-desc, 
+    .pos-indicator { 
         font-size: 1.1rem; 
     }
     .main-heading-container { font-size: 1rem; }
 }
+/* <--  */
 
 
 
 
 
 @media screen and (max-width: 960px){
-    .postText {
-        max-height: 2.0em;
-    }
-}
-@media screen and (min-width: 960px){
-  .main-heading-container {
-    font-size: 1.55rem;
-  }
+    /* Keeps the image description to one line only */
+    .post-txt { max-height: 2.0em; }
 }
 @media screen and (min-width: 1280px){
- 
-    .fullScreenShower .imgDesc,
-    .positionIndicator { font-size: 1.1rem; }
-    .imgDesc { font-size: 0.85rem;}
+    .full-screen-container .img-desc,
+    .pos-indicator { font-size: 1.1rem; }
+    .img-desc { font-size: 0.85rem;}
 }
 @media screen and (min-width: 2200px){
     .col-width, 
-    .imageResult {
+    .img-result {
         width: 14.2%;
     }
 }
-
 /* -------------------------------------------------- */
-
-
-
-
