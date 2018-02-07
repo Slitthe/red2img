@@ -158,6 +158,181 @@ header {
 
 
 
+/* ------------------Custom Inputs--------------------- */
+
+/* Shared stylings --> */
+.custom-checkbox-wrapper,
+.custom-slider-wrapper {
+    display: inline-block;
+    cursor: pointer;
+    position: relative;
+}
+.hidden-input {
+    display: none;
+}
+.faux-checkbox {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+}
+.faux-checkbox:after {
+    content: "";
+    position: absolute;
+    -webkit-transition: all 0.1s linear;
+       -moz-transition: all 0.1s linear;
+            transition: all 0.1s linear;
+}
+/* <-- */
+
+
+/* Tick-style checkbox --> */
+.custom-checkbox-wrapper {
+  width: 0.7em;
+  height: 0.7em;
+  border: 1px solid black;
+  border-radius: 15%;
+}
+    /* OFF style */
+.custom-checkbox-wrapper .faux-checkbox:after {
+  top: 35%;
+  bottom: 35%;
+  left: 35%;
+  right: 35%;
+  background: transparent;
+  border-radius: 15%;
+}
+
+    /* ON style */
+.custom-checkbox-wrapper .hidden-input:checked + .faux-checkbox:after {
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background: rgb(240,120,120);
+    box-shadow: 0 0 12px 3px rgba(188,120,120,0.7);
+}
+/* <--  */
+
+
+/* Slider-style checkbox -->  */
+.custom-slider-wrapper {
+    width: 70px;
+    height: 28px;
+    border-radius: 20px;
+    border: 1px solid gray;
+    margin: 10px 5px;
+}
+    /* OFF Styles */
+.custom-slider-wrapper .faux-checkbox {
+    background: rgba(120,0,0,0.6);
+    border-radius: 20px;
+}
+.custom-slider-wrapper .faux-checkbox:after {
+    top: 15%;
+    bottom: 15%;
+    left: 10%;
+    right: 60%;
+    background: silver;
+    background: repeating-linear-gradient(135deg, silver 0%, silver 10%, gray 10%, gray 20%);
+    border: 1px solid silver;
+    border-radius: 20px;
+}
+.custom-slider-wrapper .input-text:after{
+    content: "off";
+    font-size: 0.8em;
+    text-transform: uppercase;
+    font-family: "Lato", sans-serif;
+    line-height: 28px;
+    text-align: right;
+    padding-left: 1em;
+    width: 100%;
+    display: inline-block;
+    padding-right: 1em;
+    -webkit-box-sizing: border-box;
+       -moz-box-sizing: border-box;
+            box-sizing: border-box;
+}
+
+    /* ON Styles */
+.custom-slider-wrapper .hidden-input:checked + .faux-checkbox {
+    background: rgba(0, 120, 0, 0.6);
+}
+.custom-slider-wrapper .hidden-input:checked + .faux-checkbox:after {
+    left: 60%;
+    right: 10%;
+}
+.custom-slider-wrapper .hidden-input:checked ~ .input-text:after {
+    content: "on";
+    text-align: left;
+}
+/* <-- */
+/* --------------------------------------------------- */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -256,7 +431,381 @@ header {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* -------------Add subreddit input------------------- */
+.srSearchContainer {
+    width: 100%;
+    background: #eee;
+    border-top-right-radius: 20px;
+    position: relative;
+}
+.srSearchContainer > .awesomplete {
+    width: 70%;  /* Width of the input container */
+    float: left;
+    border-bottom: 1px solid rgb(90, 90, 90);
+}
+.awesomplete > .awesomplete, .srSearchContainer input {
+    width: 100%;
+}
+/* Add and clear buttons next to the input */
+.addSubredditBtn, 
+.clearInputBtn {
+    width: 15%;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    color: rgb(60, 60, 60);
+    border-left: 1px solid rgb(90, 90, 90);
+    border-bottom: 1px solid rgb(90, 90, 90);
+    transition: background 0.05s linear;
+    
+}
+.addSubredditBtn {
+    border-top-right-radius: 20px;
+    right: 0;
+}
+.clearInputBtn { right: 15%; }
+
+.addSubredditBtn:hover, 
+.clearInputBtn:hover {
+    background: rgb(236, 233, 216);
+}
+.addSubredditBtn:active, 
+.clearInputBtn:active {
+    background: rgb(216, 213, 186);
+}
+/* Applies indentical padding to buttons and input */
+.addSubredditBtn, .addSubreddit {
+    font-size: 1rem;
+    padding: 0.65em 0.3em;
+    letter-spacing: 0.03em;
+    -webkit-box-sizing: border-box;
+       -moz-box-sizing: border-box;
+            box-sizing: border-box;
+}
+/* --------------------------------------------------- */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* -------------Subreddits list & Deletion----------------*/
+/* General select all and delete styling --> */
+.multipleDeleteContainer {
+    height: 35px;
+    line-height: 35px;
+    font-size: 0.9rem;
+    border: 1px solid #2d2d2d;
+    border-bottom: 2px solid black;
+    text-align: center;
+}
+.multipleDeleteContainer > * {
+    line-height: 35px;
+    float: left;
+    width: 40%;
+    -webkit-box-sizing: border-box;
+       -moz-box-sizing: border-box;
+            box-sizing: border-box;
+}
+/* <-- */
+
+
+
+/* Check all --> */
+.multipleDeleteContainer label {
+   border-right: 1px solid #444;
+   position: relative;
+}
+    /* Checkboxes */
+.multipleDeleteContainer .custom-checkbox-wrapper,
+.subreddit-single .custom-checkbox-wrapper {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+       -moz-transform: translateY(-50%);
+        -ms-transform: translateY(-50%);
+            transform: translateY(-50%);
+}
+/* <-- */
+
+/* Remove selected btn --> */
+.multipleDelete {
+    color: rgba(130, 30,30, 0.8);
+    width: 60%;
+}
+.multipleDelete:hover { text-decoration: underline; }
+.multipleDelete:hover .fa-trash {
+    background: rgba(130, 30,30, 0.8);
+    color: #cbcbcb;
+}
+.multipleDeleteContainer .fa-trash {
+    width: 3rem;
+    height: 35px;
+    display: inline-block;
+    float: right;
+    display: block;
+    line-height: 35px;
+    -webkit-transition: background 0.1s linear;
+       -moz-transition: background 0.1s linear;
+            transition: background 0.1s linear;
+}
+/* <-- */
+
+
+
+/* Subreddits List --> */
+.subreddit-single {
+    width: 100%;
+    margin: 8px auto;
+    position: relative;
+    color: #222;
+    height: 35px;
+    line-height: 35px;
+}
+
+.subreddit-single .removeSubreddit {
+    position: absolute;
+    right: 0;
+    width: 3rem;
+    top: 0;
+    bottom: 0;
+    color: #ccc;
+    background: rgba(130, 30,30, 0.5);
+    -webkit-transition: background 0.1s linear;
+       -moz-transition: background 0.1s linear;
+            transition: background 0.1s linear;
+}
+.removeSubreddit:hover {
+    color: #aaa;
+    background: rgba(130, 30,30, 0.8);
+}
+/* <-- */
+
+/* Restore Subreddits Btn --> */
+.restoreSubreddits {
+    border: 1px solid rgb(164, 165, 138);
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    padding: 3px 6px;
+    background: #e4dfc7;
+    color: #232323;
+}
+.restoreSubreddits:hover {
+    background: #c4c0ac
+}
+/* <-- */
+/* ------------------------------------------------------ */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /* ----------------------Subreddits / Side Bar---------------------- */
+    /* Side bar container */
 .subreddits {
     position: absolute;
     max-width: 500px;
@@ -265,23 +814,31 @@ header {
     top: 50px;
     left: 0;
     z-index: 100;
-    
-    border: 2px solid #333;
+    border: 2px solid rgb(51, 51, 51);
     border-bottom-right-radius: 20px;
     border-top-right-radius: 20px;
     text-align: center;
-
-    background: #ccc;
+    background: rgb(204, 204, 204);
     -webkit-transition: transform 0.5s ease-in-out;
        -moz-transition: transform 0.5s ease-in-out;
             transition: transform 0.5s ease-in-out;
 }
+    /* Handles the sliding motion of the side menu when this class is applied */
 .slideHidden {
     -webkit-transform: translateX(-100%);
        -moz-transform: translateX(-100%);
         -ms-transform: translateX(-100%);
             transform: translateX(-100%);
 }
+
+.subredditList, 
+.multipleDeleteContainer, 
+.restoreSubreddits {
+    width: 75%;
+    margin: 0 auto;
+    border-left: 1px solid #454545;
+}
+
 /*Side menu headings -->*/
 .subreddits h2,
 .subreddits h3 {
@@ -295,315 +852,104 @@ header {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    /*Add subreddit*/
-    .srSearchContainer {
-        width: 100%;
-        background: #eee;
-        border-top-right-radius: 20px;
-        position: relative;
-    }
-    .srSearchContainer > .awesomplete {
-        width: 70%;
-        float: left;
-        border-bottom: 1px solid black;
-    }
-    .awesomplete > .awesomplete {
-        width: 100%;
-    }
-    .srSearchContainer input {
-        width: 100%;
-    }
-    .addSubredditBtn, 
-    .clearInputBtn {
-        width: 15%;
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        color: #222;
-        border-left: 1px solid black;
-        border-bottom: 1px solid black;
-        transition: background 0.05s linear;
-        
-    }
-    .addSubredditBtn {
-       border-top-right-radius: 20px;
-        right: 0;
-        
-        
-    }
-    .addSubredditBtn:hover, 
-    .clearInputBtn:hover {
-        background: rgb(236, 233, 216);
-    }
-    .addSubredditBtn:active, 
-    .clearInputBtn:active {
-        background: rgb(216, 213, 186);
-    }
-    .addSubredditBtn, .addSubreddit {
-        font-size: 1rem;
-        padding: 0.65em 0.3em;
-        box-sizing: border-box;
-        -webkit-box-sizing: border-box;
-        -moz-box-sizing: border-box;
-        letter-spacing: 0.03em;
-    }
-    .clearInputBtn {
-        right: 15%;
-    }
-
-
-    /* Subreddit list & Multiple Delete */
-    .multipleDeleteContainer {
-        height: 35px;
-        font-size: 0.9em;
-        border: 1px solid #2d2d2d;
-        border-bottom: 2px solid black;
-        text-align: center;
-
-    }
-    .multipleDeleteContainer > * {
-        line-height: 35px;
-        float: left;
-        width: 40%;
-
-        box-sizing: border-box;
-        -webkit-box-sizing: border-box;
-        -moz-box-sizing: border-box;
-    }
-    .multipleDeleteContainer .fa-trash {
-        width: 3rem;
-        height: 35px;
-        display: inline-block;
-        text-align: center;
-        float: right;
-        display: block;
-        line-height: 35px;
-        transition: background 0.1s linear;
-        -webkit-transition: background 0.1s linear;
-        -moz-transition: background 0.1s linear;
-    }
-
-    .multipleDeleteContainer .custom-checkbox-wrapper {
-        position: absolute;
-        left: 10px;
-        top: 50%;
-        transform: translateY(-50%);
-        -webkit-transform: translateY(-50%);
-        -moz-transform: translateY(-50%);
-        -ms-transform: translateY(-50%);
-
-    }
-    .multipleDelete {
-        color: rgba(130, 30,30, 0.8);
-        width: 60%;
-        cursor: pointer;
-        /*position: relative;*/
-    }
-    .multipleDelete:hover {
-        text-decoration: underline;
-    }
-    .multipleDelete:hover .fa-trash {
-        background: rgba(130, 30,30, 0.8);
-        color: #cbcbcb;
-    }
-    .multipleDeleteContainer label {
-       border-right: 1px solid #444;
-       position: relative;
-    }
-    .subredditList, 
-    .multipleDeleteContainer, 
-    .restoreSubreddits {
-        width: 75%;
-        margin: 0 auto;
-        border-left: 1px solid #454545;
-    }
-    .subreddit-single {
-        width: 100%;
-        margin: 8px auto;
-        position: relative;
-        text-align: center;
-        background: white;
-        /*box-shadow: 0 0 7px 0px rgba(0,0,0,0.1);*/
-        color: #222;
-    }
-    .subreddit-single .custom-checkbox-wrapper {
-        position: absolute;
-        left: 10px;
-        top: 50%;
-        transform: translateY(-50%);
-        -webkit-transform: translateY(-50%);
-        -moz-transform: translateY(-50%);
-        -ms-transform: translateY(-50%);
-    }
-    .subreddit-single > label {
-        height: 35px;
-        line-height: 35px;
-    }
-    .subreddit-single .removeSubreddit {
-        transition: background 0.1s linear;
-        -webkit-transition: background 0.1s linear;
-        -moz-transition: background 0.1s linear;
-        float: left;
-        position: absolute;
-        right: 0;
-        width: 3rem;
-        top: 0;
-        bottom: 0;
-        text-align: center;
-        color: #ccc;
-        background: rgba(130, 30,30, 0.5);
-    }
-    .removeSubreddit:hover {
-        color: #aaa;
-        background: rgba(130, 30,30, 0.8);
-    }
-    .restoreSubreddits {
-        border: 1px solid rgb(164, 165, 138);
-        border-radius: 5px;
-        border-top-left-radius: 0;
-        border-top-right-radius: 0;
-        padding:3px 6px;
-        background: #e4dfc7;
-        color: #232323;
-    }
-    .restoreSubreddits:hover {
-        background: #c4c0ac
-    }
-
-
-
-    /* Recommended/related subs  */
-    .recommended {
-        margin: 0;
-        padding: 0;
-        list-style-type: none;
-        font-size: 0.8em;
-        text-align: left;
-        padding: 10px 10%;
-    }
-
-    .recommended li {
-        border-radius: 7px;
-        background: #bbb;
-        margin: 5px 2.5%;
-        padding: 5px;
-        display: inline-block;
-        cursor: pointer;
-        transition: background 0.1s linear;
-        -webkit-transition: background 0.1s linear;
-        -moz-transition: background 0.1s linear;
-    }
-    .recommended li:hover {
-        background: #999;
-        color: white;
-    }
-    .recommended li:active {
-        background: #666;
-    }
-
-
-    /* Media  */
-    @media screen and (max-width: 400px){
-        .subredditList, 
-        .multipleDeleteContainer, 
-        .restoreSubreddits {
-            width: 90%;
-            margin: 0 auto;
-            border-left: 1px solid #454545;
-        }
-        .recommended {
-            padding: 10px 2.5%;
-        }
-        .multipleDeleteContainer {
-            height: auto;
-        }
-        .multipleDeleteContainer > * {
-            width: 100%;
-        }
-        .multipleDeleteContainer label {
-            border-right: none;
-            border-bottom: 1px solid black;
-        }
-        .multipleDelete {
-            position: relative;
-            text-align: center;
-        }
-        .multipleDelete .fa-trash {
-            position: absolute;
-            right: 0;
-            top: 0;
-            bottom: 0;
-        }
-        .recommended li {
-            font-size: 0.9em;
-        }
-    }
-
-
-    /* Checkboxes styling*/
-    .custom-checkbox-wrapper {
-      display: inline-block;
-      width: 0.7em;
-      height: 0.7em;
-      border: 1px solid black;
-      position: relative;
-      border-radius: 15%;
-      cursor: pointer;
-    }
-
-    .custom-checkbox-wrapper .hidden-input {
-      display: none  
-    }
-
-    .custom-checkbox-wrapper .faux-checkbox {
-        position: absolute;
-        left: 0;
-        right: 0;
-        top: 0;
-        bottom: 0;
-        border-radius: 15%;
-    }
-
-    .custom-checkbox-wrapper .faux-checkbox:after {
-      content: "";
-      position: absolute;
-      top: 35%;
-      bottom: 35%;
-      left: 35%;
-      right: 35%;
-      background: transparent;
-      border-radius: 15%;
-      transition: all 0.1s linear;
-      -webkit-transition: all 0.1s linear;
-      -moz-transition: all 0.1s linear;
-    }
-
-    .custom-checkbox-wrapper .hidden-input:checked + .faux-checkbox:after {
-      position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
-      right: 0;
-       background: rgb(240,120,120);
-       box-shadow: 0 0 12px 3px rgba(188,120,120,0.7);
-    }
-
+ /* Recommended/related subs  --> */
+.recommended {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    font-size: 0.8rem;
+    text-align: left;
+    padding: 10px 10%;
+}
+.recommended li {
+    border-radius: 7px;
+    background: #bbb;
+    margin: 5px 2.5%;
+    padding: 5px;
+    display: inline-block;
+    cursor: pointer;
+    -webkit-transition: background 0.1s linear;
+       -moz-transition: background 0.1s linear;
+            transition: background 0.1s linear;
+}
+.recommended li:hover {
+    background:rgb(153, 153, 153);
+    color: rgb(255, 255, 255);
+}
+.recommended li:active {
+    background: rgb(102, 102, 102);
+}
+/* <-- */
 /* ------------------------------------------------------ */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -795,39 +1141,30 @@ header {
 .col-width {
     width: 100%;
 }
+.imageResult {
+    width: 100%;
+    opacity: 0;
+    overflow: hidden;
+    padding: 10px 5px;
+    min-height: 5rem;
+    -webkit-box-sizing: border-box;
+       -moz-box-sizing: border-box;
+            box-sizing: border-box;
+    -webkit-transition: opacity 0.5s linear;
+       -moz-transition: opacity 0.5s linear;  
+            transition: opacity 0.5s linear;
+}
 .imageResult .content {
-    height: auto;
     width: 100%;
     cursor: pointer;
     border: 1px solid rgb(175,175,175);
 }
-
-.imageResult {
-    width: 100%;
-    max-width: 100%;
-    opacity: 0;
-    overflow: hidden;
-    padding: 10px 5px;
-    box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    transition: opacity 0.5s linear;
-    -webkit-transition: opacity 0.5s linear;
-    -moz-transition: opacity 0.5s linear;  
-    min-height: 5rem;
-}
-
-.imageResult.visible {
-    opacity: 1;
-}
+.imageResult.visible { opacity: 1;}
 .images {
     padding: 10px;
     padding-bottom: 40px;
-    clear: both;
     position: relative;
 }
-
-
 .no-titles .imgDesc{
     display: none;
 }
@@ -837,11 +1174,6 @@ header {
     font-size: 0.8rem;
     color: rgb(220,220,220);
     text-shadow: 1px 1px 0 black;
-
-
-}
-.imgDesc {
-    text-overflow: ellipsis;
 }
 .imgDesc .postText {
     position: absolute;
@@ -861,17 +1193,14 @@ header {
     top: 10px;
     left: 5px;
     text-align: left;
-
 }
 .imgSubredditName {
     text-shadow: 1px 1px 0 black;
     color: rgb(220,220,220);
-
 }
 .postText {
     max-height: 3.5em;
-}
-
+} 
 /* --------------------------------------------- */
 
 
@@ -1004,85 +1333,7 @@ header {
         text-align: left;
     }
 
-    .custom-slider-wrapper {
-        width: 70px;
-        height: 28px;
-        display: block;
-        cursor: pointer;
-        position: relative;
-        border-radius: 20px;
-        border: 1px solid gray;
-        margin: 10px 5px;
-        display: inline-block;
 
-
-    }
-
-    .custom-slider-wrapper input {
-        display: none
-            
-    }
-
-    .custom-slider-wrapper .input-text:after{
-        content: "off";
-        font-size: 0.8em;
-        text-transform: uppercase;
-        font-family: "Lato", sans-serif;
-        line-height: 28px;
-        text-align: right;
-        padding-left: 1em;
-        width: 100%;
-        display: inline-block;
-        box-sizing: border-box;
-        -webkit-box-sizing: border-box;
-        -moz-box-sizing: border-box;
-        padding-right: 1em;
-    }
-
-    .custom-slider-wrapper input:checked ~ .input-text:after {
-        content: "on";
-        text-align: left;
-    }
-
-    .custom-slider-wrapper .faux-checkbox {
-            position: absolute;
-            left: 0;
-        right: 0;
-        top: 0;
-            bottom: 0;
-        background: rgba(120,0,0,0.6);
-        border-radius: 20px;
-    }
-
-    .custom-slider-wrapper .faux-checkbox:after {
-        content: "";
-        position: absolute;
-        top: 15%;
-        bottom: 15%;
-        left: 10%;
-        right: 60%;
-        background: repeating-linear-gradient(135deg, silver 0%, silver 10%, gray 10%, gray 20%);
-        border-radius: 20px;
-        transition: all 0.1s linear;
-        -webkit-transition: all 0.1s linear;
-        -moz-transition: all 0.1s linear;
-        border: 1px solid silver
-    }
-
-    .custom-slider-wrapper input:checked + .faux-checkbox:after {
-        position: absolute;
-        left: 60%;
-        top: 15%;
-        bottom: 15%;
-        right: 10%;
-        border-radius: 20px;
-    }
-    .custom-slider-wrapper input:checked + .faux-checkbox {
-        background: rgba(0,120,0,0.6)
-    }
-    .custom-slider-wrapper label:hover .faux-checkbox:after {
-        background: repeating-linear-gradient(135deg, silver 0%, silver 10%, #333 10%, #333 20%);
-    }
 
     /*Sorting*/
     .sorting {
@@ -1566,6 +1817,44 @@ header {
 
 
 /* ----------------MEDIA QUERIES--------------------- */
+
+/* Media  */
+@media screen and (max-width: 400px){
+    .subredditList, 
+    .multipleDeleteContainer, 
+    .restoreSubreddits {
+        width: 90%;
+        margin: 0 auto;
+        border-left: 1px solid #454545;
+    }
+    .recommended {
+        padding: 10px 2.5%;
+    }
+    .multipleDeleteContainer {
+        height: auto;
+    }
+    .multipleDeleteContainer > * {
+        width: 100%;
+    }
+    .multipleDeleteContainer label {
+        border-right: none;
+        border-bottom: 1px solid black;
+    }
+    .multipleDelete {
+        position: relative;
+        text-align: center;
+    }
+    .multipleDelete .fa-trash {
+        position: absolute;
+        right: 0;
+        top: 0;
+        bottom: 0;
+    }
+    .recommended li {
+        font-size: 0.9em;
+    }
+}
+
 
 @media screen and (max-width: 2200px){
   .col-width, 
