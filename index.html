@@ -4,176 +4,176 @@
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
         <title>Reddit Image Gallery</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">\
+
+        <!-- Links -->
+            <!-- Icons -->
         <link rel="apple-touch-icon" href="icon.png">
         <link rel="icon" type="image/x-icon" href="favicon.ico">
         <link rel="icon" type="image/png" href="favicon.png">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <link rel="stylesheet" href="css/normalize.css">
+            <!-- Stylesheets -->
         <link rel="stylesheet" href="css/main.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato|Montserrat">
+                <!-- Libs sheets -->
+        <link rel="stylesheet" href="css/normalize.css">
         <link rel="stylesheet" href="css/lib/alertify.css">
         <link rel="stylesheet" href="css/lib/awesomplete.css">
-        <link href="https://fonts.googleapis.com/css?family=Lato|Montserrat" rel="stylesheet">
-        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-        <!-- Head lib scripts --> 
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+        <!-- Scripts -->
         <script src="https://hammerjs.github.io/dist/hammer.min.js"></script>
         <script src="js/lib/alertify.js"></script>
     </head>
     <body>
-        <!--[if lte IE 9]>
-            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
+        <!--[if lte IE 10]>
+        <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
         <![endif]-->
 
+        <main>
+            <!-- Side menu toggle -->
+            <button type="button" id="menu-btn" class="hamburger-btn no-input-style menu-btn">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            </button>
+            <!-- To top -->
+            <button class="to-top no-input-style">
+            <i class="fa fa-arrow-up"></i>
+            </button>
+            
+            <!-- Side bar -->
+            <aside class="menu slide-closed">
+                <!-- Add input -->
+                <section class="sr-search-container clearfix" id="sr-search-container">
+                    <input type="text" id="add-sr" class="awesomplete add-sr no-input-style" placeholder="Subreddit name">
+                    <button type="button" id="clear-input-btn" class="no-input-style clear-input-btn ">
+                    <i class="fa fa-close"></i>
+                    </button>
+                    <button type="button" id="add-sr-btn" class="no-input-style add-sr-btn ">
+                    <i class="fa fa-plus"></i>
+                    </button>
+                </section>
+                <!-- Subreddits list & deletion -->
+                <section>
+                    <!-- Check all / delete -->
+                    <h2>Subreddits</h2>
+                    <div class="mult-del-container clearfix">
+                        <label>
+                            <div class="custom-checkbox-wrapper">
+                                <input type="checkbox" class="checkAll hidden-input" id="checkAll">
+                                <div class="faux-checkbox"></div>
+                            </div>
+                            Check All
+                        </label>
+                        <button type="button" id="mult-del" class="mult-del no-input-style">
+                        Remove Selected<i class="fa fa-trash"></i>
+                        </button>
+                    </div>
+                    <!-- Subreddits list -->
+                    <div id="sr-list" class="sr-list"></div>
+                    <button class="restore-sr no-input-style" id="restore-sr" type="button">Restore default subreddits</button>
+                </section>
+                <section>
+                    <!-- Recommandations -->
+                    <h3>Suggestions</h3>
+                    <ul class="recommended" id="recommended"></ul>
+                </section>
+            </aside>
+        
+        <!-- Header -->
         <header>
+            <!-- Title / main heading -->
             <div class="main-heading-container">
-                <h1 class="main-heading">Red<span class="special-text">2</span>IMG</h1>
+                <h1 class="main-heading">
+                Red<span class="special-text">2</span>IMG</h1>
                 <p class="heading-info">
-                    <span class="normal-text">Re</span><span class="special-text">d</span><span class="special-text">d</span>it 
-                    <span class="normal-text">Im</span>a<span class="normal-text">g</span>e 
+                    <span class="normal-text">Re</span><span class="special-text">d</span><span class="special-text">d</span>it
+                    <span class="normal-text">Im</span>a<span class="normal-text">g</span>e
                     Gallery
                 </p>
             </div>
-
-                    <div class="settings-sort-container">
-
-                        <div id="settings" class="settings">
-                            <label>
-                                <div class="custom-slider-wrapper">
-                                    <input class="hidden-input" id="nsfw" type="checkbox" value="nsfw" name="adultContent" checked>
-                                    <div class="faux-checkbox"></div>
-                                    <span class="input-text"></span>
-                                </div>
-                                Safe For Work
-                            </label>
-
-                                <!-- <label for="nsfw">NSFW</label>
-                                <input id="nsfw" type="checkbox" value="nsfw" name="adultContent"> -->
-                            <label>
-                                <div class="custom-slider-wrapper">
-                                    <input class="hidden-input" checked id="titles" type="checkbox" value="displayTitles" name="displayTitles">
-                                    <div class="faux-checkbox"></div>
-                                    <span class="input-text"></span>
-                                </div>
-                                Show Info
-                            </label>
-                            <div class="sorting">
-                                Sort by: 
-                                <select class="no-input-style" name="type" id="type">
-                                    <option selected value="hot">Hot</option>
-                                    <option value="new">New</option>
-                                    <option value="rising">Rising</option>
-                                    <option value="controversial">Controversial</option>
-                                    <option value="top">Top</option>
-                                </select>
-                                <select class="hidden no-input-style" name="time" id="time">
-                                    <option value="hour">Hour</option>
-                                    <option selected value="day">Day</option>
-                                    <option value="week">Week</option>
-                                    <option value="controversial">Month</option>
-                                    <option value="year">Year</option>
-                                    <option value="all">All</option>
-                                </select>
-
-                                <button type="button" id="reload-imgs" class="reload-imgs no-input-style"><i class="fa fa-refresh"></i></button>
-
-
-                            </div>
-            <!--                 <label for="titles">Show Titles</label>
-                            <input checked id="titles" type="checkbox" value="displayTitles" name="displayTitles"> -->
-                        </div>
-                    </div>
-        </header>
-
-        <button type="button" id="menu-btn" class="hamburger-btn no-input-style menu-btn">
-            <div class="bar"></div> 
-            <div class="bar"></div> 
-            <div class="bar"></div> 
-        </button>
-        <div class="subreddits slide-closed">
-            <div class="sr-search-container clearfix" id="sr-search-container">
-                <input list="autocomplete" type="text" id="add-sr" class="awesomplete add-sr no-input-style" placeholder="Subreddit name">
-                <button type="button" id="clear-input-btn" class="no-input-style clear-input-btn "><i class="fa fa-close"></i></button>
-                <button type="button" id="add-sr-btn" class="no-input-style add-sr-btn "><i class="fa fa-plus"></i></button>
-            </div>
-
-            <h2>Subreddits</h2>
-            <div class="mult-del-container clearfix">
-                
+            <!-- Settings container -->
+            <section id="settings" class="settings">
+                <!-- Sliders settings (adult & titles show) -->
                 <label>
-                    <div class="custom-checkbox-wrapper">
-                        <input type="checkbox" class="checkAll hidden-input" id="checkAll">
+                    <div class="custom-slider-wrapper">
+                        <input class="hidden-input" id="nsfw" type="checkbox" value="nsfw" name="adultContent" checked>
                         <div class="faux-checkbox"></div>
+                        <span class="input-text"></span>
                     </div>
-                    Check All
+                    Safe For Work
                 </label>
-
-                <button type="button" id="mult-del" class="mult-del no-input-style">Remove Selected<i class="fa fa-trash"></i></button>
-            </div>
+                <label>
+                    <div class="custom-slider-wrapper">
+                        <input class="hidden-input" checked id="titles" type="checkbox" value="displayTitles" name="displayTitles">
+                        <div class="faux-checkbox"></div>
+                        <span class="input-text"></span>
+                    </div>
+                    Show Info
+                </label>
+                <!-- Sorting -->
+                <div class="sorting">
+                    Sort by:
+                    <select class="no-input-style" name="type" id="type">
+                        <option selected value="hot">Hot</option>
+                        <option value="new">New</option>
+                        <option value="rising">Rising</option>
+                        <option value="controversial">Controversial</option>
+                        <option value="top">Top</option>
+                    </select>
+                    <select class="hidden no-input-style" name="time" id="time">
+                        <option value="hour">Hour</option>
+                        <option selected value="day">Day</option>
+                        <option value="week">Week</option>
+                        <option value="controversial">Month</option>
+                        <option value="year">Year</option>
+                        <option value="all">All</option>
+                    </select>
+                    <!-- Images reload -->
+                    <button type="button" id="reload-imgs" class="reload-imgs no-input-style"><i class="fa fa-refresh"></i></button>
+                </div>
+            </section>
+        </header>
         
-            <div id="sr-list" class="sr-list clearfix"></div>
-            <button class="restore-sr no-input-style" id="restore-sr" type="button">Restore default subreddits</button>
-            <h3>Suggestions</h3>
-            <ul class="recommended" id="recommended"></ul>
-        </div>
-
-
-
-        
-
         
         
-
-
-       
-
-
-        <div class="images">
+        <!-- Images container -->
+        <section class="images">
             <div class="imagesContainer" id="imagesContainer"></div>
             <button type="button" id="load-more" class="load-more no-input-style">Load More</button>
             <div id="loading" class="loading invisible"></div>
+        </section>
+
+    </main>
+    <!-- Full screen -->
+    <div class="full-screen-container hidden" id="full-screen-container">
+        <!-- Previous, next and close -->
+        <div class="next"></div>
+        <button class="next-arrow no-input-style"><i class="fa fa-chevron-right"></i></button>
+        <div class="previous"></div>
+        <button class="prev-arrow no-input-style"><i class="fa fa-chevron-left"></i></button>
+        <div class="close"></div>
+        <button class="close-full-screen no-input-style"><i class="fa fa-close"></i></button>
+        
+        <!-- Positiong indicator (current and total images) -->
+        <div class="pos-indicator">
+            <div class="loading"></div>
+            <span class="currentPosition"></span> / <span class="totalImages"></span>
         </div>
-
-
-
-
-
-
-
-
-
-
-        <div class="full-screen-container hidden" id="full-screen-container">
-           
-            <div class="next">
-            </div>
-            <button class="next-arrow no-input-style"><i class="fa fa-chevron-right"></i></button>
-
-            <div class="previous">
-            </div>
-            <button class="prev-arrow no-input-style"><i class="fa fa-chevron-left"></i></button>
-
-            <div class="close">
-            </div>
-            <button class="close-full-screen no-input-style"><i class="fa fa-close"></i></button>
-            
-
-            <div class="pos-indicator">
-                <div class="loading"></div>
-                <span class="currentPosition"></span> / <span class="totalImages"></span>
-            </div>
-            <!-- <img class="whole-screen-content" src="https://upload.wikimedia.org/wikipedia/commons/d/d1/Mount_Everest_as_seen_from_Drukair2_PLW_edit.jpg"> -->
-            <video playsinline muted preload="auto" autoplay="autoplay" loop="loop" class="whole-screen-content">  
-                <source src="#" type="#"></source>
-            </video>
+        <!-- Image title and subreddit name -->
+        <div class="img-desc clearfix">
+            <a href="#" class="post-txt" target="_blank" title=""></a>
+            <div class="img-sr-name"></div>
         </div>
+        <video playsinline muted preload="auto" autoplay="autoplay" loop="loop" class="whole-screen-content">
+            <source src="#" type="#">
+        </video>
+    </div>
 
-        <button class="to-top no-input-style"><i class="fa fa-arrow-up"></i></button>
-
-        <!-- Lib Scripts -->
-        <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
-        <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
-        <script src="js/lib/awesomplete.js"></script>
-        <!-- Page Script -->
-        <script src="js/main.js"></script>
-
-    </body>
+    <!-- Lib Scripts -->
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+    <script src="js/lib/awesomplete.js"></script>
+    <!-- Page Script -->
+    <script src="js/main.js"></script>
+</body>
 </html>

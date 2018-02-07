@@ -85,7 +85,7 @@ var elements = {
 	checkAll: $("#checkAll"),
 	reloadImgsBtn: $("#reload-imgs"),
 	menuBtn: $("#menu-btn"),
-	subredditsContainer: $(".subreddits"),
+	menu: $(".menu"),
 	restoreSubreddits: $("#restore-sr"),
 	wholeScreenCloseBtn: $(".close-full-screen"),
 	wholeScreenNext: $(".next"),
@@ -1555,19 +1555,19 @@ function init(){
 
 	elements.menuBtn.on("click", function(){
 		$(this).toggleClass("open");
-		elements.subredditsContainer.toggleClass("slide-closed");
-		// elements.subredditsContainer.toggleClass("slideOpen");
-		generalSettings.menuClosed = elements.subredditsContainer.hasClass("slide-closed");
+		elements.menu.toggleClass("slide-closed");
+		// elements.menu.toggleClass("slideOpen");
+		generalSettings.menuClosed = elements.menu.hasClass("slide-closed");
 		if(generalSettings.menuClosed){
 			generalSettings.delayList.push(setTimeout(function(){
-				$(elements.subredditsContainer.addClass("invisible"));
+				$(elements.menu.addClass("invisible"));
 			}, 500));
 		}
 		else {
 			generalSettings.delayList.forEach(function(currentDelay){
 				window.clearTimeout(currentDelay);
 			});
-			$(elements.subredditsContainer.removeClass("invisible"));
+			$(elements.menu.removeClass("invisible"));
 		}
 	});
 
@@ -1638,13 +1638,13 @@ function init(){
 		var menuClosed = !generalSettings.menuClosed;
 		if(menuClosed){
 			var buttonTrigger = evt.target !== elements.menuBtn[0] && !$(evt.target).parents(".menu-btn").length;
-			var subredditsContainerTrigger = evt.target !== elements.subredditsContainer[0] && $(evt.target).parents(".subreddits").length === 0;
+			var menuTrigger = evt.target !== elements.menu[0] && $(evt.target).parents(".menu").length === 0;
 			var isRecommandation = !(evt.target.classList.contains("recommandation"));
 			var isDialog = evt.target !== $(".alertify")[0];
 			var isConfirmBox = evt.target !== $(".dialog")[0] && $(evt.target).parents(".dialog").length === 0;
 
-			if(buttonTrigger && subredditsContainerTrigger && isRecommandation && isDialog && isConfirmBox){
-				elements.subredditsContainer.addClass("slide-closed");
+			if(buttonTrigger && menuTrigger && isRecommandation && isDialog && isConfirmBox){
+				elements.menu.addClass("slide-closed");
 					generalSettings.menuClosed = true;
 					elements.menuBtn.toggleClass("open");
 			}
@@ -1722,7 +1722,7 @@ function init(){
 			}
 		}
 		if(evt.which === 27 && !generalSettings.menuClosed){
-			elements.subredditsContainer.addClass("slide-closed");
+			elements.menu.addClass("slide-closed");
 			generalSettings.menuClosed = true;
 			elements.menuBtn.toggleClass("open");
 		}
