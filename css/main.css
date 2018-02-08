@@ -257,7 +257,7 @@ header {
     -webkit-transform: translateY(-50%);
        -moz-transform: translateY(-50%);
             transform: translateY(-50%);
-    background: url('../icon.png') center/cover no-repeat;
+    background: url('../img/icon.png') center/cover no-repeat;
 }
 .normal-text, 
 .special-text { 

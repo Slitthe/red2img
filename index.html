@@ -3,25 +3,46 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>Reddit Image Gallery</title>
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>Reddit Image Gallery</title>
+
+        <meta name="description" content="Reddit image gallery gathered from a single or multiple subreddits.">
+        <meta name="robots" content="index,follow">
+        <meta name="googlebot" content="index,follow">
+        <!-- FB OG -->
+        <meta property="og:url" content="http://red2img.com/">
+        <meta property="og:type" content="website">
+        <meta property="og:title" content="Reddit Image Gallery">
+        <meta property="og:image" content="img/og_img.png">
+        <meta property="og:type" content="image/png">
+        <meta property="og:width" content="767">
+        <meta property="og:height" content="267">
+        <meta property="og:description" content="Reddit image gallery gathered from a single or multiple subreddits.">
+        <meta property="og:site_name" content="Red2IMG">
+        <meta property="og:locale" content="en_US">
 
         <!-- Links -->
+        <link rel="me" href="https://github.com/slitthe/" type="text/html">
             <!-- Icons -->
-        <link rel="apple-touch-icon" href="icon.png">
+        <link rel="apple-touch-icon" href="img/icon.png">
         <link rel="icon" type="image/x-icon" href="favicon.ico">
-        <link rel="icon" type="image/png" href="favicon.png">
+        <link rel="icon" type="image/png" href="img/favicon.png">
             <!-- Stylesheets -->
-        <link rel="stylesheet" href="css/main.css">
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato|Montserrat">
                 <!-- Libs sheets -->
         <link rel="stylesheet" href="css/normalize.css">
         <link rel="stylesheet" href="css/lib/alertify.css">
         <link rel="stylesheet" href="css/lib/awesomplete.css">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-        <!-- Scripts -->
-        <script src="https://hammerjs.github.io/dist/hammer.min.js"></script>
-        <script src="js/lib/alertify.js"></script>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato|Montserrat">
+                <!-- Author stylsheet(s) -->
+        <link rel="stylesheet" href="css/main.css">
+        <!-- Lib Scripts -->
+        <script src="js/lib/hammer.min.js"></script> <!-- Hammer.js https://hammerjs.github.io/ (touch gestures)-->
+        <script src="js/lib/alertify.min.js"></script> <!-- alertify.js  https://alertifyjs.org/ (alerts) -->
+        <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script> <!-- Masonry (grid layout) https://masonry.desandro.com/ -->
+        <script>window.Masonry || document.write('<script src="js/lib/masonry.pkgd.min.js"><\/script>')</script>
+        <script src="js/lib/awesomplete.min.js"></script> <!-- Awesomplete (autocomplete) https://leaverou.github.io/awesomplete/ -->
+
     </head>
     <body>
         <!--[if lte IE 10]>
@@ -171,8 +192,7 @@
 
     <!-- Lib Scripts -->
     <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
-    <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
-    <script src="js/lib/awesomplete.js"></script>
+    <script>window.jQuery || document.write('<script src="js/lib/jquery-3.2.1.min.js"><\/script>')</script>
     <!-- Page Script -->
     <script src="js/main.js"></script>
 </body>
