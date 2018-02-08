@@ -1,7 +1,7 @@
 // DOM elements (selected via jQuery)
 var elements = {
  	toTopBtn: $(".to-top"),
-	loading: $(".loading"),
+		loading: $(".loading"),
 	// Side bar
 	menu: $(".menu"),
 	menuBtn: $("#menu-btn"),
@@ -338,9 +338,9 @@ var subreddits = {
 			fail: error,
 			reqName: "Subreddit Validation ",
 			silent: true,
-			loading: false,
+			loading: false
 		});
-	},
+	}
 };
 
 
@@ -780,7 +780,7 @@ var uncategorized = {
 		var xhr = new XMLHttpRequest();
 		var randomNum = Math.round(Math.random() * 10000);
 
-		xhr.open('HEAD', "" + "?rand=" + randomNum, true);
+		xhr.open("HEAD", "" + "?rand=" + randomNum, true);
 		xhr.send();
 
 		xhr.addEventListener("readystatechange", function(){
@@ -796,8 +796,8 @@ var uncategorized = {
 	},
 	// Masonry library object
 	msnry: new Masonry( elements.imgsContainer[0], {
-	   itemSelector: '.img-result',
-	   columnWidth: '.col-width',
+	   itemSelector: ".img-result",
+	   columnWidth: ".col-width",
 	   percentPosition: true,
 		gutter: 0,
 		transitionDuration: 0
@@ -811,7 +811,7 @@ var uncategorized = {
 // don't show images with broken "src" link
 function deleteEl(el) {
 	$(el).parent().remove();
-};
+}
 // Shows an image only when it's fully loaded
 function showOnload(el){
 	var parent = $(el).parent();
@@ -891,11 +891,11 @@ function init(){
 	// EVENT LISTENERS 
 	elements.adultSettingInput.on("change", function(){
 		adultSettingsChange(this);
-		localStorageData.updateStorage("adultContent")
+		localStorageData.updateStorage("adultContent");
 	});
 	elements.titleSettingInput.on("change", function(){
 		titleSettingsChange(this);
-		localStorageData.updateStorage("displayTitles")
+		localStorageData.updateStorage("displayTitles");
 	});
 	elements.typeInput.on("change", function(){
 		typeSettingsChange(this, true);
@@ -1005,11 +1005,11 @@ function init(){
 	});
 
 	elements.multipleDeleteBtn.on("click", function() { // deletes the checked subreddits
-		var deleteList = [], currentEl, els;
+		var deleteList = [], currentEl, els, i;
 		
 		els = elements.subredditList.children(".subreddit-single");
-		for(var i = 0; i < els.length; i++){
-			var currentEl = $(els[i]);
+		for(i = 0; i < els.length; i++){
+			currentEl = $(els[i]);
 			if(currentEl.find("input")[0].checked){
 				deleteList.push(currentEl.find("input").attr("name"));
 			}
@@ -1020,7 +1020,8 @@ function init(){
 			    subreddits.remove(deleteList);
 			    elements.checkAllBtn.prop("checked", false);
 			}, function() {
-				for(var i = 0; i < els.length; i++){
+				var i;
+				for(i = 0; i < els.length; i++){
 					var currentEl = $(els[i]);
 					currentEl.find("input").prop("checked", false);
 
@@ -1136,13 +1137,13 @@ function init(){
 
 	var fhHammer = new Hammer(elements.fullScreenContainer[0]);
 	// Next/Previous swipe
-	fhHammer.on('swipeleft', function(ev) {
+	fhHammer.on("swipeleft", function(ev) {
 		if(fScreen.allowNext){
 			fScreen.next();
 		}
 	});
 
-	fhHammer.on('swiperight', function(ev) {
+	fhHammer.on("swiperight", function(ev) {
 		if(fScreen.allowPrevious){
 			fScreen.previous();
 		}
