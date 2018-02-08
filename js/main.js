@@ -393,9 +393,6 @@ var images = {
 			htmlS += "<div class='img-sr-name'>" + current.subreddit_name_prefixed + "</div></div></div>";
 		});
 		imagesElements = $(htmlS);
-		// for(var i = 0; i < imagesElements.length; i++){
-		// 	uncategorized.msnry.appended( imagesElements[i] );
-		// }
 		uncategorized.msnry.layout();
 		
 		imagesElements.children("img").on("click", function(){
@@ -403,6 +400,9 @@ var images = {
 		});
 		this.rawResponseData = [];
 		imagesElements.appendTo(elements.imgsContainer);
+		for(var i = 0; i < imagesElements.length; i++){
+			uncategorized.msnry.appended( imagesElements[i] );
+		}
 		this.currentImages = [];
 		// elements.imgsContainer.children(".img-result").children("img").length;
 		len = elements.imgsContainer.children(".img-result").length;
@@ -423,12 +423,12 @@ var images = {
 	/*=========================================*/
 	getImages: function(newSearch, freshSearch) { 
 		var url, req;
+		uncategorized.msnry.layout();
 		if(newSearch) {
 			if(!this.searchCount || freshSearch) {
 				urlParams.after.value = "";
 				images.rawResponseData = [];
 				elements.imgsContainer.html("<div class='col-width'></div>");
-				uncategorized.msnry.layout();
 				this.imageRequests.forEach(function(req) {
 					req.abort();
 				});
@@ -811,6 +811,7 @@ var uncategorized = {
 // don't show images with broken "src" link
 function deleteEl(el) {
 	$(el).parent().remove();
+	uncategorized.msnry.layout();
 }
 // Shows an image only when it's fully loaded
 function showOnload(el){
@@ -822,7 +823,7 @@ function showOnload(el){
 		parent.addClass("double");
 	}
 	parent.addClass("visible");
-	uncategorized.msnry.appended($(el).parent());
+	// uncategorized.msnry.appended($(el).parent());
 	uncategorized.msnry.layout();
 }
 
