@@ -1,238 +1,88 @@
-// Alertify library settings
-alertify.logPosition("bottom right");
-alertify.parent(document.body);
-alertify.maxLogItems(5);
-/*
-
-	see the SUBREDDITS section of https://en.wikipedia.org/wiki/Reddit  for a brief definition of what they are
-	=======================================================================================================
-
-			File Structure
-			==============
-
-	--> **elements** 
-		object: contains the DOM elements
-
-	--> **ajaxRequest** 
-		customized $.ajax() request function, via a normal JS function, not $.ajaxSetup()
-
-	--> **urlParams** 
-		URL parameters data and methods for retrieveing them in an URL friendly format
-
-	--> **requestUrls**
-		Object: contains the API Endpoint URL and the CORS Proxy URL, also constructs the URLs for various situations
-
-	--> **subreddits**
-		Object: stores the list of subreddits, as well as handling deletion, addition and displaying of subreddits
-
-	--> **images**
-		Stores, filters and displays the response data for images into actual HTML
-
-	--> **autocomplete**
-		object: handles the autocomplete-related functions and stores the necessary details
-
-	--> **relatedSubreddits**
-		object: handles and processes the logic for displaying the list of related subreddits (relative to the current list of subreddits)
-
-	--> **init**
-		function: what to run at the page load
-*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// DOM elements
+// DOM elements (selected via jQuery)
 var elements = {
-	subredditList: $("#sr-list"),
-	addInput: $("#add-sr"),
+ 	toTopBtn: $(".to-top"),
+	loading: $(".loading"),
+	// Side bar
+	menu: $(".menu"),
+	menuBtn: $("#menu-btn"),
+	addSrInput: $("#add-sr"),
 	addSrBtn: $("#add-sr-btn"),
-	clearBtn: $(".clear-input-btn"),
+	clearInputBtn: $(".clear-input-btn"),
+	subredditList: $("#sr-list"),
+	restoreSubreddits: $("#restore-sr"),
+	checkAllBtn: $("#check-all"),
+	multipleDeleteBtn: $("#mult-del"),
+	recommendedList: $("#recommended"),
+	// Settings
 	adultSettingInput: $(".settings #nsfw"),
 	titleSettingInput: $(".settings #titles"),
-	typeChange: $("#type"),
-	timeChange: $("#time"),
-	imagesContainer: $("#imagesContainer"),
-	loading: $(".loading"),
-	recommendedList: $("#recommended"),
-	loadMore: $("#load-more"),
-	srSearchContainer: $("#sr-search-container"),
-	multipleDeleteBtn: $("#mult-del"),
-	checkAll: $("#checkAll"),
+	typeInput: $("#type"),
+	timeInput: $("#time"),
+	// Images & relateed
 	reloadImgsBtn: $("#reload-imgs"),
-	menuBtn: $("#menu-btn"),
-	menu: $(".menu"),
-	restoreSubreddits: $("#restore-sr"),
-	wholeScreenCloseBtn: $(".close-full-screen"),
-	wholeScreenNext: $(".next"),
-	wholeScreenPrevious: $(".previous"),
-	wholeScreenClose: $(".close"),
+	imgsContainer: $("#imgs-container"),
+	loadMoreBtn: $("#load-more"),
+	// Full screen
+ 	fullScreenContainer: $(".full-screen-container"),
+ 	fullScreenVideo: $(".full-screen-container > video"),
+	fullScreeNext: $(".next"),
+	fullScreenPrevious: $(".previous"),
+	fullScreenClose: $(".close"),
 	currentPositionDisplay: $(".currentPosition"),
- 	totalImagesDisplay: $(".totalImages"),
- 	wholeScreenVideo: $(".full-screen-container > video"),
- 	wholeScreenImg: $(".full-screen-container > img"),
- 	wholeScreenContainer: $(".full-screen-container"),
- 	toTopBtn: $(".to-top")
+ 	totalImagesDisplay: $(".totalImages")
 };
 
-var es = document.querySelector('.imagesContainer');
-var msnry = new Masonry( es, {
-   itemSelector: '.img-result',
-   columnWidth: '.col-width',
-   percentPosition: true,
-	gutter: 0,
-	transitionDuration: 0
-});
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// Local store related data & methods
 var localStorageData = {
-	initialData: {
+	initialData: { // Default values for stored local storage data (in case they don't exist), JSON format
 		list: "[\"itookapicture\", \"photography\", \"OldSchoolCool\", \"Cinemagraphs\", \"AbandonedPorn\", \"MilitaryPorn\", \"EarthPorn\", \"spaceporn\", \"Eyebleach\",\"gifs\",\"pics\"]",
 		sortType: "\"hot\"",
 		sortTime: "\"day\"",
 		displayTitles: "\"true\"",
 		adultContent: "\"false\""
 	},
-	locations: {
-		"list": [ ["subreddits", "list"], true],
+	locations: { // Where to find the values to store in local storage
+		"list": [ ["subreddits", "list"] ],
 		"sortType": [ ["urlParams", "sortType"] ],
 		"sortTime": [ ["urlParams", "sortTime", "value"] ],
 		"adultContent": [ ["urlParams", "adultContent", "value"] ],
 		"displayTitles": [ ["images", "displayTitles"] ]
 	},
-	updateStorage: function(name){
+	updateStorage: function(name) { // Stores the current values in local storage (using the locations to know where to find them)
 		var item = window, i;
 		for(i = 0; i < this.locations[name][0].length; i++){
-			item = item[this.locations[name][0][i]];
+			item = item[ this.locations[name][0][i] ];
 		}
-
 		window.localStorage.setItem(name, JSON.stringify(item));
 	},
-	deleteStorage: function(){
+	deleteStorage: function() { // Completely clears the Local Storage
 		window.localStorage.clear();
 	},
-	getValue: function(name){
+	getValue: function(name) { // returns the value either from "initialData" or from localStorage if the property exists there
 		return window.localStorage.getItem(name) ? JSON.parse(window.localStorage.getItem(name)) : JSON.parse(this.initialData[name]);
 	}
 };
 
 
 
+/*======================= 
+				Customized jQuery ajaxReqest, an alternative to jQuery's "ajaxSetup()"
 
+	condition: prevents the function from doing anything
+	timeout: request timeout
 
+	Obj can contain: loading (boolean, show the loading circle ) 
+				        success (function to run at successful request)
+				        fail (functon to run at failed request)
+				        complete (function to run at completed request)
+				        reqName (what name to use for the alerts)
+				        silent (boolean value, display the alerts for communication errors)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// Customized jQuery ajaxReqest, to avoid using $.ajaxSetup()
-function ajaxRequest(reqUrl, condition, timeout, obj){
+	Returns the ajaxRequest (which in turns returns an xhr object) so it can be stored and later cancelled if needed
+=========================*/
+function ajaxRequest(reqUrl, condition, timeout, obj) {
 
 	if(condition){
-
 		if(obj.loading){
 			elements.loading.removeClass("invisible");
 		}
@@ -247,12 +97,9 @@ function ajaxRequest(reqUrl, condition, timeout, obj){
 				if(obj.success){ obj.success(succData); }
 			},
 			error: function(errorData){
-				if(obj.fail){
-					obj.fail(errorData);
-				}
+				if(obj.fail){ obj.fail(errorData); }
 
 				if (!obj.silent){
-
 					if(errorData.statusText === "timeout") {
 						alertify.delay(5000).error("<strong>" + obj.reqName + "</strong>: Request timeout.");
 					}
@@ -262,58 +109,46 @@ function ajaxRequest(reqUrl, condition, timeout, obj){
 				}
 			},
 			complete: function(completeData){
-				if(obj.complete){ obj.complete(completeData);	}
-				if(obj.loading){
-					elements.loading.addClass("invisible");
-				}
+				if(obj.complete){ obj.complete(completeData); }
+				if(obj.loading){ elements.loading.addClass("invisible"); }
 			}
 		}); // AJAX req return end
 
 	} //Condition end
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// Returns the API Requests URLs for different tasks
+var requestUrls = {
+	base: "https://www.reddit.com/",
+	postsData: function(subreddits) { /*Get posts data for the current subreddits and sorting values*/
+		var url;
+		subreddits = subreddits.join("+").toLowerCase();
+		url = this.base + "r/" + subreddits;
+		url += "/" + urlParams.sortType + ".json?";
+		return url + urlParams.getParams(["limit", "after", "sortTime"]);
+	},
+	subExists: function(subName) { /*Check if the subreddit exists (and is accesible)*/
+		var url = this.base;
+		url += "r/" + subName + "/about/rules.json";
+		return url;
+	},
+	recommended: function() { /*Get a recommended list of subreddits based on the current list*/
+		var url = this.base + "api/recommend/sr/srnames.json?";
+		url += "srnames=" + subreddits.list.join(",") + "&";
+		url += urlParams.getParams(["adultContent"]);
+		return url;
+	},
+	searchAutocomplete: function(query, adult) {
+		var url = this.base + "api/subreddit_autocomplete.json?";
+		urlParams.longQuery.value = query;
+		url += urlParams.getParams( ["longQuery", "includeProfiles"] );
+		url += "&include_over_18=" + adult;
+		return url;
+	},
+	gfyCatVideo: function(name) { /*gfycat url --> gfycat video url*/
+		return "https://gfycat.com/cajax/get/" + name;
+	}
+};
 
 // API URL parameters data & methods for retrieving / changing them
 var urlParams = {
@@ -323,7 +158,7 @@ var urlParams = {
 		},
 		longQuery: {
 			name: "query",
-			value: ""
+			value: "fat_cats"
 		},
 		includeProfiles: {
 			name:"include_profiles",
@@ -331,7 +166,7 @@ var urlParams = {
 		},
 		limit: {
 			name: "limit",
-			value: 20
+			value: 20 /*How many result to get per 1 request, increasing this will result in getting more image per "load" */
 		},
 		adultContent: {
 			name: "include_over_18",
@@ -355,18 +190,15 @@ var urlParams = {
 			return params.join("&");
 
 		},
-		setType: function(type, loadImg) { // makes it that when the type or time is changed, new images are fetched (it affects the results)
+		// When sorting is changed, get new images based on the new sorting
+		setType: function(type, loadImg) { 
 			this.sortType = type;
-			if(loadImg) {
-				images.getImages(true, true);	
-			}
+			if(loadImg) { images.getImages(true, true); }
 			localStorageData.updateStorage("sortType");
 		},
 		setTime: function(time, loadImg) {
 			this.sortTime.value = time;
-			if(loadImg) {
-				images.getImages(true, true);	
-			}
+			if(loadImg) { images.getImages(true, true); }
 			localStorageData.updateStorage("sortTime");
 		}
 };
@@ -374,174 +206,10 @@ var urlParams = {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// Returns the API Requests URLs for different tasks
-var requestUrls = {
-	base: "https://www.reddit.com/",
-	postsData: function(subreddits) {
-		var url;
-		subreddits = subreddits.join("+").toLowerCase();
-		url = this.base + "r/" + subreddits;
-		url += "/" + urlParams.sortType + ".json?";
-		return url + urlParams.getParams(["limit", "after", "sortTime"]);
-	},
-	subExists: function(subName) {
-		var url = this.base;
-		url += "r/" + subName + "/about/rules.json";
-		return url;
-	},
-	recommended: function() {
-		var url = this.base + "api/recommend/sr/srnames.json?";
-		url += "srnames=" + subreddits.list.join(",") + "&";
-		url += urlParams.getParams(["adultContent"]);
-		return url;
-	},
-	searchAutocomplete: function(query, adult) {
-		var url = this.base + "api/subreddit_autocomplete.json?";
-		urlParams.longQuery.value = query;
-		url += urlParams.getParams( ["longQuery", "includeProfiles"] );
-		url += "&include_over_18=" + adult;
-		return url;
-	},
-	gfyCatVideo: function(name){
-		return "https://gfycat.com/cajax/get/" + name;
-	}
-};
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // Contains the subreddits data, as well as the related methods for adding/removing them from the list
 var subreddits = {
-	list: localStorageData.getValue("list"),
-	addWithCheck: function(element) {
+	list: localStorageData.getValue("list"), /*Subreddits list on which the data is based on*/
+	addWithCheck: function(element) { /*Addings the subreddits only after it is checked for existance (and accesability, ie not banned or private)*/
 		var value = encodeURI( element.val() );
 		if(value) {
 			element.val("");
@@ -550,9 +218,9 @@ var subreddits = {
 			});
 		}
 	},
-	addWithoutCheck: function(value) {
+	addWithoutCheck: function(value) { /*Adds the subreddits without checking (used for recommended list and autocomplete)*/
 		subreddits.list.push(value);
-		elements.addInput.val("");
+		elements.addSrInput.val("");
 		subreddits.checkDuplicate();
 		subreddits.showList(elements.subredditList, true);
 		images.getImages(true, true);
@@ -567,12 +235,12 @@ var subreddits = {
 		localStorageData.updateStorage("list");
 
 	},
-	checkDuplicate: function() {
+	checkDuplicate: function() { /*Prevents duplicate subreddits from being added*/
 		this.list = this.list.filter(function(curr, ind, arr) {
 			return arr.slice(ind + 1).indexOf(curr) === -1;
 		});
 	},
-	remove: function(nameList) {
+	remove: function(nameList) { /*Removes the subreddits from the list*/
 		var dataIndex, i, j;
 		for(i = 0; i < nameList.length; i++){
 			for(j = 0; j < this.list.length; j++){
@@ -590,6 +258,7 @@ var subreddits = {
 		localStorageData.updateStorage("list");
 	},
 	showList: function(element, add) { // constructs the subreddit list based on the subreddits.list (adds/removes if necessary)
+		// add --> boolean; true --> adds a subreddits ; false --> removes it
 		var html = "", 
 		inputs = [], 
 		i,
@@ -610,9 +279,9 @@ var subreddits = {
 					html += "<button class='del-sr no-input-style' type='button'><i class=\"fa fa-trash-o\"></i></button>";
 					html += "</div>";
 					var el = $(html);
-					el.css("backgroundColor", colorGenerator());
+					el.css("backgroundColor", uncategorized.colorGenerator());
 					el.appendTo(element);
-					wholeScreenShower.showHideArrows();
+					fScreen.showHideArrows();
 				}
 			});
 		}
@@ -660,7 +329,7 @@ var subreddits = {
 					alertify.delay(5000).error("<strong>" + reqName + "</strong>: Communication error.");
 
 				};
-				doesConnectionExist(online, offline);
+				uncategorized.doesConnectionExist(online, offline);
 			}
 		};
 
@@ -675,89 +344,9 @@ var subreddits = {
 };
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 var images = {
-	currentImages: [],
 	displayTitles: localStorageData.getValue("displayTitles"),
+	currentImages: [], // Stores the images elements of the current images, to be used for full screen showing
 	imageRequests: [], // HTTP Requests for images data
 	continueSearch: true, // stops calling the getImages function when there is no more data to get
 	imagesTarget: 25, // roughly how many images to display for the fresh image requests
@@ -772,14 +361,14 @@ var images = {
 			});
 		}
 	},
-	keepOnlyImages: function() {
+	keepOnlyImages: function() { // Keep only the data which cointains images and videos
 		this.rawResponseData = this.rawResponseData.filter(function(current){
 			var conditionOne = current.url.search(/(.jpg|.png|.jpeg|.svg|.gif|.gifv|.mp4|.webm)$/gi) >= 0;
 			var conditionTwo = current.url.search("gfycat.com") >= 0;
 			return conditionOne || conditionTwo;
 		});
 	},
-	getCorrectResolution: function(post) {
+	getCorrectResolution: function(post) { // Gets preview images whose width is <= that of the "maximumResWidth" props value
 		var i, l;
 		if(post.hasOwnProperty("preview")) {
 			l = post.preview.images[0].resolutions.length;
@@ -793,7 +382,7 @@ var images = {
 			return post.url;
 		}
 	},
-	displayImages: function() {
+	displayImages: function() { // Displays the images in the HTML
 		var htmlS = "", imagesElements, len, i, crImages;
 		this.rawResponseData.forEach(function(current, indx, arr) {
 			htmlS += "<div class='img-result'>";
@@ -805,59 +394,67 @@ var images = {
 		});
 		imagesElements = $(htmlS);
 		// for(var i = 0; i < imagesElements.length; i++){
-		// 	msnry.appended( imagesElements[i] );
+		// 	uncategorized.msnry.appended( imagesElements[i] );
 		// }
-		msnry.layout();
+		uncategorized.msnry.layout();
 		
 		imagesElements.children("img").on("click", function(){
-			wholeScreenShower.show(this);
+			fScreen.show(this);
 		});
 		this.rawResponseData = [];
-		imagesElements.appendTo(elements.imagesContainer);
+		imagesElements.appendTo(elements.imgsContainer);
 		this.currentImages = [];
-		// elements.imagesContainer.children(".img-result").children("img").length;
-		len = elements.imagesContainer.children(".img-result").length;
-		crImages = elements.imagesContainer.children(".img-result").children("img");
+		// elements.imgsContainer.children(".img-result").children("img").length;
+		len = elements.imgsContainer.children(".img-result").length;
+		crImages = elements.imgsContainer.children(".img-result").children("img");
 		for (i = 0; i < len; i++) {
 			this.currentImages.push(crImages[i]);
 		}
 		elements.totalImagesDisplay.text(this.currentImages.length);
-		wholeScreenShower.showHideArrows();
+		fScreen.showHideArrows();
 	},
+	/*
+	Makes the req to get images based on three scenarios:
+		freshSearch --> this signified that the new images should be loaded (when sorting or subreddits are added and/or removed)
+		newSearch --> this is the search done UNTIL the search quote is reached (or failed to be reached)
+
+		no freshSearch and no newSearch --> just continues to get more images
+	*/
+	/*=========================================*/
 	getImages: function(newSearch, freshSearch) { 
 		var url, req;
 		if(newSearch) {
 			if(!this.searchCount || freshSearch) {
 				urlParams.after.value = "";
 				images.rawResponseData = [];
-				elements.imagesContainer.html("<div class='col-width'></div>");
-				msnry.layout();
+				elements.imgsContainer.html("<div class='col-width'></div>");
+				uncategorized.msnry.layout();
 				this.imageRequests.forEach(function(req) {
 					req.abort();
 				});
 				this.imageRequests = [];
 				this.continueSearch = true;
-				// elements.loadMore.removeClass("invisible");
+				// elements.loadMoreBtn.removeClass("invisible");
 			}
 			this.searchCount++;
 		}
 		else {
 			this.searchCount = 0;
 			if(images.continueSearch) {
-				elements.wholeScreenNext.prop("disabled", true);
+				elements.fullScreeNext.prop("disabled", true);
 			}
 		}
-		generalSettings.avoidMultipleRequests = false;
+		uncategorized.avoidMultipleRequests = false;
 		url = requestUrls.postsData(subreddits.list);
 
 		if(subreddits.list.length) {
-			elements.loadMore.addClass("invisible");
+			elements.loadMoreBtn.addClass("invisible");
 			req = ajaxRequest(url, images.continueSearch, 7000, {
 				reqName: "Getting Images",
 				silent: false,
 				loading: true,
 				success: function(succ) {
-							elements.loadMore.removeClass("invisible");
+							elements.loadMoreBtn.removeClass("invisible");
 							var imagesCount;
 							succ.data.children.forEach(function(cr){
 								images.rawResponseData.push(cr.data);
@@ -866,43 +463,36 @@ var images = {
 							images.filterAdult();
 							urlParams.after.value = succ.data.after;
 							images.displayImages();
-							imagesCount = $("#imagesContainer .img-result").length;
+							imagesCount = elements.imgsContainer.children(".img-result").length;
 							if(!succ.data.after) {
 								images.searchCount = 5;
-								// images.continueSearch = false;
-							}
-							else {
 							}
 							if( (images.searchCount === images.maxNewSearchRequests) && imagesCount  === 0){
 								alertify.delay(5000).error("No images to load." );
 								images.continueSearch = false;
-								elements.loadMore.addClass("invisible");
+								elements.loadMoreBtn.addClass("invisible");
 							}
 							else if(!succ.data.after) {
 								alertify.delay(5000).error("No more images to load.");
 								images.continueSearch = false;
-								elements.loadMore.addClass("invisible");
-							}
-							else {
-								// elements.loadMore.removeClass("invisible");
-
+								elements.loadMoreBtn.addClass("invisible");
 							}
 							if(newSearch && (imagesCount < images.imagesTarget) && (images.searchCount < images.maxNewSearchRequests)){
 								images.getImages(true);
 							}
 							else {
 								images.searchCount = 0;
-								generalSettings.avoidMultipleRequests = true;
+								uncategorized.avoidMultipleRequests = true;
 							}
 				},
 				fail: function() {
-					generalSettings.avoidMultipleRequests = false;
-					elements.loadMore.removeClass("invisible");
+					uncategorized.avoidMultipleRequests = false;
+					elements.loadMoreBtn.removeClass("invisible");
 
-					// elements.loadMore.removeClass("hidden");
+					// elements.loadMoreBtn.removeClass("hidden");
 				},
 				complete: function() {
-					elements.wholeScreenNext.prop("disabled", false);
+					elements.fullScreeNext.prop("disabled", false);
 				}
 			});
 			if(req) { this.imageRequests.push(req); }
@@ -910,127 +500,41 @@ var images = {
 	}
 };
 
-/*PROMISE IN CASE I FUCKED SOMETHING UP TRYING TO REPLACE IT
 
-var displayImg = new Promise(function(res, rej){
-	images.displayImages();
-	setTimeout(function(){
-		res();
-	}, 250);
-}).then(function() {
-	var imagesCount = $("#imagesContainer .imageResult").length;
-	if(!succ.data.after) {
-		images.searchCount = 5;
-		images.continueSearch = false;
-		elements.loadMore.addClass("hidden");
-
-	}
-	else {
-		elements.loadMore.removeClass("hidden");							
-	}
-	if( (images.searchCount === images.maxNewSearchRequests) && imagesCount  === 0){
-		alertify.delay(5000).error("No images to load." );
-
-	}
-	else if(!succ.data.after) {
-		alertify.delay(5000).error("No more images to load.");
-
-	}
-	if(newSearch && (imagesCount < images.imagesTarget) && (images.searchCount < images.maxNewSearchRequests)){
-		images.getImages(true);
-	}
-	else {
-		images.searchCount = 0;
-		generalSettings.avoidMultipleRequests = true;
-	}
-});
-*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// Autocomplete data & methods
 var autocomplete = {
-	aSrNames: [],
-	aComplete: new Awesomplete(elements.addInput[0], {
+	aSrNames: [], // Autocomplete subreddits array
+	aComplete: new Awesomplete(elements.addSrInput[0], { // The Awesomplete lib object
 		minChars: 1
 	}),
+	// Signifies the completion of the NSFW/SFW request for autocomplete data
 	firstReqDone: false,
 	secondReqDone: false,
-	combinedSuggestions: [],
-	recommendedListSFW: [],
-	recommendedListNSFW: [],
+	combinedSuggestions: [], // based on the adultContent value, the combined list of SFW + (NSFW)
+	recommendedListSFW: [], // Safe For Work list of autocomplete subreddits
+	recommendedListNSFW: [], // Not Safe For Work list
 	autocompleteReq: [], // HTTP Requests for autocomplete data
-	combineSuggestions: function() {
+	/*
+		Combined (or not) adult container and safe autocomplete suggestions
+		Also, only displays displays SFW and NSFW results in a 3:1 ratio
+	*/
+	combineSuggestions: function() { 
 		var i;
 		this.aComplete.list = [];
 		this.combinedSuggestions = [];
-		if(!urlParams.adultContent.value){
+		if(!urlParams.adultContent.value) { // Removes NSFW data is SFW-only option is chosen
 			this.recommendedListNSFW = [];
 		}
 		i = 0;
-		while(this.combinedSuggestions.length <= 5) {
+		while(this.combinedSuggestions.length <= 5) { // Stops when 6 results are concatendated
 			if(i % 3 === 0 && this.recommendedListNSFW.length) {
-				this.combinedSuggestions.push(this.recommendedListNSFW.shift());
+				this.combinedSuggestions.push( this.recommendedListNSFW.shift() );
 			}
 			else if(this.recommendedListSFW.length) {
-				this.combinedSuggestions.push(this.recommendedListSFW.shift());		
+				this.combinedSuggestions.push( this.recommendedListSFW.shift() );		
 			}
 			if(!this.recommendedListSFW.length && !this.recommendedListNSFW.length) {
-				break;
+				break; // Stops when there's nothing more to sort through (prevents infinite loop)
 			}
 			i++;
 		}
@@ -1049,20 +553,21 @@ var autocomplete = {
 		this.recommendedListNSFW = [];
 		this.recommendedListSFW = [];
 	},
-	addSuggestions: function() {
+	addSuggestions: function() { // Combine the suggestions only when the req for SFW and NSFW are both completeData
 		if(this.firstReqDone && this.secondReqDone) {
 			this.firstReqDone = false;
 			this.secondReqDone = false;
 			this.combineSuggestions();
 		}
 	},
-	getAutocomplete: function(value) {
+	/*============================*/
+	getAutocomplete: function(value) { // Makes the request to get the autocomplete data, and performs the related necessary actions to display them
 		this.autocompleteReq.forEach(function(req) {
 			req.abort();
 			autocomplete.secondReqDone = false;
 			autocomplete.firstReqDone = false;
 		});
-		if(elements.addInput.val()) {
+		if(elements.addSrInput.val()) {
 			this.autocompleteReq.push( ajaxRequest(requestUrls.searchAutocomplete(value, true), true, 1500, {
 				complete: function(data) {
 					if(data.responseJSON){
@@ -1104,55 +609,9 @@ var autocomplete = {
 	}
 };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// Recommended list of subreddits
 var relatedSubs = {
-	relatedSubsReq: "",
+	relatedSubsReq: "", // the xhr requets, so it can be canelled upon making a new request
 	getRelatedSubs: function() {
 		var html = "";
 		if(this.relatedSubsReq) {
@@ -1161,13 +620,13 @@ var relatedSubs = {
 		if(subreddits.list.length) {
 			this.relatedSubsReq = ajaxRequest( requestUrls.recommended(), true, 5000, {
 				success: function(res) {
-				res.forEach(function(srname) {
-					html += "<li class=\"recommandation\" data-srname=" + srname.sr_name + ">/r/" + srname.sr_name + "</li>"; 
-				});
-				elements.recommendedList.html(html);
-			},
-			silent: true,
-			loading: false
+					res.forEach(function(srname) { // Displays the recommende list in the HTML
+						html += "<li class=\"recommandation\" data-srname=" + srname.sr_name + ">/r/" + srname.sr_name + "</li>"; 
+					});
+					elements.recommendedList.html(html);
+				},
+				silent: true,
+				loading: false
 			});
 		}
 		else {
@@ -1176,64 +635,23 @@ var relatedSubs = {
 	}
 };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-var wholeScreenShower = {
-	isVideo: "",
-	isGfyCat: "",
-	isImage: "", 
+/*Full Screen Feature*/
+var fScreen = {
+	/*Boolean values, which type of content it is*/
+	isImage: false, 
+	isVideo: false,
+	isGfyCat: false,
+	/*For first and last image*/
 	allowPrevious: true,
 	allowNext: true,
-	currentUrl: "",
-	currentTarget: "",
-	scrollLocation: "",
-	show: function(targetEl) {
+	currentUrl: "", // url of the content
+	currentTarget: "", // html element of the target, whole "img-result" container
+	scrollLocation: "", // stores the scrolling location of the body prior to going full screen
+	show: function(targetEl) { // Opens the full screen feature
 		this.currentTarget = $(targetEl).parent();
 		this.scrollLocation = window.scrollY;
 		$(document.body).addClass("no-scroll-body");
-		elements.wholeScreenContainer.removeClass("hidden");
+		elements.fullScreenContainer.removeClass("hidden");
 		this.change();
 		elements.currentPositionDisplay.text(images.currentImages.indexOf($(this.currentTarget).children("img")[0]) + 1);
 		elements.totalImagesDisplay.text(images.currentImages.length);
@@ -1242,22 +660,27 @@ var wholeScreenShower = {
 		}
 		this.showHideArrows();
 	},
-	showHideContent: function() {
-		elements.wholeScreenContainer.css("backgroundImage", "");
+	hide: function() { // closes the full screen feature
+		$(document.body).removeClass("no-scroll-body");
+		$("html, body").scrollTop(this.scrollLocation);
+		elements.fullScreenContainer.addClass("hidden");
+		uncategorized.msnry.layout();
+	},
+	showHideContent: function() { // What to show/hide for img/video content type
+		elements.fullScreenContainer.css("backgroundImage", "");
 		if(this.isImage >= 0) {
-			elements.wholeScreenVideo.hide();
-			elements.wholeScreenVideo.children("source").prop("src", "#");
-			elements.wholeScreenVideo[0].load();
+			elements.fullScreenVideo.hide();
+			elements.fullScreenVideo.children("source").prop("src", "#");
+			elements.fullScreenVideo[0].load();
 		}
 		else {
-			elements.wholeScreenVideo.show();
-			// $("<source></source>").appendTo(elements.wholeScreenVideo);
+			elements.fullScreenVideo.show();
 		}
 	},
-	change: function() {
-		elements.wholeScreenVideo.hide();
-		elements.wholeScreenVideo.children("source").prop("src", "#");
-		elements.wholeScreenVideo[0].load();
+	change: function() { // Performs when showing/changing the elements (next, previous or just show first time)
+		elements.fullScreenVideo.hide();
+		elements.fullScreenVideo.children("source").prop("src", "#");
+		elements.fullScreenVideo[0].load();
 		var extension;
 		this.currentUrl = $(this.currentTarget).children("img").attr("data-fullurl");
 		this.isImage = this.currentUrl.search(/(.jpg|.png|.jpeg|.svg|.gif)$/gi);
@@ -1265,7 +688,7 @@ var wholeScreenShower = {
 		this.isGfyCat = this.currentUrl.search(/^https?:\/\/gfycat.com/);
 		this.showHideContent();
 		if(this.isImage >= 0) {
-			elements.wholeScreenContainer.css("backgroundImage", "url(" + this.currentUrl + ")");
+			elements.fullScreenContainer.css("backgroundImage", "url(" + this.currentUrl + ")");
 		}
 		else if(this.isVideo >= 0 || this.isGfyCat >= 0) {
 			if(this.isVideo >= 0) {
@@ -1277,9 +700,9 @@ var wholeScreenShower = {
 				else {
 					extension = this.currentUrl.substring(this.isVideo);
 				}
-				elements.wholeScreenVideo.children("source").prop("src", this.currentUrl);
-				elements.wholeScreenVideo.children("source").prop("type", "video/" + extension.substring(1));
-				elements.wholeScreenVideo[0].load();
+				elements.fullScreenVideo.children("source").prop("src", this.currentUrl);
+				elements.fullScreenVideo.children("source").prop("type", "video/" + extension.substring(1));
+				elements.fullScreenVideo[0].load();
 
 			}
 			
@@ -1288,42 +711,36 @@ var wholeScreenShower = {
 				var reqUrl = requestUrls.gfyCatVideo(vidName);
 				ajaxRequest(reqUrl, true, 5000, {
 					success: function(res) {
-						elements.wholeScreenVideo.children("source").prop("src", res.gfyItem.mp4Url);
-						elements.wholeScreenVideo.children("source").prop("type", "video/mp4");
-						elements.wholeScreenVideo[0].load();
+						elements.fullScreenVideo.children("source").prop("src", res.gfyItem.mp4Url);
+						elements.fullScreenVideo.children("source").prop("type", "video/mp4");
+						elements.fullScreenVideo[0].load();
 					},
 					silent: true
 				});
 			}
 		}
-		elements.wholeScreenContainer.children(".img-desc").html( $(this.currentTarget).children(".img-desc").html() );
+		elements.fullScreenContainer.children(".img-desc").html( $(this.currentTarget).children(".img-desc").html() );
 	},
-	showHideArrows: function() {
+	showHideArrows: function() { // when to show and hide the corresponding arrows, as well as allow them
 		if( !$(this.currentTarget).prev()[0] || $(this.currentTarget).prev().hasClass("col-width") ) {
-			elements.wholeScreenPrevious.addClass("hidden");
+			elements.fullScreenPrevious.addClass("hidden");
 			this.allowPrevious = false;
 		}
 		else {
-			elements.wholeScreenPrevious.removeClass("hidden");
+			elements.fullScreenPrevious.removeClass("hidden");
 			this.allowPrevious = true;
 		}
 		if( !$(this.currentTarget).next()[0] ) {
-			elements.wholeScreenNext.addClass("hidden");
+			elements.fullScreeNext.addClass("hidden");
 			this.allowNext = false;
 		}
 		else {
-			elements.wholeScreenNext.removeClass("hidden");
+			elements.fullScreeNext.removeClass("hidden");
 			this.allowNext = true;
 		}
 	},
-	hide: function() {
-		$(document.body).removeClass("no-scroll-body");
-		$("html, body").scrollTop(this.scrollLocation);
-		elements.wholeScreenContainer.addClass("hidden");
-		msnry.layout();
-	},
-	previous: function() {
-		elements.wholeScreenPrevious.removeClass("hidden");
+	previous: function() { // gettings previous content actions
+		elements.fullScreenPrevious.removeClass("hidden");
 		if( $(this.currentTarget).prev()[0] || !$(this.currentTarget).prev().hasClass("col-width") ) {
 			this.currentTarget = $(this.currentTarget).prev();
 			this.change();
@@ -1331,8 +748,8 @@ var wholeScreenShower = {
 		this.updatePosition();
 		
 	},
-	next: function() {
-		elements.wholeScreenNext.removeClass("hidden");
+	next: function() { // gettings next content actions
+		elements.fullScreeNext.removeClass("hidden");
 		if( $(this.currentTarget).next()[0] ) {
 			this.currentTarget = $(this.currentTarget).next();
 			this.change();
@@ -1342,22 +759,54 @@ var wholeScreenShower = {
 		}
 		this.updatePosition();
 	},
-	updatePosition: function() {
+	updatePosition: function() { // updates the display of the current / total content number
 		if( images.currentImages.indexOf( $(this.currentTarget).children("img")[0] ) !== -1 ) {
 			elements.currentPositionDisplay.text(images.currentImages.indexOf($(this.currentTarget).children("img")[0]) + 1);
 			elements.totalImagesDisplay.text(images.currentImages.length);
 		}
-		wholeScreenShower.showHideArrows();
+		fScreen.showHideArrows();
 	}
 };
 
-var generalSettings = {
-	menuClosed: true,
-	delayList: [],
-	avoidMultipleRequests: true,
-	isTap: false
-};
 
+// Functions and variables which do not belong in any particular object
+// To prevent pollution the global object
+var uncategorized = {
+	menuClosed: true,
+	delayList: [], // Contains the "setTimeout"'s for the side menu's hidden, used to cancel them if needed
+	avoidMultipleRequests: true, 
+	// Checks for internet connectivity by seding a "HEAD" request to the hostname
+	doesConnectionExist: function(succ, fail) {
+		var xhr = new XMLHttpRequest();
+		var randomNum = Math.round(Math.random() * 10000);
+
+		xhr.open('HEAD', "" + "?rand=" + randomNum, true);
+		xhr.send();
+
+		xhr.addEventListener("readystatechange", function(){
+			if (xhr.readyState == 4) {
+				if (xhr.status >= 200 && xhr.status < 304) {
+					succ();
+				} 
+				else {
+					fail();
+				}
+			}
+		}, false);
+	},
+	// Masonry library object
+	msnry: new Masonry( elements.imgsContainer[0], {
+	   itemSelector: '.img-result',
+	   columnWidth: '.col-width',
+	   percentPosition: true,
+		gutter: 0,
+		transitionDuration: 0
+	}),
+	colorGenerator: function() {
+		var number = Math.floor(Math.random() * 361);
+		return "hsla(" + number + ", 35%, 35%, 0.2)";
+	}
+};
 
 // don't show images with broken "src" link
 function deleteEl(el) {
@@ -1373,94 +822,39 @@ function showOnload(el){
 		parent.addClass("double");
 	}
 	parent.addClass("visible");
-	msnry.appended($(el).parent());
-	msnry.layout();
+	uncategorized.msnry.appended($(el).parent());
+	uncategorized.msnry.layout();
 }
 
 
-
-
-/*Tests for internet connectivity by making a "HEAD" request to the hostname*/
-function doesConnectionExist(succ, fail) {
-    var xhr = new XMLHttpRequest();
-    var randomNum = Math.round(Math.random() * 10000);
- 
-    xhr.open('HEAD', "" + "?rand=" + randomNum, true);
-    xhr.send();
-     
-    xhr.addEventListener("readystatechange", function(){
-		      if (xhr.readyState == 4) {
-        if (xhr.status >= 200 && xhr.status < 304) {
-          succ();
-        } else {
-          fail();
-        }
-      }
-	}, false);
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// What to run the first time the document loads
 function init(){
-	function setValues(){
+
+	/*====ALERTIFY LIB SETTINGS====== --> */
+	alertify.parent(document.body);
+	alertify.maxLogItems(5);
+	alertify.logPosition("bottom right");
+	/* <-------------------------------- */
+
+
+
+
+	/*====SETTINGS====== --> */
+	function setValues() { // changes the HTML's settings values to that of the values in the JS
 		elements.adultSettingInput.prop("checked", !urlParams.adultContent.value);
 		elements.titleSettingInput.prop("checked", images.displayTitles);
-		elements.typeChange.val(urlParams.sortType);
-		elements.timeChange.val(urlParams.sortTime.value);
+		elements.typeInput.val(urlParams.sortType);
+		elements.timeInput.val(urlParams.sortTime.value);
 	}
+
+	// changing the adult settings
 	function adultSettingsChange(el){
 		urlParams[$(el).attr("name")].value = !el.checked;
 		images.searchCount = 0;
 		images.getImages(true, true);
-		autocomplete.getAutocomplete(elements.addInput.val());
+		autocomplete.getAutocomplete(elements.addSrInput.val());
 	}
+	// changing the title settings
 	function titleSettingsChange(el){
 		images[$(el).attr("name")] = el.checked;
 		if(images[$(el).attr("name")]){
@@ -1470,9 +864,11 @@ function init(){
 			$(document.body).addClass("no-titles");	
 		}
 	}
+	// changing the time sorting setting
 	function timeSettingsChange(el, loadImg){
 		urlParams.setTime($(el).val(), loadImg);
 	}
+	// changing the type sorting setting
 	function typeSettingsChange(el, loadImg){
 		var value = $(el).val();
 		if(value === "controversial" || value === "top"){
@@ -1483,108 +879,135 @@ function init(){
 		}
 		urlParams.setType(value, loadImg);
 	}	
+
+
 	setValues();
+	// Runs the chaning of the settings without gettings new images
 	adultSettingsChange(elements.adultSettingInput[0], false);
 	titleSettingsChange(elements.titleSettingInput[0]);
-	timeSettingsChange(elements.timeChange[0], false);
-	typeSettingsChange(elements.typeChange[0], false);
+	timeSettingsChange(elements.timeInput[0], false);
+	typeSettingsChange(elements.typeInput[0], false);
 
-	autocomplete.aComplete.list = [];
-	elements.typeChange.on("change", function(){
-		typeSettingsChange(this, true);
-	});
-	elements.timeChange.on("change", function(){
-		timeSettingsChange(this, true);
-	});
-
-	elements.clearBtn.on("click", function(){
-		elements.addInput.val("");
-	});
-
-	elements.subredditList.on("click", ".del-sr", function(){
-		subreddits.remove([$(this).prev().text()]);
-	});
-
-
-	elements.addInput.on("focus", function(){
-		autocomplete.aComplete.evaluate();
-	});
-
-
+	// EVENT LISTENERS 
 	elements.adultSettingInput.on("change", function(){
 		adultSettingsChange(this);
 		localStorageData.updateStorage("adultContent")
 	});
-
 	elements.titleSettingInput.on("change", function(){
 		titleSettingsChange(this);
 		localStorageData.updateStorage("displayTitles")
 	});
+	elements.typeInput.on("change", function(){
+		typeSettingsChange(this, true);
+	});
+	elements.timeInput.on("change", function(){
+		timeSettingsChange(this, true);
+	});
+	/* <---------------------- */
 
-	elements.addInput[0].addEventListener("awesomplete-selectcomplete", function(evt){
+
+
+
+
+
+	/*====AUTOCOMPLETE & SUREDDITS ADD===== --> */
+	autocomplete.aComplete.list = [];
+	
+	elements.addSrInput.on("focus", function() {
+		autocomplete.aComplete.evaluate(); // shows the autocomplete
+	});
+	elements.addSrInput[0].addEventListener("awesomplete-selectcomplete", function(evt) {
+		// Adds the selected autocomplete result
 		subreddits.addWithoutCheck(evt.text.value);
 		autocomplete.aComplete.list = [];
-
-	})
-
-	$("#imagesContainer").on("error", ".img-result img", function(){
 	});
-
-	elements.loadMore.on("click", function(){
-		images.getImages(false);
-		// $(this).addClass("hidden");
-	});
-
-	elements.recommendedList.on("click", "li", function(){
-		subreddits.addWithoutCheck($(this).attr("data-srname"));
-		$(this).remove();
-	});
-
-	elements.addInput.on("input", function(){
-		if(!$(this).val()){
+	elements.addSrInput.on("keydown", function(evt) { // add upon pressing "Enter" key
+		if( evt.which === 13 && $(this).val() ) {
+			subreddits.addWithCheck( $(this) );
 		}
+	});
+	elements.addSrInput.on("input", function() { // get autocomplete on input change
 		autocomplete.getAutocomplete($(this).val());
 	});
 
-	// elements.srSearchContainer.on("blur", function(){
-	// 	autocomplete.autocompleteReq.forEach(function(req){
-	// 		req.abort();
-	// 	});
-	// 	autocomplete.aComplete.close();
-	// });
+	
+	elements.clearInputBtn.on("click", function() { // clear input
+		elements.addSrInput.val("");
+	});
+	elements.addSrBtn.on("click", function() { // add button for the input
+		subreddits.addWithCheck(elements.addSrInput);
+	});
+	/* <--------------------------- */
 
-	elements.menuBtn.on("click", function(){
+
+
+	/*========MENU & SIDEBAR========*/
+	function closeSideMenu(evt) { // Close the side menu based on the target of the event
+		if(!uncategorized.menuClosed) {
+			var buttonTrigger = evt.target !== elements.menuBtn[0] && !$(evt.target).parents(".menu-btn").length;
+			var menuTrigger = evt.target !== elements.menu[0] && $(evt.target).parents(".menu").length === 0;
+			var isRecommandation = !(evt.target.classList.contains("recommandation"));
+			var isDialog = evt.target !== $(".alertify")[0];
+			var isConfirmBox = evt.target !== $(".dialog")[0] && $(evt.target).parents(".dialog").length === 0;
+
+			if(buttonTrigger && menuTrigger && isRecommandation && isDialog && isConfirmBox){
+				elements.menu.addClass("slide-closed");
+					uncategorized.menuClosed = true;
+					elements.menuBtn.toggleClass("open");
+			}
+		}
+	}
+
+	$(document.body).on("click", function(evt) { // checks if the side menu needs closing based on the target (or the ancestor of the target)
+		closeSideMenu(evt);
+	});
+
+	// Calls the "closeSideMenu" on tap of the body
+	var bodyHammer = new Hammer(document.body);
+	bodyHammer.on("tap", function(evt){
+		closeSideMenu(evt);
+	});
+
+	elements.menuBtn.on("click", function() { // Menu button
 		$(this).toggleClass("open");
 		elements.menu.toggleClass("slide-closed");
 		// elements.menu.toggleClass("slideOpen");
-		generalSettings.menuClosed = elements.menu.hasClass("slide-closed");
-		if(generalSettings.menuClosed){
-			generalSettings.delayList.push(setTimeout(function(){
+		uncategorized.menuClosed = elements.menu.hasClass("slide-closed");
+		if(uncategorized.menuClosed) {
+			uncategorized.delayList.push(setTimeout(function() { // hides the sidebar when it has reached it's final sliding destination
 				$(elements.menu.addClass("invisible"));
 			}, 500));
 		}
 		else {
-			generalSettings.delayList.forEach(function(currentDelay){
-				window.clearTimeout(currentDelay);
+			uncategorized.delayList.forEach(function(currentDelay) {
+				window.clearTimeout(currentDelay); // cancels the hiding if the menu has been opened while in the closing process
 			});
 			$(elements.menu.removeClass("invisible"));
 		}
 	});
 
-	elements.addSrBtn.on("click", function(){
-		subreddits.addWithCheck(elements.addInput);
+
+	elements.subredditList.on("click", ".del-sr", function() { // Delete single subreddit
+		subreddits.remove([$(this).prev().text()]);
 	});
-	elements.addInput.on("keydown", function(evt){
-		if( evt.which === 13 && $(this).val() ) {
-			subreddits.addWithCheck( $(this) );
+	elements.recommendedList.on("click", "li", function() { // add a subreddit from the recommende list
+		subreddits.addWithoutCheck($(this).attr("data-srname"));
+		$(this).remove();
+	});
+
+	elements.checkAllBtn.on("change", function() { // Check all the subreddits (to be deleted)
+		if(this.checked){
+			$(".subreddit-single input").prop("checked", true);
+		}
+		else {
+			$(".subreddit-single input").prop("checked", false);
 		}
 	});
 
-	elements.multipleDeleteBtn.on("click", function(){
-		var deleteList = [],
-		currentEl;
+	elements.multipleDeleteBtn.on("click", function() { // deletes the checked subreddits
+		var deleteList = [], currentEl, els;
 		
-		var els = elements.subredditList.children(".subreddit-single");
+		els = elements.subredditList.children(".subreddit-single");
 		for(var i = 0; i < els.length; i++){
 			var currentEl = $(els[i]);
 			if(currentEl.find("input")[0].checked){
@@ -1595,82 +1018,54 @@ function init(){
 			// confirm dialog
 			alertify.confirm("Are you sure you want to remove the selected subreddits?", function () {
 			    subreddits.remove(deleteList);
-			    elements.checkAll.prop("checked", false);
+			    elements.checkAllBtn.prop("checked", false);
 			}, function() {
 				for(var i = 0; i < els.length; i++){
 					var currentEl = $(els[i]);
 					currentEl.find("input").prop("checked", false);
 
 				}
-			    elements.checkAll.prop("checked", false);
-			});
-				
-		}
-
-	});
-
-	elements.checkAll.on("change", function(){
-		if(this.checked){
-			$(".subreddit-single input").prop("checked", true);
-		}
-		else {
-			$(".subreddit-single input").prop("checked", false);
+			    elements.checkAllBtn.prop("checked", false);
+			});	
 		}
 	});
-	elements.reloadImgsBtn.on("click", function(){
-		images.getImages(true, true);
-	});
 
-	elements.restoreSubreddits.on("click", function(){
-		alertify.confirm("This will delete the current subreddits and replace them with the defaults one, are you sure you want to continue?", function () {
-		    localStorageData.deleteStorage();
+	elements.restoreSubreddits.on("click", function() { // restores the default list of subreddits
+		alertify.confirm("This will delete the current subreddits and replace them with the defaults one. Are you sure you want to continue?", function () {
+			elements.subredditList.html("");
+		   localStorageData.deleteStorage();
 			subreddits.list = JSON.parse(localStorageData.initialData.list);
 			subreddits.showList(elements.subredditList, true);
 			images.getImages(true, true);
 			relatedSubs.getRelatedSubs();
-		}, function() {
-			
 		});
-		
-	})
-
-	function closeSideMenu(evt){
-		var menuClosed = !generalSettings.menuClosed;
-		if(menuClosed){
-			var buttonTrigger = evt.target !== elements.menuBtn[0] && !$(evt.target).parents(".menu-btn").length;
-			var menuTrigger = evt.target !== elements.menu[0] && $(evt.target).parents(".menu").length === 0;
-			var isRecommandation = !(evt.target.classList.contains("recommandation"));
-			var isDialog = evt.target !== $(".alertify")[0];
-			var isConfirmBox = evt.target !== $(".dialog")[0] && $(evt.target).parents(".dialog").length === 0;
-
-			if(buttonTrigger && menuTrigger && isRecommandation && isDialog && isConfirmBox){
-				elements.menu.addClass("slide-closed");
-					generalSettings.menuClosed = true;
-					elements.menuBtn.toggleClass("open");
-			}
+	});
+	
+	$(document.body).on("keydown", function(evt) { // closes the side menu when pressing "Esc"
+		if(evt.which === 27 && !uncategorized.menuClosed){
+			elements.menu.addClass("slide-closed");
+			uncategorized.menuClosed = true;
+			elements.menuBtn.toggleClass("open");
 		}
-
-	}
-	var c = true;
-	$(window).on("resize", function(){
 	});
-	$(document.body).on("click", function(evt){
-		closeSideMenu(evt);
-	});
-	// $(document.body).on("touchstart", function(evt){
-	// 	generalSettings.isTap = true; 
+	/* <--------------------------- */
 
-	// });
-	// $(document.body).on("touchmove", function(){
-	// 	generalSettings.isTap = false;
-	// });
-	// $(document.body).on("touchend", function(evt){
-	// 	if(generalSettings.isTap){
-	// 		closeSideMenu(evt);
-	// 	}
-	// });
-	$(window).on("scroll wheel", function(evt) {
-		if(generalSettings.avoidMultipleRequests){
+
+
+
+
+
+
+	/* ======IMAGES LOADING====== */
+	elements.loadMoreBtn.on("click", function() { // Load more images button
+		images.getImages(false);
+		// $(this).addClass("hidden");
+	});
+	elements.reloadImgsBtn.on("click", function() { // reload (freshLoad) images
+		images.getImages(true, true);
+	});
+	$(window).on("scroll wheel", function(evt) { // loads more images when scrolling to the bottom (based on the body height and window scroll)
+		if(uncategorized.avoidMultipleRequests){
 			var bodyHeight = document.body.offsetHeight;
 			var windowScroll = window.pageYOffset + window.innerHeight;
 			if(windowScroll >= (bodyHeight - 35)) {
@@ -1678,9 +1073,11 @@ function init(){
 			}	
 		}
 	});
-	elements.toTopBtn.hide();
-	var isGreater = false;
-	$(window).on("scroll", function(){
+	/* <--------------------------- */
+
+
+	/* =======SCROLL TO TOP========= */
+	$(window).on("scroll", function() { // When to show the scroll to top element
 		if(window.scrollY >= 1200){
 			elements.toTopBtn.show();
 		}
@@ -1688,87 +1085,74 @@ function init(){
 			elements.toTopBtn.hide();
 		}
 	});
-
-	elements.toTopBtn.on("click", function(){
+	function smoothScroll() { // Scroll to the top of the page smoothly
 		var scrollElements = $("html, body");
-		scrollElements.animate({scrollTop:0}, 500);
+		scrollElements.animate({scrollTop:0}, 500); // 500ms duration
+	}
+	elements.toTopBtn.on("click", function() { // Click event
+		smoothScroll();
 	});
 
+	var toTopHammer = new Hammer(elements.toTopBtn[0]);
+	toTopHammer.on("tap", function() { // Tap event
+		smoothScroll();
+	});
+	/* <--------------------------- */
 
-	elements.wholeScreenClose.on("click", function(){
-		wholeScreenShower.hide();
+
+
+
+	/* ========FULL SCREEN========= */
+	elements.fullScreenClose.on("click", function(){
+		fScreen.hide();
 	});
 
-	elements.wholeScreenPrevious.on("click", function(){
-		wholeScreenShower.previous();
+	elements.fullScreenPrevious.on("click", function(){
+		fScreen.previous();
 	});
-	elements.wholeScreenNext.on("click", function(){
-		wholeScreenShower.next();
+	elements.fullScreeNext.on("click", function(){
+		fScreen.next();
 	});
-	$(document.body).on("keydown", function(evt){
-		if($(this).hasClass("no-scroll-body")){
+
+	$(document.body).on("keydown", function(evt) { // Keyboard controls
+		if($(this).hasClass("no-scroll-body")) {
 			if(evt.which === 37) {
-				if(wholeScreenShower.allowPrevious){
-					wholeScreenShower.previous();
+				if(fScreen.allowPrevious) { // "Left arrow"
+					fScreen.previous();
 				}
 			}
-			else if (evt.which === 39) {
-				if(wholeScreenShower.allowNext){
-					wholeScreenShower.next();
+			else if (evt.which === 39) { // "Right arrow 
+				if(fScreen.allowNext){
+					fScreen.next();
 				}
 			}
-			else if(evt.which === 27){
-				wholeScreenShower.hide();
+			else if(evt.which === 27) { // "Esc"
+				fScreen.hide();
 			}
-		}
-		if(evt.which === 27 && !generalSettings.menuClosed){
-			elements.menu.addClass("slide-closed");
-			generalSettings.menuClosed = true;
-			elements.menuBtn.toggleClass("open");
 		}
 	});
 
 
-	var bodyHm = new Hammer(document.body);
-	bodyHm.on("tap", function(evt){
-		closeSideMenu(evt);
-	})
 
-	var isTap = false;
+	var fhHammer = new Hammer(elements.fullScreenContainer[0]);
+	// Next/Previous swipe
+	fhHammer.on('swipeleft', function(ev) {
+		if(fScreen.allowNext){
+			fScreen.next();
+		}
+	});
 
-		subreddits.showList(elements.subredditList, true);
+	fhHammer.on('swiperight', function(ev) {
+		if(fScreen.allowPrevious){
+			fScreen.previous();
+		}
+	});
+	/* <--------------------------- */
+
+	// Gets images, show subreddits list and get related subs for that subreddits list
+	subreddits.showList(elements.subredditList, true);
 	images.getImages(true, true);
 	relatedSubs.getRelatedSubs();
 }
 
-
 init();
-
-
-
-function colorGenerator(){
-	var number = Math.floor(Math.random() * 361);
-	return "hsla(" + number + ", 35%, 35%, 0.2)";
-}
-
-
-
-
-var hm = new Hammer(elements.wholeScreenContainer[0]);
-hm.on('swipeleft', function(ev) {
-	if(wholeScreenShower.allowNext){
-		wholeScreenShower.next();
-	}
-});
-
-hm.on('swiperight', function(ev) {
-	if(wholeScreenShower.allowPrevious){
-		wholeScreenShower.previous();
-	}
-});
-
-var toTopHm = new Hammer(elements.toTopBtn[0]);
-toTopHm.on("tap", function(){
-	var scrollElements = $("html, body");
-	scrollElements.animate({scrollTop:0}, 500);
-});

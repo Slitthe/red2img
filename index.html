@@ -1,109 +1,114 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <title>Reddit Image Gallery</title>
 
-        
-        <meta name="description" content="Reddit image gallery gathered from a single or multiple subreddits.">
-        <meta name="robots" content="index,follow">
-        <meta name="googlebot" content="index,follow">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Reddit Image Gallery</title>
+    <meta name="description" content="Reddit image gallery based on customizable single or multiple subreddits.">
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
 
-        <!-- FB OG -->
-        <meta property="og:url" content="http://red2img.com/">
-        <meta property="og:type" content="website">
-        <meta property="og:title" content="Reddit Image Gallery">
-        <meta property="og:image" content="http://red2img.com/img/og_img.png">
-        <meta property="og:image:type" content="image/png">
-        <meta property="og:image:width" content="1400">
-        <meta property="og:image:height" content="733">
-        <meta property="og:description" content="Reddit image gallery gathered from a single or multiple subreddits.">
-        <meta property="og:site_name" content="Red2IMG">
-        <meta property="og:locale" content="en_US">
+    <!-- FB OG -->
+    <meta property="og:url" content="http://red2img.com/">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Reddit Image Gallery">
+    <meta property="og:image" content="http://red2img.com/img/og_img.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="1400">
+    <meta property="og:image:height" content="733">
+    <meta property="og:description" content="Reddit image gallery based on customizable single or multiple subreddits.">
+    <meta property="og:site_name" content="Red2IMG">
+    <meta property="og:locale" content="en_US">
 
-        <!-- Links -->
-        <link rel="me" href="https://github.com/slitthe/" type="text/html">
-            <!-- Icons -->
-        <link rel="apple-touch-icon" href="img/icon.png">
-        <link rel="icon" type="image/x-icon" href="favicon.ico">
-        <link rel="icon" type="image/png" href="img/favicon.png">
-            <!-- Stylesheets -->
-                <!-- Libs sheets -->
-        <link rel="stylesheet" href="css/normalize.css">
-        <link rel="stylesheet" href="css/lib/alertify.css">
-        <link rel="stylesheet" href="css/lib/awesomplete.css">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato|Montserrat">
-                <!-- Author stylsheet(s) -->
-        <link rel="stylesheet" href="css/main.css">
+    <!-- Links -->
+    <link rel="me" href="https://github.com/slitthe/" type="text/html">
+        <!-- Icons -->
+    <link rel="apple-touch-icon" href="img/icon.png">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="icon" type="image/png" href="img/favicon.png">
+        <!-- Stylesheets -->
+            <!-- Libs sheets -->
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/lib/alertify.css">
+    <link rel="stylesheet" href="css/lib/awesomplete.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato|Montserrat">
+            <!-- Author stylsheet(s) -->
+    <link rel="stylesheet" href="css/main.css">
 
 
-        <!-- Lib Scripts -->
-        <script src="js/lib/hammer.min.js"></script> <!-- Hammer.js https://hammerjs.github.io/ (touch gestures)-->
-        <script src="js/lib/alertify.min.js"></script> <!-- alertify.js  https://alertifyjs.org/ (alerts) -->
-        <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script> <!-- Masonry (grid layout) https://masonry.desandro.com/ -->
-        <script>window.Masonry || document.write('<script src="js/lib/masonry.pkgd.min.js"><\/script>')</script>
-        <script src="js/lib/awesomplete.min.js"></script> <!-- Awesomplete (autocomplete) https://leaverou.github.io/awesomplete/ -->
+    <!-- Lib Scripts -->
+    <script src="js/lib/hammer.min.js"></script> <!-- Hammer.js (touch gestures) https://hammerjs.github.io/ -->
+    <script src="js/lib/alertify.min.js"></script> <!-- alertify.js (alerts) https://alertifyjs.org/  -->
+    <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script> <!-- Masonry (grid layout) https://masonry.desandro.com/ -->
+    <script>window.Masonry || document.write('<script src="js/lib/masonry.pkgd.min.js"><\/script>')</script>
+    <script src="js/lib/awesomplete.min.js"></script> <!-- Awesomplete (autocomplete) https://leaverou.github.io/awesomplete/ -->
+</head>
 
-    </head>
-    <body>
-        <!--[if lte IE 10]>
-        <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
-        <![endif]-->
+<body>
+    <!--[if lte IE 10]>
+    <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
+    <![endif]-->
 
-        <main>
-            <!-- Side menu toggle -->
-            <button type="button" id="menu-btn" class="hamburger-btn no-input-style menu-btn">
+    <main>
+        <!-- Side menu toggle -->
+        <button id="menu-btn" class="hamburger-btn no-input-style menu-btn" type="button">
             <div class="bar"></div>
             <div class="bar"></div>
             <div class="bar"></div>
-            </button>
-            <!-- To top -->
-            <button class="to-top no-input-style">
+        </button>
+
+        <!-- To top -->
+        <button class="to-top no-input-style">
             <i class="fa fa-arrow-up"></i>
-            </button>
-            
-            <!-- Side bar -->
-            <aside class="menu slide-closed">
-                <!-- Add input -->
-                <section class="sr-search-container clearfix" id="sr-search-container">
-                    <input type="text" id="add-sr" class="awesomplete add-sr no-input-style" placeholder="Subreddit name">
-                    <button type="button" id="clear-input-btn" class="no-input-style clear-input-btn ">
-                    <i class="fa fa-close"></i>
-                    </button>
-                    <button type="button" id="add-sr-btn" class="no-input-style add-sr-btn ">
-                    <i class="fa fa-plus"></i>
-                    </button>
-                </section>
-                <!-- Subreddits list & deletion -->
-                <section>
-                    <!-- Check all / delete -->
-                    <h2>Subreddits</h2>
-                    <div class="mult-del-container clearfix">
-                        <label>
-                            <div class="custom-checkbox-wrapper">
-                                <input type="checkbox" class="checkAll hidden-input" id="checkAll">
-                                <div class="faux-checkbox"></div>
-                            </div>
-                            Check All
-                        </label>
-                        <button type="button" id="mult-del" class="mult-del no-input-style">
-                        Remove Selected<i class="fa fa-trash"></i>
-                        </button>
-                    </div>
-                    <!-- Subreddits list -->
-                    <div id="sr-list" class="sr-list"></div>
-                    <button class="restore-sr no-input-style" id="restore-sr" type="button">Restore default subreddits</button>
-                </section>
-                <section>
-                    <!-- Recommandations -->
-                    <h3>Suggestions</h3>
-                    <ul class="recommended" id="recommended"></ul>
-                </section>
-            </aside>
+        </button>
         
+        <!-- Side bar -->
+        <aside class="menu slide-closed">
+            <!-- Add input -->
+            <section id="sr-search-container" class="sr-search-container clearfix">
+                <input id="add-sr" class="awesomplete add-sr no-input-style" type="text"  placeholder="Subreddit name.">
+                <button id="clear-input-btn" class="no-input-style clear-input-btn" type="button">
+                    <i class="fa fa-close"></i>
+                </button>
+                <button id="add-sr-btn" class="no-input-style add-sr-btn" type="button">
+                    <i class="fa fa-plus"></i>
+                </button>
+            </section>
+
+            <!-- Subreddits list & deletion -->
+            <section>
+
+                <!-- Check all / delete -->
+                <h2>Subreddits</h2>
+                <div class="mult-del-container clearfix">
+                    <label>
+                        <div class="custom-checkbox-wrapper">
+                            <input id="check-all" class="check-all hidden-input" type="checkbox">
+                            <div class="faux-checkbox"></div>
+                        </div>
+                        Check All
+                    </label>
+                    <button id="mult-del" class="mult-del no-input-style" type="button">
+                        Remove Selected
+                        <i class="fa fa-trash"></i>
+                    </button>
+                </div>
+
+                <!-- Subreddits list -->
+                <div id="sr-list" class="sr-list"></div>
+                <button id="restore-sr" class="restore-sr no-input-style" type="button">Restore default subreddits</button>
+            </section>
+
+            <!-- Recommandations -->
+            <section>
+                <h3>Suggestions</h3>
+                <ul id="recommended" class="recommended"></ul>
+            </section>
+        </aside> <!-- Side Bar End -->
+    
         <!-- Header -->
         <header>
             <!-- Title / main heading -->
@@ -116,12 +121,14 @@
                     Gallery
                 </p>
             </div>
+
             <!-- Settings container -->
             <section id="settings" class="settings">
+
                 <!-- Sliders settings (adult & titles show) -->
                 <label>
                     <div class="custom-slider-wrapper">
-                        <input class="hidden-input" id="nsfw" type="checkbox" value="nsfw" name="adultContent" checked>
+                        <input id="nsfw" class="hidden-input" type="checkbox" value="nsfw" name="adultContent" checked>
                         <div class="faux-checkbox"></div>
                         <span class="input-text"></span>
                     </div>
@@ -129,23 +136,24 @@
                 </label>
                 <label>
                     <div class="custom-slider-wrapper">
-                        <input class="hidden-input" checked id="titles" type="checkbox" value="displayTitles" name="displayTitles">
+                        <input id="titles" class="hidden-input" type="checkbox" value="displayTitles" name="displayTitles" checked>
                         <div class="faux-checkbox"></div>
                         <span class="input-text"></span>
                     </div>
                     Show Info
                 </label>
+
                 <!-- Sorting -->
                 <div class="sorting">
                     Sort by:
-                    <select class="no-input-style" name="type" id="type">
+                    <select id="type" class="no-input-style" name="type" >
                         <option selected value="hot">Hot</option>
                         <option value="new">New</option>
                         <option value="rising">Rising</option>
                         <option value="controversial">Controversial</option>
                         <option value="top">Top</option>
                     </select>
-                    <select class="hidden no-input-style" name="time" id="time">
+                    <select id="time" class="hidden no-input-style" name="time" >
                         <option value="hour">Hour</option>
                         <option selected value="day">Day</option>
                         <option value="week">Week</option>
@@ -153,46 +161,61 @@
                         <option value="year">Year</option>
                         <option value="all">All</option>
                     </select>
+
                     <!-- Images reload -->
-                    <button type="button" id="reload-imgs" class="reload-imgs no-input-style"><i class="fa fa-refresh"></i></button>
+                    <button id="reload-imgs" class="reload-imgs no-input-style" type="button">
+                        <i class="fa fa-refresh"></i>
+                    </button>
                 </div>
-            </section>
+            </section> <!-- Settings End -->
         </header>
-        
-        
-        
+
         <!-- Images container -->
         <section class="images">
-            <div class="imagesContainer" id="imagesContainer"></div>
+            <!-- Images themselves go in Here -->
+            <div class="imgs-container" id="imgs-container"></div>
+            <!-- Load More button -->
             <button type="button" id="load-more" class="load-more no-input-style">Load More</button>
+            <!-- Loading circle -->
             <div id="loading" class="loading invisible"></div>
         </section>
-
     </main>
-    <!-- Full screen -->
+
+    <!-- Full screen feature -->
     <div class="full-screen-container hidden" id="full-screen-container">
         <!-- Previous, next and close -->
         <div class="next"></div>
-        <button class="next-arrow no-input-style"><i class="fa fa-chevron-right"></i></button>
+        <button class="next-arrow no-input-style">
+            <i class="fa fa-chevron-right"></i>
+        </button>
+
         <div class="previous"></div>
-        <button class="prev-arrow no-input-style"><i class="fa fa-chevron-left"></i></button>
+        <button class="prev-arrow no-input-style">
+            <i class="fa fa-chevron-left"></i>
+        </button>
+
         <div class="close"></div>
-        <button class="close-full-screen no-input-style"><i class="fa fa-close"></i></button>
+        <button class="close-full-screen no-input-style">
+            <i class="fa fa-close"></i>
+        </button>
         
         <!-- Positiong indicator (current and total images) -->
         <div class="pos-indicator">
             <div class="loading"></div>
             <span class="currentPosition"></span> / <span class="totalImages"></span>
         </div>
+
         <!-- Image title and subreddit name -->
         <div class="img-desc clearfix">
             <a href="#" class="post-txt" target="_blank" title=""></a>
             <div class="img-sr-name"></div>
         </div>
+
+        <!-- Video Element -->
         <video playsinline muted preload="auto" autoplay="autoplay" loop="loop" class="whole-screen-content">
             <source src="#" type="#">
         </video>
-    </div>
+    </div> <!-- End of full screen feature -->
 
     <!-- Lib Scripts -->
     <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
