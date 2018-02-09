@@ -530,8 +530,9 @@ header {
     text-align: center;
     background: rgb(204, 204, 204);
     -webkit-transition: transform 0.5s ease-in-out;
+    -webkit-transition: -webkit-transform 0.5s ease-in-out;
        -moz-transition: transform 0.5s ease-in-out;
-            transition: transform 0.5s ease-in-out;
+            transition: transform 0.5s ease-in-out, -webkit-transform 0.5s ease-in-out;
 }
     /* Handles the sliding motion of the side menu when this class is applied */
 .slide-closed {
@@ -742,7 +743,19 @@ header {
     border-top-color: rgba(0,0,0,0.8); /* Moving part of the loading circle */
     border-radius: 50%;
     position: relative;
-    animation: rotate 1s linear infinite;
+    -webkit-animation: rotate 1s linear infinite;
+       -moz-animation: rotate 1s linear infinite;
+            animation: rotate 1s linear infinite;
+}
+@-webkit-keyframes rotate {
+    0%{
+        -webkit-transform: rotate(0deg);
+                transform: rotate(0deg);
+    }
+    100%{
+        -webkit-transform: rotate(360deg);
+                transform: rotate(360deg);
+    }
 }
 @keyframes rotate {
     0%{
