@@ -1,4 +1,4 @@
-/* 
+ 
     --= General
     --= Custom Inputs
     --= Main heading / Title
@@ -1073,4 +1073,8 @@ header {
         width: 14.2%;
     }
 }
-/* -------------------------------------------------- */
+    /*Important to overwrite previous rules in the stylesheet (because of identical specificity)*/
+.img-desc .post-txt:hover, .post-txt:hover {
+    max-height: none;
+}
+/* -------------------------------------------------- 
