@@ -668,6 +668,16 @@ header {
        -moz-transition: opacity 0.5s linear;  
             transition: opacity 0.5s linear;
 }
+.img-result:after {
+    content: "";
+    position: absolute;
+    bottom: 10px;
+    height: 0.5em;
+    left: 6px;
+    right: 4px;
+    display: block;
+    background: rgba(0,0,0,0.3);
+}
 .img-result.visible { opacity: 1;}
 .no-titles .img-desc{ display: none; }
 
@@ -685,14 +695,16 @@ header {
 .img-desc .post-txt {
     position: absolute;
     bottom: 10px;
-    left: 5px;
-    right: 5px;
-    padding: 0.5em;
+    left: 6px;
+    right: 4px;
+    padding: 0.5em 0.5em 0 0.5em;
+    margin-bottom: 0.5em;
     background: rgba(0,0,0,0.3);
     overflow: hidden;
        -moz-box-sizing: border-box;
             box-sizing: border-box;
 }
+
 .img-desc .img-sr-name {
     position: absolute;
     padding: 5px 0 0 5px;
@@ -704,7 +716,10 @@ header {
     text-shadow: 1px 1px 0 black;
     color: rgb(220,220,220);
 }
-.post-txt { max-height: 2.8em; } 
+.post-txt {
+    max-height: 3.5em;
+    line-height: 1.5em; 
+} 
 /* <-- */
 /* --------------------------------------------- */
 
@@ -817,6 +832,7 @@ header {
     background: transparent;
     overflow: hidden;
     z-index: 250;
+    margin-bottom: 0;
 }
 .pos-indicator {
     bottom: 0;
@@ -997,7 +1013,10 @@ header {
     .img-result.triple { width: 60%;}
 
     /*===============*/
-    .img-desc { font-size: 0.9rem;}
+    .img-desc, 
+    .img-result:after { 
+        font-size: 0.9rem;
+    }
 }
 
 @media screen and (max-width: 1380px){
@@ -1009,7 +1028,10 @@ header {
     .img-result.triple {  width: 75%; }
 
     /*===============*/
-    .img-desc { font-size: 0.85rem;}
+    .img-desc,
+    .img-result:after {
+        font-size: 0.85rem;
+    }
 }
 
 @media screen and (max-width: 1100px){
@@ -1021,7 +1043,10 @@ header {
     .img-result.triple {  width: 100%;}
 
     /*===============*/
-    .img-desc { font-size: 0.85rem;}
+    .img-desc,
+    .img-result:after {
+        font-size: 0.85rem;
+    }
 
     .main-heading-container { font-size: 1.15rem; }
     .heading-info { font-size: 1em; }
@@ -1041,7 +1066,10 @@ header {
     }
 
     /*===============*/
-    .img-desc { font-size: 0.8rem;}
+    .img-desc,
+    .img-result:after {
+        font-size: 0.8rem;
+    }
     .main-heading-container { font-size: 1.15rem; }
 }
 @media screen and (max-width: 400px){
@@ -1053,7 +1081,10 @@ header {
     .img-result.triple {  width: 100%; }
 
     /*===============*/
-    .img-desc { font-size: 0.75rem;}
+    .img-desc, 
+    .img-result:after {
+        font-size: 0.75rem;
+    }
     .main-heading-container { font-size: 1rem; }
 }
 /* <--  */
@@ -1061,11 +1092,17 @@ header {
 
 @media screen and (max-width: 960px){
     /* Keeps the image description to one line only */
-    .post-txt { max-height: 1.7em; }
+    .post-txt { 
+        max-height: 2em; /*1em + 0.5 padding top and bottom*/
+        line-height: 1.5em; /*1em + the padding*/
+    }
     .pos-indicator { margin-bottom: 0.3rem; }
 }
 @media screen and (min-width: 1280px){
-    .img-desc { font-size: 0.85rem;}
+    .img-desc,
+    .img-result:after {
+        font-size: 0.85rem;
+    }
 }
 @media screen and (min-width: 2200px){
     .col-width, 
