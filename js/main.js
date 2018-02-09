@@ -303,26 +303,26 @@ var subreddits = {
 				succesful();
 			}
 			else {
-				alertify.delay(5000).error("<strong>" + reqName + "</strong>:Subreddit doesn't exist.");
+				alertify.delay(5000).error("<strong>" + reqName + "</strong>: Subreddit doesn't exist.");
 			}
 		},
 		error = function(data) {
 			if(data.status === 404) {
 				if(data.hasOwnProperty("responseJSON")){
 					if( data.responseJSON.hasOwnProperty("reason") ) {
-						alertify.delay(5000).error("<strong>" + reqName + "</strong>:Private or banned subreddit");
+						alertify.delay(5000).error("<strong>" + reqName + "</strong>: Private or banned subreddit.");
 					}
 					else {
-						alertify.delay(5000).error("<strong>" + reqName + "</strong>:Subreddit doesn't exist");
+						alertify.delay(5000).error("<strong>" + reqName + "</strong>: Subreddit doesn't exist.");
 					}
 				}
 			}
 			else if(data.status === 403 && data.hasOwnProperty("responseJSON") && data.responseJSON.reason === "private") {
-				alertify.delay(5000).error("<strong>" + reqName + "</strong>:Private  subreddit");
+				alertify.delay(5000).error("<strong>" + reqName + "</strong>: Private  subreddit.");
 			}
 			else {
 				var online = function(){
-					alertify.delay(5000).error("<strong>" + reqName + "</strong>:Subreddit doesn't exist");
+					alertify.delay(5000).error("<strong>" + reqName + "</strong>: Subreddit doesn't exist");
 
 				};
 				var offline = function(){
@@ -429,6 +429,7 @@ var images = {
 				urlParams.after.value = "";
 				images.rawResponseData = [];
 				elements.imgsContainer.html("<div class='col-width'></div>");
+				uncategorized.msnry.layout();
 				this.imageRequests.forEach(function(req) {
 					req.abort();
 				});
@@ -1034,8 +1035,9 @@ function init(){
 
 	elements.restoreSubreddits.on("click", function() { // restores the default list of subreddits
 		alertify.confirm("This will delete the current subreddits and replace them with the defaults one. Are you sure you want to continue?", function () {
+			elements.checkAllBtn.prop("checked", false);
 			elements.subredditList.html("");
-		   localStorageData.deleteStorage();
+		    localStorageData.deleteStorage();
 			subreddits.list = JSON.parse(localStorageData.initialData.list);
 			subreddits.showList(elements.subredditList, true);
 			images.getImages(true, true);
@@ -1080,7 +1082,8 @@ function init(){
 
 	/* =======SCROLL TO TOP========= */
 	$(window).on("scroll", function() { // When to show the scroll to top element
-		if(window.scrollY >= 1200){
+		var scroll = window.scrollY | window.pageYOffset;
+		if(scroll >= 1200){
 			elements.toTopBtn.show();
 		}
 		else {
