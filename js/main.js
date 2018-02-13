@@ -38,8 +38,8 @@ var localStorageData = {
 		list: "[\"pics\", \"aww\", \"gifs\", \"EarthPorn\", \"OldSchoolCool\", \"FoodPorn\", \"Eyebleach\", \"HighQualityGifs\", \"RoomPorn\",\"cats\",\"AbandonedPorn\", \"SpacePorn\", \"carporn\", \"itookapicture\"]",
 		sortType: "\"hot\"",
 		sortTime: "\"day\"",
-		displayTitles: "\"true\"",
-		adultContent: "\"true\""
+		displayTitles: "true",
+		adultContent: "false"
 	},
 	locations: { // Where to find the values to store in local storage
 		"list": [ ["subreddits", "list"] ],
