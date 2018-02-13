@@ -35,11 +35,11 @@ var elements = {
 // Local store related data & methods
 var localStorageData = {
 	initialData: { // Default values for stored local storage data (in case they don't exist), JSON format
-		list: "[\"itookapicture\", \"photography\", \"OldSchoolCool\", \"Cinemagraphs\", \"AbandonedPorn\", \"MilitaryPorn\", \"EarthPorn\", \"spaceporn\", \"Eyebleach\",\"gifs\",\"pics\"]",
+		list: "[\"pics\", \"aww\", \"gifs\", \"EarthPorn\", \"OldSchoolCool\", \"FoodPorn\", \"Eyebleach\", \"HighQualityGifs\", \"RoomPorn\",\"cats\",\"AbandonedPorn\", \"SpacePorn\", \"carporn\", \"itookapicture\"]",
 		sortType: "\"hot\"",
 		sortTime: "\"day\"",
 		displayTitles: "\"true\"",
-		adultContent: "\"false\""
+		adultContent: "\"true\""
 	},
 	locations: { // Where to find the values to store in local storage
 		"list": [ ["subreddits", "list"] ],
