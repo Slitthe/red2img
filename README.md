@@ -44,7 +44,7 @@ The settings above will be saved when visiting from the same device and non-icog
 
 --- when to stop trying to get more images, only applies when the page first loads
   
-**images.maxNewSearchRequests **
+**images.maxNewSearchRequests**
 
 --- the maximum amount of requests to make when trying to get images at first page load (it will attempt)
   
